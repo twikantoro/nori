@@ -1,0 +1,7 @@
+{
+  "name": "nori-four",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
