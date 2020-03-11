@@ -1,8 +1,11 @@
 import React from 'react';
-import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet } from '@ionic/react';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { IonApp, IonRouterOutlet, IonContent } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Home from './pages/Home';
+import Login from './pages/Login';
+import pengantriTabBar from './components/PengantriTabBar'
+import Antrian from './pages/antrianPage'
+import Tabs from './components/Tabs'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -22,15 +25,20 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import antrianPage from './pages/antrianPage';
 
 const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route path="/home" component={Home} exact={true} />
-        <Route exact path="/" render={() => <Redirect to="/home" />} />
-      </IonRouterOutlet>
-    </IonReactRouter>
+  <IonApp className=''>
+    <IonContent>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route path="/login" component={Login} exact={true} />
+          <Route path="/pengantri" component={antrianPage} exact={true} />
+          <Route exact path="/" render={() => <Redirect to="/pengantri" />} />
+        </IonRouterOutlet>
+      </IonReactRouter>
+      <Tabs />
+    </IonContent>
   </IonApp>
 );
 
