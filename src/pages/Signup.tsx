@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { IonPage, IonHeader, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonInput, IonRow, IonImg, IonGrid, IonCol, IonButton, IonToolbar } from "@ionic/react";
-import { loginUser, validateEmail } from "../config/firebaseConfig";
+import { signupUser, validateEmail } from "../config/firebaseConfig";
 import { toast } from '../components/toast'
-import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
-const Login: React.FC = () => {
+const Signup: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const dispatch = useDispatch()
 
-  async function login(){
+  async function Signup() {
     if (validateEmail(email)) {
-      const res = await loginUser(email, password, function(response: any){
+      await signupUser(email, password, function(response: any){
         toast(response)
       })
     } else {
@@ -20,13 +19,13 @@ const Login: React.FC = () => {
   }
 
   return (
-    <IonPage id="login-page">
+    <IonPage id="Signup-page">
       <IonHeader>
         <IonButtons slot="start">
           <IonMenuButton></IonMenuButton>
         </IonButtons>
         <IonToolbar>
-          <IonTitle>Login</IonTitle>
+          <IonTitle>Signup</IonTitle>
         </IonToolbar>
 
       </IonHeader>
@@ -35,16 +34,16 @@ const Login: React.FC = () => {
 
           <IonList>
             <IonItem>
-              <IonInput 
-                type="text" 
-                placeholder="Email" 
+              <IonInput
+                type="text"
+                placeholder="Email"
                 onIonChange={(e: any) => setEmail(e.target.value)}
               />
             </IonItem>
             <IonItem>
-            <IonInput 
-                type="password" 
-                placeholder="Password" 
+              <IonInput
+                type="password"
+                placeholder="Password"
                 onIonChange={(e: any) => setPassword(e.target.value)}
               />
             </IonItem>
@@ -52,16 +51,20 @@ const Login: React.FC = () => {
 
           <IonRow>
             <IonCol>
-              <IonButton 
-                type="submit" 
+              <IonButton
+                type="submit"
                 expand="block"
-                onClick={login}
-              >Login
+                onClick={Signup}
+              >Signup
               </IonButton>
             </IonCol>
+
+          </IonRow>
+          <IonRow>
             <IonCol>
-              <IonButton routerLink="/signup" color="light" expand="block">Signup</IonButton>
+              <p>Sudah punya akun? <Link to="/login">Login</Link></p>
             </IonCol>
+
           </IonRow>
         </IonGrid>
       </IonContent>
@@ -69,4 +72,4 @@ const Login: React.FC = () => {
   )
 }
 
-export default Login
+export default Signup

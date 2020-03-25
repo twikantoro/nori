@@ -7,11 +7,11 @@ import { Route, Redirect } from 'react-router'
 const PengantriTabBar: React.FC = (match) => {
   return (
     <IonTabBar slot="bottom">
-      <IonTabButton tab="antrian" href="/tabs/antrian">
+      <IonTabButton tab="antrian" href="/pengantri/antrian">
         <IonIcon icon={calendarOutline} />
         <IonLabel>Antrian</IonLabel>
       </IonTabButton>
-      <IonTabButton>
+      <IonTabButton tab="cari" href="/pengantri/cari">
         <IonIcon icon={searchSharp} />
         <IonLabel>Cari gerai</IonLabel>
       </IonTabButton>
