@@ -1,8 +1,6 @@
 import React from 'react'
 import { IonPage, IonContent, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/react'
 import { home, homeSharp, search, searchSharp, notificationsCircleSharp, notificationsSharp, notificationsOff, notificationsOutline, person, analyticsSharp, reorderFourSharp, readerOutline, calendarSharp, calendarOutline } from 'ionicons/icons'
-import { userInfo } from 'os'
-import { Route, Redirect } from 'react-router'
 
 const PengantriTabBar: React.FC = (match) => {
   return (

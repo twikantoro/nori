@@ -1,7 +1,9 @@
 import { useSelector } from "react-redux"
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from "@ionic/react"
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonItem, IonIcon, IonLabel, IonGrid, IonRow, IonCol, IonAvatar, IonFabList, IonList, IonButton, IonButtons } from "@ionic/react"
 import React from "react"
 import PengantriTabBar from "../../components/PengantriTabBar"
+import { wifi } from "ionicons/icons"
+import CardAntrian from "../../components/Pengantri/CardAntrian"
 
 const AntrianPage: React.FC = () => {
   const username = useSelector((state: any) => state.user.username)
@@ -16,8 +18,8 @@ const AntrianPage: React.FC = () => {
           </IonToolbar>
         </IonHeader>
       </IonHeader>
-      <IonContent className="ion-padding">
-        <p>Hello {username}</p>
+      <IonContent>
+        <CardAntrian />
       </IonContent>
       <PengantriTabBar />
     </IonPage>

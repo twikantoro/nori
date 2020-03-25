@@ -1,4 +1,7 @@
-
-nori-logo-big {
+#nori-logo-big {
   --padding-start: 20vw;
+}
+.persyaratan-content {
+  padding: 0px 20px 20px 20px ;
+  margin: 0px ;
 }
