@@ -15,11 +15,11 @@ const PengantriTabBar: React.FC = (match) => {
         <IonIcon icon={searchSharp} />
         <IonLabel>Cari gerai</IonLabel>
       </IonTabButton>
-      <IonTabButton>
+      <IonTabButton tab="notifikasi" href="/pengantri/notifikasi">
         <IonIcon icon={notificationsOutline} />
         <IonLabel>Notifikasi</IonLabel>
       </IonTabButton>
-      <IonTabButton>
+      <IonTabButton tab="riwayat" href="/pengantri/riwayat">
         <IonIcon icon={readerOutline} />
         <IonLabel>Riwayat</IonLabel>
       </IonTabButton>
