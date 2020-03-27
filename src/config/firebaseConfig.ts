@@ -3,6 +3,7 @@ import 'firebase/firestore';
 import 'firebase/auth';
 import axios from 'axios'
 import { call } from 'ionicons/icons';
+import { useState } from 'react';
 
 // Replace this with your own config details
 var apiSite = "https://nori-api.herokuapp.com"
@@ -33,22 +34,16 @@ export function validateEmail(email: string) {
 }
 
 export async function loginUser(email: string, password: string, callback: Function) {
-
   const res = await firebase.auth().signInWithEmailAndPassword(email, password)
     .then(function (response) {
       console.log(response)
-      if (response) {
-        callback('Password salah')
-      } else {
-        callback('Akun tidak ditemukan')
-      }
       callback('Berhasil')
     })
     .catch(function (response) {
       console.log(response)
       if (response.code == 'auth/user-not-found'){
         callback('User tidak ditemukan')
-      } else {
+      } else if(response.code == 'auth/wrong-password') {
         callback('Password salah')
       }
       //callback('Kombinasi email dan password salah')
@@ -79,6 +74,10 @@ export async function signupUser(email: string, password: string, callback: Func
     .then(function () {
       // always executed
     });
+}
+
+export function logoutUser() {
+  firebase.auth().signOut()
 }
 
 export function getCurrentUser() {

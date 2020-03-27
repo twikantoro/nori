@@ -1,18 +1,29 @@
 import React, { useState } from "react";
-import { IonPage, IonHeader, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonInput, IonRow, IonImg, IonGrid, IonCol, IonButton, IonToolbar } from "@ionic/react";
+import { IonPage, IonHeader, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonInput, IonRow, IonImg, IonGrid, IonCol, IonButton, IonToolbar, IonLoading } from "@ionic/react";
 import { loginUser, validateEmail } from "../config/firebaseConfig";
 import { toast } from '../components/toast'
 import { useDispatch } from "react-redux";
+import { setUserState } from "../redux/actions";
+import { Redirect } from "react-router";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [busy, setBusy]= useState(false)
   const dispatch = useDispatch()
 
   async function login(){
     if (validateEmail(email)) {
+      setBusy(true)
       const res = await loginUser(email, password, function(response: any){
+        setBusy(false)
         toast(response)
+        if(response.substring(0,1) == 'B'){
+          window.history.replaceState({}, '', '/pengantri')
+          return (
+            window.location.replace('/pengantri')
+          )
+        }
       })
     } else {
       toast('Masukkan email yang valid')
@@ -31,6 +42,9 @@ const Login: React.FC = () => {
 
       </IonHeader>
       <IonContent className="ion-padding">
+        <IonLoading
+          isOpen={busy}
+        />
         <IonGrid>
 
           <IonList>
