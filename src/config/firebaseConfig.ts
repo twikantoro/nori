@@ -1,24 +1,24 @@
+import axios from 'axios';
 import firebase from 'firebase/app';
-import 'firebase/firestore';
 import 'firebase/auth';
-import axios from 'axios'
-import { call } from 'ionicons/icons';
-import { useState } from 'react';
+import 'firebase/firestore';
 
 // Replace this with your own config details
-var apiSite = "https://nori-api.herokuapp.com"
+var apiSite = "http://localhost:5000"
 
 var config = {
-  apiKey: "AIzaSyChHRpSmiJXoCCCeZFbRwi-fg3KWXMvVvc",
-  authDomain: "nori-3744e.firebaseapp.com",
-  databaseURL: "https://nori-3744e.firebaseio.com",
-  projectId: "nori-3744e",
-  storageBucket: "nori-3744e.appspot.com",
-  messagingSenderId: "1013448863939",
-  appId: "1:1013448863939:web:942a30be0c724778487276",
-  measurementId: "G-7V4KB43HWN"
+  apiKey: "AIzaSyB5Z9FXmzH-_Z15QDYNg6boA28ak3tRbPE",
+  authDomain: "nori-api-24aca.firebaseapp.com",
+  databaseURL: "https://nori-api-24aca.firebaseio.com",
+  projectId: "nori-api-24aca",
+  storageBucket: "nori-api-24aca.appspot.com",
+  messagingSenderId: "914353176827",
+  appId: "1:914353176827:web:62007b927ed004d487f05e",
+  measurementId: "G-7DD8HNBMEV"
+
 };
 firebase.initializeApp(config);
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
 
 function arrayToGet(array: any) {
   var encoded = ''
@@ -41,9 +41,9 @@ export async function loginUser(email: string, password: string, callback: Funct
     })
     .catch(function (response) {
       console.log(response)
-      if (response.code == 'auth/user-not-found'){
+      if (response.code == 'auth/user-not-found') {
         callback('User tidak ditemukan')
-      } else if(response.code == 'auth/wrong-password') {
+      } else if (response.code == 'auth/wrong-password') {
         callback('Password salah')
       }
       //callback('Kombinasi email dan password salah')
@@ -57,7 +57,7 @@ export async function signupUser(email: string, password: string, callback: Func
     password: password
   }
   var encoded = arrayToGet(params)
-  axios.get(apiSite + '/users/create?' + encoded)
+  axios.get(apiSite + '/api/pengguna/create?' + encoded)
     .then(function (response) {
       // handle success
       console.log(response);
@@ -81,14 +81,42 @@ export function logoutUser() {
 }
 
 export function getCurrentUser() {
-  return new Promise ((resolve, reject) => {
-    const unsubscribe = firebase.auth().onAuthStateChanged(function(user) {
-      if(user) {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
         resolve(user)
       } else {
         resolve(null)
       }
       unsubscribe()
+    })
+  })
+}
+
+export function getToken() {
+  return new Promise((resolve, reject) => {
+    firebase.auth().currentUser?.getIdToken(true).then(function (idToken) {
+      resolve(idToken)
+    }).catch(function (error) {
+      reject(error)
+    })
+  })
+}
+
+export function isPemilik(callback: Function) {
+  getToken().then(function(result){
+    axios.get(apiSite + '/api/pemilik/ami?token=' + result,{
+      withCredentials: false
+    }).then(function(result){
+      callback(result)
+    })
+  })
+}
+
+export function isStaf(callback: Function) {
+  getToken().then(function(result){
+    axios.get(apiSite + '/api/staf/ami?token=' + result).then(function(result){
+      callback(result)
     })
   })
 }

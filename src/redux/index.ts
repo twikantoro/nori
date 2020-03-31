@@ -20,5 +20,11 @@ export default function reducer(state = [],
         ...state,
         antrians: payload
       }
+    case 'SET_ROLE':
+      console.log('ROLE: '+payload)
+      return {
+        ...state,
+        role: payload
+      }
   }
 }

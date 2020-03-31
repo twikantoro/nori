@@ -11,3 +11,6 @@
 .height-50-percent {
   height: 50vh;
 }
+.bg-transparent {
+  background: transparent;
+}

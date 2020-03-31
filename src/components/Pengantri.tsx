@@ -1,27 +1,44 @@
-import React from 'react'
+import { IonApp, IonContent, IonTabBar, IonPage, IonHeader, IonToolbar, IonTitle, IonTabs, IonRouterOutlet, IonTabButton, IonIcon, IonLabel } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
-import { Route, Redirect } from 'react-router-dom'
-//import antrianPage from '../pages/antrianPage'
-import PengantriTabBar from './PengantriTabBar'
-import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonApp } from '@ionic/react'
-import { useSelector } from 'react-redux'
+import React from 'react'
+import { Redirect, Route } from 'react-router-dom'
 import AntrianPage from '../pages/Pengantri/Antrian'
 import CariPage from '../pages/Pengantri/Cari'
 import NotifikasiPage from '../pages/Pengantri/Notifikasi'
 import RiwayatPage from '../pages/Pengantri/Riwayat'
+import PengantriTabBar from './PengantriTabBar'
+import { calendarOutline, searchSharp, notificationsOutline, readerOutline } from 'ionicons/icons'
 
 const Pengantri: React.FC = () => {
   return (
-    <IonApp>
-      <IonReactRouter>
+    <IonTabs>
+      <IonRouterOutlet>
         <Route exact path="/pengantri" render={() => <Redirect to="/pengantri/antrian" />} />
         <Route exact path="/pengantri/antrian" component={AntrianPage} />
         <Route exact path="/pengantri/cari" component={CariPage} />
         <Route exact path="/pengantri/notifikasi" component={NotifikasiPage} />
         <Route exact path="/pengantri/Riwayat" component={RiwayatPage} />
-      </IonReactRouter>
 
-    </IonApp>
+      </IonRouterOutlet>
+      <IonTabBar slot="bottom">
+        <IonTabButton tab="antrian" href="/pengantri/antrian">
+          <IonIcon icon={calendarOutline} />
+          <IonLabel>Antrian</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="cari" href="/pengantri/cari">
+          <IonIcon icon={searchSharp} />
+          <IonLabel>Cari gerai</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="notifikasi" href="/pengantri/notifikasi">
+          <IonIcon icon={notificationsOutline} />
+          <IonLabel>Notifikasi</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="riwayat" href="/pengantri/riwayat">
+          <IonIcon icon={readerOutline} />
+          <IonLabel>Riwayat</IonLabel>
+        </IonTabButton>
+      </IonTabBar>
+    </IonTabs>
   )
 }
 

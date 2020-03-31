@@ -1,24 +1,23 @@
+import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonInput, IonItem, IonList, IonLoading, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar } from "@ionic/react";
 import React, { useState } from "react";
-import { IonPage, IonHeader, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonInput, IonRow, IonImg, IonGrid, IonCol, IonButton, IonToolbar, IonLoading } from "@ionic/react";
-import { loginUser, validateEmail } from "../config/firebaseConfig";
-import { toast } from '../components/toast'
 import { useDispatch } from "react-redux";
-import { setUserState } from "../redux/actions";
-import { Redirect } from "react-router";
+import { toast } from '../components/toast';
+import { loginUser, validateEmail } from "../config/firebaseConfig";
+import { Link } from "react-router-dom";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [busy, setBusy]= useState(false)
+  const [busy, setBusy] = useState(false)
   const dispatch = useDispatch()
 
-  async function login(){
+  async function login() {
     if (validateEmail(email)) {
       setBusy(true)
-      const res = await loginUser(email, password, function(response: any){
+      const res = await loginUser(email, password, function (response: any) {
         setBusy(false)
         toast(response)
-        if(response.substring(0,1) == 'B'){
+        if (response.substring(0, 1) == 'B') {
           window.history.replaceState({}, '', '/pengantri')
           return (
             window.location.replace('/pengantri')
@@ -49,16 +48,16 @@ const Login: React.FC = () => {
 
           <IonList>
             <IonItem>
-              <IonInput 
-                type="text" 
-                placeholder="Email" 
+              <IonInput
+                type="text"
+                placeholder="Email"
                 onIonChange={(e: any) => setEmail(e.target.value)}
               />
             </IonItem>
             <IonItem>
-            <IonInput 
-                type="password" 
-                placeholder="Password" 
+              <IonInput
+                type="password"
+                placeholder="Password"
                 onIonChange={(e: any) => setPassword(e.target.value)}
               />
             </IonItem>
@@ -66,16 +65,16 @@ const Login: React.FC = () => {
 
           <IonRow>
             <IonCol>
-              <IonButton 
-                type="submit" 
+              <IonButton
+                type="submit"
                 expand="block"
                 onClick={login}
               >Login
               </IonButton>
             </IonCol>
-            <IonCol>
-              <IonButton routerLink="/signup" color="light" expand="block">Signup</IonButton>
-            </IonCol>
+          </IonRow>
+          <IonRow className="ion-justify-content-center">
+            <p>Belum punya akun? <Link to="/signup">Signup</Link></p>
           </IonRow>
         </IonGrid>
       </IonContent>

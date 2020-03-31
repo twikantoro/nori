@@ -1,8 +1,8 @@
 import React from 'react'
-import { IonPage, IonContent, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/react'
-import { home, homeSharp, search, searchSharp, notificationsCircleSharp, notificationsSharp, notificationsOff, notificationsOutline, person, analyticsSharp, reorderFourSharp, readerOutline, calendarSharp, calendarOutline } from 'ionicons/icons'
+import { IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/react'
+import { searchSharp, notificationsOutline, readerOutline, calendarOutline } from 'ionicons/icons'
 
-const PengantriTabBar: React.FC = (match) => {
+const PengantriTabBar: React.FC = () => {
   return (
     <IonTabBar slot="bottom">
       <IonTabButton tab="antrian" href="/pengantri/antrian">

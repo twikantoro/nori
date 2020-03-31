@@ -1,29 +1,21 @@
-import { useSelector } from "react-redux"
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonItem, IonIcon, IonLabel, IonGrid, IonRow, IonCol, IonAvatar, IonFabList, IonList, IonButton, IonButtons } from "@ionic/react"
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from "@ionic/react"
 import React from "react"
-import PengantriTabBar from "../../components/PengantriTabBar"
+import { useSelector } from "react-redux"
 import CardAntrian from "../../components/Pengantri/CardAntrian"
+import PengantriTabBar from "../../components/PengantriTabBar"
+import firebase from 'firebase'
+import { getToken } from "../../config/firebaseConfig"
+import Axios from "axios"
 
 const AntrianPage: React.FC = () => {
   const username = useSelector((state: any) => state.user.username)
   const antrians = useSelector((state: any) => state.antrians)
-  const state = useSelector((state:any) => state)
-  console.log(state)
+  const state = useSelector((state: any) => state)
+
+  console.log('state: ', state)
   return (
     <IonPage>
-      <IonHeader>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>
-              Antrian
-            </IonTitle>
-          </IonToolbar>
-        </IonHeader>
-      </IonHeader>
-      <IonContent>
-        <CardAntrian />
-      </IonContent>
-      <PengantriTabBar />
+      <CardAntrian />
     </IonPage>
   )
 }

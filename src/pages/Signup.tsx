@@ -1,17 +1,30 @@
 import React, { useState } from "react";
-import { IonPage, IonHeader, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonInput, IonRow, IonImg, IonGrid, IonCol, IonButton, IonToolbar } from "@ionic/react";
+import { IonPage, IonHeader, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonInput, IonRow, IonImg, IonGrid, IonCol, IonButton, IonToolbar, IonLoading } from "@ionic/react";
 import { signupUser, validateEmail } from "../config/firebaseConfig";
 import { toast } from '../components/toast'
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
+import { render } from "@testing-library/react";
 
 const Signup: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [busy, setBusy]= useState(false)
 
   async function Signup() {
     if (validateEmail(email)) {
-      await signupUser(email, password, function(response: any){
-        toast(response)
+      if (password.length<6){
+        toast('Password minimal 6 karakter')
+        return false
+      }
+      setBusy(true)
+      await signupUser(email, password, function (response: any) {
+        setBusy(false)
+        if(response.substring(0,1)=='E'){
+          toast(response)
+        } else if(response.substring(0,3)=='Ber') {
+          toast(response)
+          //window.location.href = '/login'
+        }
       })
     } else {
       toast('Masukkan email yang valid')
@@ -30,6 +43,9 @@ const Signup: React.FC = () => {
 
       </IonHeader>
       <IonContent className="ion-padding">
+        <IonLoading
+          isOpen={busy}
+        />
         <IonGrid>
 
           <IonList>
@@ -60,10 +76,10 @@ const Signup: React.FC = () => {
             </IonCol>
 
           </IonRow>
-          <IonRow>
-            <IonCol>
+          <IonRow className="ion-justify-content-center">
+            
               <p>Sudah punya akun? <Link to="/login">Login</Link></p>
-            </IonCol>
+            
 
           </IonRow>
         </IonGrid>

@@ -4,21 +4,9 @@ import PengantriTabBar from "../../components/PengantriTabBar"
 
 const RiwayatPage: React.FC = () => {
   return (
-    <IonPage>
-      <IonHeader>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>
-              Riwayat transaksi
-            </IonTitle>
-          </IonToolbar>
-        </IonHeader>
-      </IonHeader>
-      <IonContent className="ion-padding">
+   
         <p>Hallo</p>
-      </IonContent>
-      <PengantriTabBar />
-    </IonPage>
+     
   )
 }
 
