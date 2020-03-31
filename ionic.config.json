@@ -1,0 +1,7 @@
+{
+  "name": "nori-five",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
