@@ -1,0 +1,19 @@
+#nori-logo-big {
+  --padding-start: 20vw;
+}
+.persyaratan-content {
+  padding: 0px 20px 20px 20px ;
+  margin: 0px ;
+}
+.height-45vh {
+  height: 48vh;
+}
+.height-50-percent {
+  height: 50vh;
+}
+.bg-transparent {
+  background: transparent;
+}
+.ripple-transparent {
+  --ripple-color: transparent;
+}

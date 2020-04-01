@@ -1,8 +1,10 @@
-import React from 'react';
-import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet } from '@ionic/react';
+import React, { useState, useEffect } from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { IonApp, IonRouterOutlet, IonContent, IonSpinner, IonPage, IonLoading, IonGrid, IonRow, IonAlert } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Home from './pages/Home';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Pengantri from './tabs/Pengantri'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -22,16 +24,63 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import './App.css';
+import { useDispatch, connect, useSelector } from 'react-redux';
+import { setUserState } from './redux/actions';
+import { getCurrentUser, isPemilik, isStaf } from './config/firebaseConfig'
 
-const App: React.FC = () => (
-  <IonApp>
+const RoutingSystem: React.FC = () => {
+  return (
     <IonReactRouter>
       <IonRouterOutlet>
-        <Route path="/home" component={Home} exact={true} />
-        <Route exact path="/" render={() => <Redirect to="/home" />} />
+        <Route exact path="/pengantri" component={Pengantri} />
+        <Route exact path="/" render={() => <Redirect to="/pengantri" />} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/signup" component={Signup} />
       </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
 
-export default App;
+    </IonReactRouter>
+  )
+}
+
+const App: React.FC = () => {
+  const [busy, setBusy] = useState(true)
+  const [amiPemilik, setAmiPemilik] = useState(false)
+  const [amiStaf, setAmiStaf] = useState(false)
+  const [role, setRole] = useState('pengantri')
+  const dispatch = useDispatch()
+
+  // isPemilik(function (result: any) {
+  //   setAmiPemilik(result)
+  // })
+  // isStaf(function (result: any) {
+  //   setAmiStaf(result)
+  // })
+
+  useEffect(() => {
+    getCurrentUser().then((user: any) => {
+      if (user) {
+        //console.log(user)
+        dispatch(setUserState(user.email))
+        if (/*amiPemilik || amiStaf*/ false) {
+          window.history.replaceState({}, '', '/chooseRole')
+        } else {
+          setRole('pengantri')
+          window.history.replaceState({}, '', '/pengantri')
+        }
+      } else {
+        if (window.location.href.includes('signup')) {
+          setRole('signup')
+          // let it be
+        } else {
+          setRole('login')
+          window.history.replaceState({}, '', '/login')
+        }
+      }
+      setBusy(false)
+    })
+  }, [])
+  return <IonApp>{busy ? <IonPage><IonContent><IonGrid><IonRow className="ion-justify-content-center ion-align-items-end height-50-percent"><IonSpinner name="dots" /></IonRow><IonRow></IonRow></IonGrid></IonContent></IonPage> : <RoutingSystem />}</IonApp>
+};
+
+export default connect()(App);
