@@ -4,9 +4,7 @@ import { IonApp, IonRouterOutlet, IonContent, IonSpinner, IonPage, IonLoading, I
 import { IonReactRouter } from '@ionic/react-router';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Logout from './pages/Logout'
-import Pengantri from './components/Pengantri'
-import Pemilik from './components/Pemilik'
+import Pengantri from './tabs/Pengantri'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -37,6 +35,8 @@ const RoutingSystem: React.FC = () => {
       <IonRouterOutlet>
         <Route exact path="/pengantri" component={Pengantri} />
         <Route exact path="/" render={() => <Redirect to="/pengantri" />} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/signup" component={Signup} />
       </IonRouterOutlet>
 
     </IonReactRouter>

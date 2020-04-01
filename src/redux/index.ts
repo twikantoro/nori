@@ -1,4 +1,34 @@
-export default function reducer(state = [],
+const initialState = {
+  antrians: [
+    {
+      id: 1234,
+      gerai: "Bank Ngadirejo",
+      subLayanan: "Tukar Uang",
+      prefix: "A",
+      slot: 117,
+      current: 67,
+      perkiraan: "12:34"
+    },{
+      id: 1235,
+      gerai: "Bank Masahan",
+      subLayanan: "Tukar Uang",
+      prefix: "A",
+      slot: 222,
+      current: 12,
+      perkiraan: "Besok pukul 14:30"
+    },{
+      id: 1236,
+      gerai: "Bank Ngadirejo",
+      subLayanan: "Tukar Uang",
+      prefix: "A",
+      slot: 117,
+      current: 67,
+      perkiraan: "12:34"
+    }
+  ]
+}
+
+export default function reducer(state = initialState,
   { type, payload }: { type: string, payload: any }): any {
   //work with state
   switch (type) {
@@ -10,7 +40,6 @@ export default function reducer(state = [],
         }
       }
     case 'UNSET_STATE':
-      state = []
       console.log('cekstate', state)
       return {
         state: []
