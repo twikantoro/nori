@@ -15,7 +15,39 @@ const DefaultRiwayatPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <CardRiwayat />
+        <CardRiwayat 
+          gerai="Bank Ngadirejo"
+          subLayanan="Bayar utang"
+          prefix="A"
+          slot="117"
+          tanggal="2 April 2020"
+          waktu="12:35"
+          bintang="0"
+          status="sukses"
+          kebuka={true}
+        />
+        <CardRiwayat 
+          gerai="Bank Ngadirejo"
+          subLayanan="Bayar utang"
+          prefix="A"
+          slot="117"
+          tanggal="2 April 2020"
+          waktu="12:35"
+          bintang="5"
+          status="sukses"
+          kebuka={false}
+        />
+        <CardRiwayat 
+          gerai="Bank Ngadirejo"
+          subLayanan="Bayar utang"
+          prefix="A"
+          slot="117"
+          tanggal="2 April 2020"
+          waktu="12:35"
+          bintang="5"
+          status="sukses"
+          kebuka={false}
+        />
       </IonContent>
     </>
   )

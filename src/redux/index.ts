@@ -7,7 +7,8 @@ const initialState = {
       prefix: "A",
       slot: 117,
       current: 67,
-      perkiraan: "12:34"
+      perkiraan: "12:34",
+      status: 'berlangsung'
     },{
       id: 1235,
       gerai: "Bank Masahan",
@@ -15,7 +16,8 @@ const initialState = {
       prefix: "A",
       slot: 222,
       current: 12,
-      perkiraan: "Besok pukul 14:30"
+      perkiraan: "Besok pukul 14:30",
+      status: 'terlambat'
     },{
       id: 1236,
       gerai: "Bank Ngadirejo",
@@ -23,7 +25,8 @@ const initialState = {
       prefix: "A",
       slot: 117,
       current: 67,
-      perkiraan: "12:34"
+      perkiraan: "12:34",
+      status: 'dipesan'
     }
   ]
 }

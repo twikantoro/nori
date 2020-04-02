@@ -26,7 +26,9 @@ const DefaultAntrianPage: React.FC = () => {
               prefix={curr.prefix}
               slot={curr.slot}
               current={curr.current}
-              perkiraan={curr.perkiraan}
+              tanggal="12 April 2020"
+              waktu={curr.perkiraan}
+              status={curr.status}
             />
           )
         })}
