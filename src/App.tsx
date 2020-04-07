@@ -24,16 +24,20 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import './theme/facebook.css'
+import './theme/google.css'
 import './App.css';
 import { useDispatch, connect, useSelector } from 'react-redux';
-import { setUserState } from './redux/actions';
+import { setUserState, setRole } from './redux/actions';
 import { getCurrentUser, isPemilik, isStaf } from './config/firebaseConfig'
+import Pemilik from './tabs/Pemilik';
 
 const RoutingSystem: React.FC = () => {
   return (
     <IonReactRouter>
       <IonRouterOutlet>
         <Route exact path="/pengantri" component={Pengantri} />
+        <Route exact path="/pemilik" component={Pemilik} />
         <Route exact path="/" render={() => <Redirect to="/pengantri" />} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/signup" component={Signup} />
@@ -47,7 +51,6 @@ const App: React.FC = () => {
   const [busy, setBusy] = useState(true)
   const [amiPemilik, setAmiPemilik] = useState(false)
   const [amiStaf, setAmiStaf] = useState(false)
-  const [role, setRole] = useState('pengantri')
   const dispatch = useDispatch()
 
   // isPemilik(function (result: any) {
@@ -60,12 +63,21 @@ const App: React.FC = () => {
   useEffect(() => {
     getCurrentUser().then((user: any) => {
       if (user) {
-        //console.log(user)
+        console.log(user)
         dispatch(setUserState(user.email))
         if (/*amiPemilik || amiStaf*/ false) {
           window.history.replaceState({}, '', '/chooseRole')
+        } else if(window.location.href.includes('pengantri')) {
+          dispatch(setRole('pengantri'))
+          window.history.replaceState({}, '', '/pengantri')
+        } else if(window.location.href.includes('pemilik')) {
+          dispatch(setRole('pemilik'))
+          window.history.replaceState({}, '', '/pemilik')
+        } else if(window.location.href.includes('staf')) {
+          dispatch(setRole('staf'))
+          window.history.replaceState({}, '', '/staf')
         } else {
-          setRole('pengantri')
+          dispatch(setRole('pengantri'))
           window.history.replaceState({}, '', '/pengantri')
         }
       } else {

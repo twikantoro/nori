@@ -8,23 +8,24 @@ import { render } from "@testing-library/react";
 const Signup: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [busy, setBusy]= useState(false)
+  const [nama, setNama] = useState('')
+  const [busy, setBusy] = useState(false)
 
   async function Signup() {
     if (validateEmail(email)) {
-      if (password.length<6){
+      if (password.length < 6) {
         toast('Password minimal 6 karakter')
         return false
       }
       setBusy(true)
       await signupUser(email, password, function (response: any) {
         setBusy(false)
-        if(response.substring(0,1)=='E'){
-          toast(response)
-        } else if(response.substring(0,3)=='Ber') {
-          toast(response)
-          //window.location.href = '/login'
-        }
+        console.log(response)
+        // if (response.substring(0, 1) == 'E') {
+        //   toast(response)
+        // } else if (response.substring(0, 3) == 'Ber') {
+        //   toast(response)
+        // }
       })
     } else {
       toast('Masukkan email yang valid')
@@ -33,25 +34,27 @@ const Signup: React.FC = () => {
 
   return (
     <IonPage id="Signup-page">
-      <IonHeader>
-        <IonButtons slot="start">
-          <IonMenuButton></IonMenuButton>
-        </IonButtons>
-        <IonToolbar>
-          <IonTitle>Signup</IonTitle>
-        </IonToolbar>
 
-      </IonHeader>
       <IonContent className="ion-padding">
+        <h1 className="ion-text-center">Daftar</h1>
         <IonLoading
           isOpen={busy}
         />
         <IonGrid>
 
           <IonList>
+            {/* <IonItem>
+              <IonInput
+                type="text"
+                name="nama"
+                placeholder="Nama Lengkap"
+                onIonChange={(e: any) => setNama(e.target.value)}
+              />
+            </IonItem> */}
             <IonItem>
               <IonInput
                 type="text"
+                name="email"
                 placeholder="Email"
                 onIonChange={(e: any) => setEmail(e.target.value)}
               />
@@ -59,6 +62,7 @@ const Signup: React.FC = () => {
             <IonItem>
               <IonInput
                 type="password"
+                name="password"
                 placeholder="Password"
                 onIonChange={(e: any) => setPassword(e.target.value)}
               />
@@ -71,15 +75,15 @@ const Signup: React.FC = () => {
                 type="submit"
                 expand="block"
                 onClick={Signup}
-              >Signup
+              >Daftar
               </IonButton>
             </IonCol>
 
           </IonRow>
           <IonRow className="ion-justify-content-center">
-            
-              <p>Sudah punya akun? <Link to="/login">Login</Link></p>
-            
+
+            <p>Sudah punya akun? <Link to="/login">Masuk</Link></p>
+
 
           </IonRow>
         </IonGrid>

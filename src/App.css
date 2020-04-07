@@ -17,3 +17,6 @@
 .ripple-transparent {
   --ripple-color: transparent;
 }
+.no-text-transform {
+  text-transform: none;
+}

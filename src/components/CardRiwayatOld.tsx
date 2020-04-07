@@ -18,8 +18,8 @@ interface OwnProps {
 
 interface CardAntrianProps extends OwnProps { }
 
-const CardRiwayat: React.FC<CardAntrianProps> = ({gerai,subLayanan,prefix,slot,tanggal,waktu,bintang,status,kebuka}) => {
-  const [expanded, setExpanded] = useState(true)
+const CardRiwayat: React.FC<CardAntrianProps> = ({gerai,subLayanan,prefix,slot,tanggal,waktu,bintang,status,kebuka=false}) => {
+  const [expanded, setExpanded] = useState(kebuka)
   const [stars, setStars] = useState(bintang)
   const [starsSet, setStarsSet] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
@@ -128,6 +128,24 @@ const CardRiwayat: React.FC<CardAntrianProps> = ({gerai,subLayanan,prefix,slot,t
       {expanded? '' : <>
       <IonItemDivider style={heightlessItemDivider} />
       <IonItem style={colorInherit} lines="none"><IonLabel style={width100}><p className="ion-text-center">1 April</p></IonLabel></IonItem></>}
+      {/* {
+  expanded ? <IonItem style={expandBtnStyle}>
+    <IonButton className="ripple-transparent" fill="clear" expand="block" style={expandBtnStyle} onClick={(e: any) => expanded ? setExpanded(false) : setExpanded(true)}>
+    <IonIcon icon={chevronUpSharp}></IonIcon>
+    </IonButton>
+  </IonItem> : ''
+} */}
+
+      {/* <IonItem className="ripple-transparent" style={expandBtnStyle} onClick={(e: any) => expanded ? setExpanded(false) : setExpanded(true)}>
+        <IonLabel>Detail</IonLabel>
+        <IonIcon icon={expanded ? chevronUpSharp : chevronDownSharp}></IonIcon>
+      </IonItem> */}
+
+      {/* {stars == 0 ? 
+      <IonItem lines="none">
+        
+      </IonItem>
+      : ''} */}
 
       <IonAlert
         isOpen={showAlert}

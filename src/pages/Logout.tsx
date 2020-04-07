@@ -1,16 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Redirect } from 'react-router'
 import { useDispatch } from 'react-redux'
 import { logoutUser } from '../config/firebaseConfig'
 import { unsetState } from '../redux/actions'
+import { IonLoading, IonContent } from '@ionic/react'
+import firebaseConfig from '../config/firebaseConfig'
 
 const Logout: React.FC = () => {
   const dispatch = useDispatch()
-  console.log(unsetState([]))
-  logoutUser()
-
+  const [busy,setBusy] = useState(true)
+  firebaseConfig.auth().signOut().then(()=>{
+    setBusy(false)
+  })
+  document.location.href = ""
   return (
-    <Redirect to="/login"></Redirect>
+    <IonContent>
+      <p>Logging out...</p>
+      <IonLoading isOpen={busy}></IonLoading>
+    </IonContent>
   )
 }
 

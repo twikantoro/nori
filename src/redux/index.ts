@@ -9,7 +9,7 @@ const initialState = {
       current: 67,
       perkiraan: "12:34",
       status: 'berlangsung'
-    },{
+    }, {
       id: 1235,
       gerai: "Bank Masahan",
       subLayanan: "Tukar Uang",
@@ -18,7 +18,7 @@ const initialState = {
       current: 12,
       perkiraan: "Besok pukul 14:30",
       status: 'terlambat'
-    },{
+    }, {
       id: 1236,
       gerai: "Bank Ngadirejo",
       subLayanan: "Tukar Uang",
@@ -35,6 +35,11 @@ export default function reducer(state = initialState,
   { type, payload }: { type: string, payload: any }): any {
   //work with state
   switch (type) {
+    case 'SET_TEMP_MESSAGE':
+      return {
+        ...state,
+        temp_message: payload
+      }
     case 'SET_USER_STATE':
       return {
         ...state,
@@ -53,7 +58,6 @@ export default function reducer(state = initialState,
         antrians: payload
       }
     case 'SET_ROLE':
-      console.log('ROLE: '+payload)
       return {
         ...state,
         role: payload

@@ -10,6 +10,10 @@ export const setAntrians = (payload: any) => {
   return { type: 'SET_ANTRIANS', payload }
 }
 
-export const setRole = (payload: string) => {
-  return { type: 'SET_ROLE', payload }
+export const setRole = (payload: any) => {
+  return { type: 'SET_ROLE', payload}
+}
+
+export const setTempMessage = (payload: any) => {
+  return {type: 'SET_TEMP_MESSAGE', payload}
 }

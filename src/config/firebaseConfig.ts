@@ -45,13 +45,15 @@ export async function loginUser(email: string, password: string, callback: Funct
         callback('User tidak ditemukan')
       } else if (response.code == 'auth/wrong-password') {
         callback('Password salah')
+      } else {
+        callback('Anda sedang offline')
       }
       //callback('Kombinasi email dan password salah')
     })
 
 }
 
-export async function signupUser(email: string, password: string, callback: Function) {
+export async function signupUserOld(email: string, password: string, callback: Function) {
   var params = {
     email: email,
     password: password
@@ -68,12 +70,24 @@ export async function signupUser(email: string, password: string, callback: Func
       }
     })
     .catch(function (error) {
-      // handle error
-      console.log(error);
+      callback('Anda sedang offline')
     })
     .then(function () {
       // always executed
     });
+}
+
+export async function signupUser(email: string, password: string, callback: Function) {
+  firebase.auth().createUserWithEmailAndPassword(email,password).then((response)=>{
+    callback('Berhasil')
+    document.location.href="/login"
+  }).catch((error)=>{
+    if(error=='Error: The email address is already in use by another account.'){
+      callback('Email sudah terdaftar')
+    } else {
+      callback('Terjadi kesalahan')
+    }
+  })
 }
 
 export function logoutUser() {
@@ -120,3 +134,8 @@ export function isStaf(callback: Function) {
     })
   })
 }
+
+export const providerGoogle = new firebase.auth.GoogleAuthProvider();
+export const providerFacebook = new firebase.auth.FacebookAuthProvider()
+
+export default firebase
