@@ -5,6 +5,7 @@ import { useSelector } from "react-redux"
 import { Link, Route } from "react-router-dom"
 import Logout from "../../pages/Logout"
 import AkunPage from "../../pages/AkunPage"
+import AkunPemilik from "../../pages/AkunPemilik"
 
 const AkunTab: React.FC = () => {
   const username = useSelector((state: any) => state.user.username)
@@ -15,7 +16,7 @@ const AkunTab: React.FC = () => {
   return (
     <IonPage>
       <IonReactRouter>
-        <Route exact path="/pemilik/akun" component={AkunPage} />
+        <Route exact path="/pemilik/akun" component={AkunPemilik} />
         <Route exact path="/pemilik/akun/logout" component={Logout}></Route>
       </IonReactRouter>
     </IonPage>

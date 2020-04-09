@@ -2,6 +2,7 @@ import axios from 'axios';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import { callbackify } from 'util';
 
 // Replace this with your own config details
 var apiSite = "http://localhost:5000"
@@ -90,8 +91,10 @@ export async function signupUser(email: string, password: string, callback: Func
   })
 }
 
-export function logoutUser() {
-  firebase.auth().signOut()
+export function logoutUser(callback: any) {
+  firebase.auth().signOut().then(()=>{
+    callback(true)
+  })
 }
 
 export function getCurrentUser() {

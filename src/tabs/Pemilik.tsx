@@ -4,6 +4,7 @@ import React from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import AkunTab from './pemilik/AkunTab'
 import GeraiTab from './pemilik/GeraiTab'
+import Logout from '../pages/Logout'
 
 const Pemilik: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const Pemilik: React.FC = () => {
         <Redirect exact from="/pemilik" to="/pemilik/gerai" />
         <Route path="/pemilik/gerai" render={() => <GeraiTab />} exact={true} />
         <Route path="/pemilik/akun" render={() => <AkunTab />} exact={true} />
+        <Route path="/logout" render={() => <Logout />} exact={true} />
       </IonRouterOutlet>
       <IonTabBar slot="bottom" selectedTab="antrian">
         <IonTabButton tab="gerai" href="/pemilik/gerai" selected>
