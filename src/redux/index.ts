@@ -28,7 +28,13 @@ const initialState = {
       perkiraan: "12:34",
       status: 'dipesan'
     }
-  ]
+  ],
+  pemilik: {
+    isRegistered: false
+  },
+  geraisLoaded: false,
+  gerais: new Array(0),
+  geraiNeedsUpdate: false
 }
 
 export default function reducer(state = initialState,
@@ -61,6 +67,54 @@ export default function reducer(state = initialState,
       return {
         ...state,
         role: payload
+      }
+    case 'SET_PEMILIK_DATA':
+      return {
+        ...state,
+        pemilik: payload
+      }
+    case 'GERAI_NEEDS_UPDATE':
+      return {
+        ...state,
+        geraiNeedsUpdate: payload
+      }
+    case 'GERAIS_LOADED':
+      return {
+        ...state,
+        geraisLoaded: payload
+      }
+    case 'SET_GERAIS':
+      return {
+        ...state,
+        gerais: payload
+      }
+    case 'SET_LOCAL_TOKEN':
+      return {
+        ...state,
+        tokenLastUpdated: payload.updated,
+        token: payload.token
+      }
+
+    case 'ADD_GERAI':
+      return {
+        ...state,
+        gerais: state.gerais.concat(payload),
+        geraiNeedsUpdate: true
+      }
+
+    case 'REMOVE_GERAI':
+      var newGerais = new Array
+      var i = 0
+      state.gerais.forEach(oldGerai => {
+        if (oldGerai.kode !== payload.kode) {
+          newGerais[i] = oldGerai
+          i++
+        }
+      })
+      return {
+        ...state,
+        gerais: newGerais,
+        geraiNeedsUpdate: true
       }
   }
 }

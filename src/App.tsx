@@ -31,6 +31,7 @@ import { useDispatch, connect, useSelector } from 'react-redux';
 import { setUserState, setRole } from './redux/actions';
 import { getCurrentUser, isPemilik, isStaf } from './config/firebaseConfig'
 import Pemilik from './tabs/Pemilik';
+import BusyPage from './pages/Busy';
 
 const RoutingSystem: React.FC = () => {
   return (
@@ -42,7 +43,6 @@ const RoutingSystem: React.FC = () => {
         <Route exact path="/login" component={Login} />
         <Route exact path="/signup" component={Signup} />
       </IonRouterOutlet>
-
     </IonReactRouter>
   )
 }
@@ -92,7 +92,7 @@ const App: React.FC = () => {
       setBusy(false)
     })
   }, [])
-  return <IonApp>{busy ? <IonPage><IonContent><IonGrid><IonRow className="ion-justify-content-center ion-align-items-end height-50-percent"><IonSpinner name="dots" /></IonRow><IonRow></IonRow></IonGrid></IonContent></IonPage> : <RoutingSystem />}</IonApp>
+  return <IonApp>{busy ? <BusyPage /> : <RoutingSystem />}</IonApp>
 };
 
 export default connect()(App);

@@ -2,7 +2,7 @@ import axios from 'axios';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
-import { callbackify } from 'util';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Replace this with your own config details
 var apiSite = "http://localhost:5000"
@@ -111,7 +111,16 @@ export function getCurrentUser() {
 }
 
 export function getToken() {
+  // var date = Date.now()
+  // var timestamp = Math.floor(date/1000)+3600
+  // var lastUpdated = useSelector((state:any)=>state.tokenLastUpdated)
   return new Promise((resolve, reject) => {
+    //if not expired
+    // if(lastUpdated>=timestamp){
+    //   resolve(useSelector((state:any)=>state.token))
+    //   return true
+    // }
+    //if expired
     firebase.auth().currentUser?.getIdToken(true).then(function (idToken) {
       resolve(idToken)
     }).catch(function (error) {

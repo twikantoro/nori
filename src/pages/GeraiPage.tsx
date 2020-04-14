@@ -1,24 +1,52 @@
-import React, { useState, useEffect } from "react"
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonSegment, IonSegmentButton, IonLabel, IonRefresher, IonRefresherContent, IonList, IonFab, IonFabButton, IonIcon, IonListHeader, IonItem } from "@ionic/react"
-import CardAntrian from "../components/CardAntrian"
-import { useSelector, connect } from "react-redux"
-import $ from 'jquery'
-import { arrowForwardCircle, addCircle, add, chevronForwardOutline } from "ionicons/icons"
+import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCol, IonContent, IonHeader, IonItem, IonLabel, IonList, IonLoading, IonRow, IonTitle, IonToolbar } from "@ionic/react"
+import React, { useEffect, useState } from "react"
+import { connect, useDispatch, useSelector } from "react-redux"
 
-const DefaultAntrianPage: React.FC = () => {
+const GeraiPage: React.FC = () => {
+  const [busy, setBusy] = useState(false)
   const curl = '/pemilik/gerai'
-  const antrians = useSelector((state: any) => state.antrians)
-  const theState = useSelector((state: any) => state)
   const [activeSegment, setActiveSegment] = useState('berlangsung')
-  //console.log(antrians)
-  const shown = { display: 'block' }
-  const hidden = { display: 'none' }
+  const gerais = useSelector((state: any) => state.gerais)
+  const geraisLoadedvar = useSelector((state: any) => state.geraisLoaded)
+  const dispatch = useDispatch()
+  const id_pemilik = useSelector((state: any) => state.pemilik.id)
+  const state = useSelector((state: any) => state)
+  //gerais
+  const [localGerais, setLocalGerais] = useState([])
+  //trying
+  const [waiting,setWaiting] = useState(true)
 
-  const swithSegmentTo = (segment: any) => {
-    setActiveSegment(segment)
-    //console.log(activeSegment)
-    $('.customSegments').hide()
-    $('#segment-' + segment).show()
+  useEffect(() => {
+    setLocalGerais(gerais)
+    setTimeout(function(){
+      setWaiting(false)
+    },1000)
+  })
+
+  console.log("state: ", state)
+
+  interface GeraiProps { data: any }
+  const Gerai: React.FC<GeraiProps> = (data: any) => {
+    return (
+      <IonCard>
+        <IonCardHeader>
+          <IonItem>
+            <IonLabel>
+              <h3><b>{data.nama}</b></h3>
+              <p>{data.kode}</p>
+            </IonLabel>
+          </IonItem>
+        </IonCardHeader>
+        <IonCardContent>
+          <IonRow>
+            <IonCol>
+              <IonCardSubtitle>SOmething</IonCardSubtitle>
+              SOmething else
+            </IonCol>
+          </IonRow>
+        </IonCardContent>
+      </IonCard>
+    )
   }
 
   return (
@@ -29,19 +57,46 @@ const DefaultAntrianPage: React.FC = () => {
             Gerai
           </IonTitle>
         </IonToolbar>
-        </IonHeader>
+      </IonHeader>
       <IonContent>
-      <IonList mode="md">
-        <IonItem button routerLink={curl+"/daftar"}>
-          <IonLabel>
-            Daftarkan gerai baru
-          </IonLabel>
-          <IonIcon icon={chevronForwardOutline} />
-        </IonItem>
-      </IonList>
+        <IonLoading isOpen={busy} />
+        <IonList mode="md">
+          {localGerais[0] ? (
+            localGerais.map(function (gerai: any) {
+              return (
+                <IonItem key={gerai.kode} button routerLink={curl+"/"+gerai.kode}>
+                  <IonAvatar>
+                    <img src="/assets/img/location-outline.png" />
+                  </IonAvatar>
+                  <IonLabel>
+                    <h3>{gerai.nama}</h3>
+                    <p>{gerai.kode}</p>
+                  </IonLabel>
+                </IonItem>
+              )
+            })
+          ) : (
+              <IonItem>
+                <IonLabel>
+                  Anda tidak memiliki gerai
+                </IonLabel>
+              </IonItem>
+            )}
+          <IonItem button routerLink={curl + "/daftar"}>
+            <IonAvatar>
+              <img src="/assets/img/add-circle-outline.png" />
+            </IonAvatar>
+            <IonLabel>
+              <p>
+                Daftarkan gerai baru
+              </p>
+            </IonLabel>
+            
+          </IonItem>
+        </IonList>
       </IonContent>
-      </>
+    </>
   )
 }
 
-export default connect()(DefaultAntrianPage)
+export default connect()(GeraiPage)

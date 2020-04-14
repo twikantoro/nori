@@ -2,9 +2,10 @@ import { IonPage } from "@ionic/react"
 import { IonReactRouter } from "@ionic/react-router"
 import React from "react"
 import { useSelector } from "react-redux"
-import { Route, Redirect } from "react-router-dom"
+import { Route, Redirect, Switch } from "react-router-dom"
 import GeraiPage from "../../pages/GeraiPage"
 import DaftarGeraiPage from "../../pages/DaftarGeraiPage"
+import GeraiDetailPemilik from "../../pages/GeraiDetailPemilik"
 
 const GeraiTab: React.FC = () => {
   const username = useSelector((state: any) => state.user.username)
@@ -15,9 +16,12 @@ const GeraiTab: React.FC = () => {
   return (
     <IonPage>
       <IonReactRouter>
-        <Redirect to="/pemilik/gerai/daftar" from="/" />
-        <Route exact path="/pemilik/gerai" component={GeraiPage}></Route>
-        <Route exact path="/pemilik/gerai/daftar" component={DaftarGeraiPage}></Route>
+        <Switch>
+          {/* <Redirect to="/pemilik/gerai/daftar" from="/" /> */}
+          <Route exact path="/pemilik/gerai" component={GeraiPage}></Route>
+          <Route exact path="/pemilik/gerai/daftar" component={DaftarGeraiPage}></Route>
+          <Route exact path="/pemilik/gerai/:id" component={GeraiDetailPemilik} />
+        </Switch>
       </IonReactRouter>
     </IonPage>
   )

@@ -1,0 +1,12 @@
+GET /pemilik/me
+with token
+  {
+    id: id
+    ...
+  }
+
+GET /pemilik/:id
+  {
+    id: id
+    ...
+  }

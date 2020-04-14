@@ -20,3 +20,6 @@
 .no-text-transform {
   text-transform: none;
 }
+.custom-hidden {
+  display: none;
+}
