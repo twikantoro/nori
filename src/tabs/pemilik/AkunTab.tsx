@@ -2,11 +2,12 @@ import { IonPage } from "@ionic/react"
 import { IonReactRouter } from "@ionic/react-router"
 import React from "react"
 import { useSelector } from "react-redux"
-import { Route } from "react-router-dom"
-import DefaultRiwayatPage from '../../pages/RiwayatPage'
-import RiwayatDetailPage from "../../pages/RiwayatDetailPage"
+import { Link, Route } from "react-router-dom"
+import Logout from "../../pages/Logout"
+import AkunPage from "../../pages/AkunPage"
+import AkunPemilik from "../../pages/AkunPemilik"
 
-const AntrianTab: React.FC = () => {
+const AkunTab: React.FC = () => {
   const username = useSelector((state: any) => state.user.username)
   const antrians = useSelector((state: any) => state.antrians)
   const state = useSelector((state: any) => state)
@@ -15,11 +16,11 @@ const AntrianTab: React.FC = () => {
   return (
     <IonPage>
       <IonReactRouter>
-        <Route exact path="/pengantri/riwayat/detail" component={RiwayatDetailPage} />
-        <Route exact path="/pengantri/riwayat" component={DefaultRiwayatPage} />
+        <Route exact path="/pemilik/akun" component={AkunPemilik} />
+        <Route exact path="/pemilik/akun/logout" component={Logout}></Route>
       </IonReactRouter>
     </IonPage>
   )
 }
 
-export default AntrianTab
+export default AkunTab

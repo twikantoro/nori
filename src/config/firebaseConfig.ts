@@ -2,6 +2,7 @@ import axios from 'axios';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Replace this with your own config details
 var apiSite = "http://localhost:5000"
@@ -45,13 +46,15 @@ export async function loginUser(email: string, password: string, callback: Funct
         callback('User tidak ditemukan')
       } else if (response.code == 'auth/wrong-password') {
         callback('Password salah')
+      } else {
+        callback('Anda sedang offline')
       }
       //callback('Kombinasi email dan password salah')
     })
 
 }
 
-export async function signupUser(email: string, password: string, callback: Function) {
+export async function signupUserOld(email: string, password: string, callback: Function) {
   var params = {
     email: email,
     password: password
@@ -68,16 +71,30 @@ export async function signupUser(email: string, password: string, callback: Func
       }
     })
     .catch(function (error) {
-      // handle error
-      console.log(error);
+      callback('Anda sedang offline')
     })
     .then(function () {
       // always executed
     });
 }
 
-export function logoutUser() {
-  firebase.auth().signOut()
+export async function signupUser(email: string, password: string, callback: Function) {
+  firebase.auth().createUserWithEmailAndPassword(email,password).then((response)=>{
+    callback('Berhasil')
+    document.location.href="/login"
+  }).catch((error)=>{
+    if(error=='Error: The email address is already in use by another account.'){
+      callback('Email sudah terdaftar')
+    } else {
+      callback('Terjadi kesalahan')
+    }
+  })
+}
+
+export function logoutUser(callback: any) {
+  firebase.auth().signOut().then(()=>{
+    callback(true)
+  })
 }
 
 export function getCurrentUser() {
@@ -94,7 +111,16 @@ export function getCurrentUser() {
 }
 
 export function getToken() {
+  // var date = Date.now()
+  // var timestamp = Math.floor(date/1000)+3600
+  // var lastUpdated = useSelector((state:any)=>state.tokenLastUpdated)
   return new Promise((resolve, reject) => {
+    //if not expired
+    // if(lastUpdated>=timestamp){
+    //   resolve(useSelector((state:any)=>state.token))
+    //   return true
+    // }
+    //if expired
     firebase.auth().currentUser?.getIdToken(true).then(function (idToken) {
       resolve(idToken)
     }).catch(function (error) {
@@ -120,3 +146,8 @@ export function isStaf(callback: Function) {
     })
   })
 }
+
+export const providerGoogle = new firebase.auth.GoogleAuthProvider();
+export const providerFacebook = new firebase.auth.FacebookAuthProvider()
+
+export default firebase

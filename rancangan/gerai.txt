@@ -1,0 +1,47 @@
+GET /gerai/mine/all
+with token
+  [
+    {
+      id: id
+      ...
+    },
+    ...
+  ]
+  or false
+
+GET /gerai/mine/list
+with token
+  [
+    {
+      id: id
+      ...
+    },
+    ...
+  ]
+  or false
+
+GET /gerai/mine/list/:start/:stop
+with token
+  [
+    {
+      id: id
+      ...
+    },
+    ...
+  ]
+  or false
+
+GET /gerai/mine/:id
+with token
+  {
+    id: id
+    ...
+  }
+  or false
+
+GET /gerai/:id
+  {
+    id: id
+    ...
+  }
+
