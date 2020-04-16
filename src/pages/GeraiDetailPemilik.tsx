@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { IonTitle, IonToolbar, IonButtons, IonBackButton, IonHeader, IonContent, IonButton, IonLoading } from '@ionic/react'
+import { IonTitle, IonToolbar, IonButtons, IonBackButton, IonHeader, IonContent, IonButton, IonLoading, IonItem, IonAvatar, IonLabel, IonList } from '@ionic/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { hapusGeraiAsync, geraiNeedsUpdate } from '../redux/actions'
 import { getToken } from '../config/firebaseConfig'
@@ -56,6 +56,16 @@ const GeraiDetailPemilik: React.FC = (data: any) => {
       </IonHeader>
       <IonContent className="ion-padding">
         <IonLoading isOpen={busy} />
+        <IonList>
+          <IonItem>
+            <IonAvatar>
+              <img src="/assets/img/hourglass-outline.svg" />
+            </IonAvatar>
+            <IonLabel>
+              
+            </IonLabel>
+          </IonItem>
+        </IonList>
         <IonButton color="danger" onClick={() => hapusGerai()}>Hapus Gerai</IonButton>
       </IonContent>
       <IonButton id="btn-back" className="custom-hidden" routerLink="/pemilik/gerai" />

@@ -66,7 +66,7 @@ const GeraiPage: React.FC = () => {
               return (
                 <IonItem key={gerai.kode} button routerLink={curl+"/"+gerai.kode}>
                   <IonAvatar>
-                    <img src="/assets/img/location-outline.png" />
+                    <img src="/assets/img/location-outline.svg" />
                   </IonAvatar>
                   <IonLabel>
                     <h3>{gerai.nama}</h3>
@@ -84,7 +84,7 @@ const GeraiPage: React.FC = () => {
             )}
           <IonItem button routerLink={curl + "/daftar"}>
             <IonAvatar>
-              <img src="/assets/img/add-circle-outline.png" />
+              <img src="/assets/img/add-circle-outline.svg" />
             </IonAvatar>
             <IonLabel>
               <p>
