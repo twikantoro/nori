@@ -1,4 +1,4 @@
-import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCol, IonContent, IonHeader, IonItem, IonLabel, IonList, IonLoading, IonRow, IonTitle, IonToolbar } from "@ionic/react"
+import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCol, IonContent, IonHeader, IonItem, IonLabel, IonList, IonLoading, IonRow, IonTitle, IonToolbar, IonItemDivider } from "@ionic/react"
 import React, { useEffect, useState } from "react"
 import { connect, useDispatch, useSelector } from "react-redux"
 
@@ -14,13 +14,13 @@ const GeraiPage: React.FC = () => {
   //gerais
   const [localGerais, setLocalGerais] = useState([])
   //trying
-  const [waiting,setWaiting] = useState(true)
+  const [waiting, setWaiting] = useState(true)
 
   useEffect(() => {
     setLocalGerais(gerais)
-    setTimeout(function(){
+    setTimeout(function () {
       setWaiting(false)
-    },1000)
+    }, 1000)
   })
 
   console.log("state: ", state)
@@ -60,11 +60,16 @@ const GeraiPage: React.FC = () => {
       </IonHeader>
       <IonContent>
         <IonLoading isOpen={busy} />
+        <IonItemDivider mode="ios">
+          <IonLabel>
+            Gerai
+            </IonLabel>
+        </IonItemDivider>
         <IonList mode="md">
           {localGerais[0] ? (
             localGerais.map(function (gerai: any) {
               return (
-                <IonItem key={gerai.kode} button routerLink={curl+"/"+gerai.kode}>
+                <IonItem key={gerai.kode} button routerLink={curl + "/" + gerai.kode}>
                   <IonAvatar>
                     <img src="/assets/img/location-outline.svg" />
                   </IonAvatar>
@@ -82,6 +87,11 @@ const GeraiPage: React.FC = () => {
                 </IonLabel>
               </IonItem>
             )}
+          <IonItemDivider mode="ios">
+            <IonLabel>
+              Action
+            </IonLabel>
+          </IonItemDivider>
           <IonItem button routerLink={curl + "/daftar"}>
             <IonAvatar>
               <img src="/assets/img/add-circle-outline.svg" />
@@ -91,7 +101,7 @@ const GeraiPage: React.FC = () => {
                 Daftarkan gerai baru
               </p>
             </IonLabel>
-            
+
           </IonItem>
         </IonList>
       </IonContent>

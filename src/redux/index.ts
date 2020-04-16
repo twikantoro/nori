@@ -34,7 +34,9 @@ const initialState = {
   },
   geraisLoaded: false,
   gerais: new Array(0),
-  geraiNeedsUpdate: false
+  geraiNeedsUpdate: false,
+  layanansAreUpated: false,
+  layanans: new Array(0)
 }
 
 export default function reducer(state = initialState,
@@ -108,13 +110,25 @@ export default function reducer(state = initialState,
       state.gerais.forEach(oldGerai => {
         if (oldGerai.kode !== payload.kode) {
           newGerais[i] = oldGerai
-          i++
         }
+        i++
       })
       return {
         ...state,
         gerais: newGerais,
         geraiNeedsUpdate: true
+      }
+    case 'LAYANANS_ARE_UPDATED':
+      return {
+        ...state,
+        layanansAreUpated: payload
+      }
+    case 'SET_LAYANANS':
+      var newLayanans = state.layanans
+      newLayanans[payload.kode] = payload.layanans
+      return {
+        ...state,
+        layanans: newLayanans
       }
   }
 }

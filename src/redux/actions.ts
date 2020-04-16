@@ -75,3 +75,39 @@ export const hapusGeraiAsync = (payload: any) => {
     })
   }
 }
+
+export const setLayanans = (payload: any) => {
+  return { type: 'SET_LAYANANS', payload }
+}
+
+export const fetchLayanansAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite+"/layanan/getAllByKode?"+queryString.stringify(payload)).then(response => {
+      var newPayload = {
+        kode: payload.kode,
+        layanans: response
+      }
+      dispatch(setLayanans(newPayload))
+    })
+  }
+}
+
+export const layanansAreUpdated = (payload: any) => {
+  return { type: 'LAYANANS_ARE_UPDATED', payload }
+}
+
+export const loadLayanansAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite+"/layanan/getAllByKode?"+queryString.stringify(payload)).then(response => {
+      var newPayload = {
+        kode: payload.kode,
+        layanans: response
+      }
+      dispatch(setLayanans(newPayload))
+    })
+  }
+}
+
+export const loadingLayananIsCompleteGlobal = (payload: any) => {
+  return { type: 'LOADING_LAYANAN_IS_COMPLETE', payload }
+}
