@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { IonTitle, IonToolbar, IonButtons, IonBackButton, IonHeader, IonContent, IonButton, IonLoading, IonItem, IonAvatar, IonLabel, IonList, IonSpinner } from '@ionic/react'
+import { IonTitle, IonToolbar, IonButtons, IonBackButton, IonHeader, IonContent, IonButton, IonLoading, IonItem, IonAvatar, IonLabel, IonList, IonSpinner, IonItemDivider, IonIcon } from '@ionic/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { hapusGeraiAsync, geraiNeedsUpdate, fetchLayanansAsync, layanansAreUpdated, loadLayanansAsync, loadingLayananIsCompleteGlobal } from '../redux/actions'
 import { getToken } from '../config/firebaseConfig'
 import { Link } from 'react-router-dom'
 import { toast } from '../components/toast'
 import $ from 'jquery'
+import { trashOutline } from 'ionicons/icons'
 
 
 /*
@@ -22,7 +23,7 @@ Briefing
 */
 
 const GeraiDetailPemilik: React.FC = (data: any) => {
-  const loadingLayananIsComplete = useSelector((state:any) => state.loadingLayananIsComplete)
+  const loadingLayananIsComplete = useSelector((state: any) => state.loadingLayananIsComplete)
   const [isLoadingLayanans, setIsLoadingLayanans] = useState(true)
   const layanansAreUpdatedLocal = useSelector((state: any) => state.layanansAreUpdated)
   const [layanansAreSet, setLayanansAreSet] = useState(false)
@@ -31,9 +32,9 @@ const GeraiDetailPemilik: React.FC = (data: any) => {
   const dispatch = useDispatch()
   const id_pemilik = useSelector((state: any) => state.pemilik.id)
   const gerais = useSelector((state: any) => state.gerais)
-  if (typeof gerais.layanans) {
-    setLayanansAreSet(true)
-  }
+  // if (typeof gerais.layanans) {
+  //   setLayanansAreSet(true)
+  // }
   const urls = window.location.href.split("/")
   const kode = urls[urls.length - 1]
   const curl = '/pemilik/gerai/' + kode
@@ -59,6 +60,15 @@ const GeraiDetailPemilik: React.FC = (data: any) => {
     dispatch(hapusGeraiAsync(params))
   }
 
+  var payload = {
+    kode: kode
+  }
+
+  if (!isLoadingLayanans) {
+    dispatch(loadLayanansAsync(payload))
+    setIsLoadingLayanans(false)
+  }
+
   useEffect(() => {
     if (geraiNeedsUpdateLocal) {
       setBusy(false)
@@ -67,12 +77,8 @@ const GeraiDetailPemilik: React.FC = (data: any) => {
       toast("Berhasil dihapus")
     }
     //dispatching. everytime it loads
-    var payload = {
-      kode: kode
-    }
-    dispatch(loadLayanansAsync(payload))
+
     if (loadingLayananIsComplete) {
-      setIsLoadingLayanans(false)
       dispatch(loadingLayananIsCompleteGlobal(false))
     }
   })
@@ -87,9 +93,14 @@ const GeraiDetailPemilik: React.FC = (data: any) => {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent >
         <IonLoading isOpen={busy} />
         <IonList mode="md">
+          <IonItemDivider mode="ios">
+            <IonLabel>
+              Layanan
+            </IonLabel>
+          </IonItemDivider>
           {
             isLoadingLayanans ? (
               <IonItem>
@@ -113,22 +124,34 @@ const GeraiDetailPemilik: React.FC = (data: any) => {
                 ) : (
                     <IonItem>
                       <IonLabel>
-                        Anda tidak memiliki gerai
+                        Gerai ini tidak memiliki layanan
                     </IonLabel>
                     </IonItem>
                   )
               )
           }
+          <IonItemDivider mode="ios">
+            <IonLabel>
+              Action
+            </IonLabel>
+          </IonItemDivider>
           <IonItem button routerLink={curl + "/daftar"}>
             <IonAvatar>
               <img src="/assets/img/add-circle-outline.svg" />
             </IonAvatar>
             <IonLabel>
               <p>
-                Daftarkan gerai baru
+                Buat layanan baru
               </p>
             </IonLabel>
-
+          </IonItem>
+          <IonItem button onClick={() => hapusGerai()}>
+            <IonIcon icon={trashOutline} />
+            <IonLabel>
+              <p color="danger">
+                Hapus gerai
+              </p>
+            </IonLabel>
           </IonItem>
         </IonList>
         <IonButton color="danger" onClick={() => hapusGerai()}>Hapus Gerai</IonButton>

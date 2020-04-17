@@ -1,6 +1,7 @@
-import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCol, IonContent, IonHeader, IonItem, IonLabel, IonList, IonLoading, IonRow, IonTitle, IonToolbar, IonItemDivider } from "@ionic/react"
+import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCol, IonContent, IonHeader, IonItem, IonLabel, IonList, IonLoading, IonRow, IonTitle, IonToolbar, IonItemDivider, IonIcon } from "@ionic/react"
 import React, { useEffect, useState } from "react"
 import { connect, useDispatch, useSelector } from "react-redux"
+import { locationOutline, addCircleOutline } from "ionicons/icons"
 
 const GeraiPage: React.FC = () => {
   const [busy, setBusy] = useState(false)
@@ -70,9 +71,7 @@ const GeraiPage: React.FC = () => {
             localGerais.map(function (gerai: any) {
               return (
                 <IonItem key={gerai.kode} button routerLink={curl + "/" + gerai.kode}>
-                  <IonAvatar>
-                    <img src="/assets/img/location-outline.svg" />
-                  </IonAvatar>
+                  <IonIcon icon={locationOutline} color="black" size="large" /> &nbsp;
                   <IonLabel>
                     <h3>{gerai.nama}</h3>
                     <p>{gerai.kode}</p>
@@ -93,9 +92,7 @@ const GeraiPage: React.FC = () => {
             </IonLabel>
           </IonItemDivider>
           <IonItem button routerLink={curl + "/daftar"}>
-            <IonAvatar>
-              <img src="/assets/img/add-circle-outline.svg" />
-            </IonAvatar>
+            <IonIcon size="large" icon={addCircleOutline} color="dark" /> &nbsp;
             <IonLabel>
               <p>
                 Daftarkan gerai baru
