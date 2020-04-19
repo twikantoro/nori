@@ -1,0 +1,7 @@
+ <IonChip onClick={() => toggleHari(0)} color={sen ? "primary" : "light"} outline={true}>S</IonChip>
+            <IonChip onClick={() => toggleHari(1)} color={sel ? "primary" : "light"} outline={true}>S</IonChip>
+            <IonChip onClick={() => toggleHari(2)} color={rab ? "primary" : "light"} outline={true}>R</IonChip>
+            <IonChip onClick={() => toggleHari(3)} color={kam ? "primary" : "light"} outline={true}>K</IonChip>
+            <IonChip onClick={() => toggleHari(4)} color={jum ? "primary" : "light"} outline={true}>J</IonChip>
+            <IonChip onClick={() => toggleHari(5)} color={sab ? "primary" : "light"} outline={true}>S</IonChip>
+            <IonChip onClick={() => toggleHari(6)} color={min ? "primary" : "light"} outline={true}>M</IonChip>

@@ -6,6 +6,7 @@ import { Route, Redirect, Switch } from "react-router-dom"
 import GeraiPage from "../../pages/GeraiPage"
 import DaftarGeraiPage from "../../pages/DaftarGeraiPage"
 import GeraiDetailPemilik from "../../pages/GeraiDetailPemilik"
+import TambahLayananPage from "../../pages/TambahLayanan"
 
 const GeraiTab: React.FC = () => {
   const username = useSelector((state: any) => state.user.username)
@@ -21,6 +22,7 @@ const GeraiTab: React.FC = () => {
           <Route exact path="/pemilik/gerai" component={GeraiPage}></Route>
           <Route exact path="/pemilik/gerai/daftar" component={DaftarGeraiPage}></Route>
           <Route exact path="/pemilik/gerai/:id" component={GeraiDetailPemilik} />
+          <Route exact path="/pemilik/gerai/:id/tambah" component={TambahLayananPage} />
         </Switch>
       </IonReactRouter>
     </IonPage>

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { IonTitle, IonToolbar, IonButtons, IonBackButton, IonHeader, IonContent, IonButton, IonLoading, IonItem, IonAvatar, IonLabel, IonList, IonSpinner, IonItemDivider, IonIcon } from '@ionic/react'
+import { IonTitle, IonToolbar, IonButtons, IonBackButton, IonHeader, IonContent, IonButton, IonLoading, IonItem, IonAvatar, IonLabel, IonList, IonSpinner, IonItemDivider, IonIcon, IonAlert } from '@ionic/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { hapusGeraiAsync, geraiNeedsUpdate, fetchLayanansAsync, layanansAreUpdated, loadLayanansAsync, loadingLayananIsCompleteGlobal } from '../redux/actions'
 import { getToken } from '../config/firebaseConfig'
 import { Link } from 'react-router-dom'
 import { toast } from '../components/toast'
 import $ from 'jquery'
-import { trashOutline } from 'ionicons/icons'
+import { trashOutline, addCircleOutline } from 'ionicons/icons'
 
 
 /*
@@ -23,6 +23,7 @@ Briefing
 */
 
 const GeraiDetailPemilik: React.FC = (data: any) => {
+  const [showAlertDelete,setShowAlertDelete] = useState(false)
   const loadingLayananIsComplete = useSelector((state: any) => state.loadingLayananIsComplete)
   const [isLoadingLayanans, setIsLoadingLayanans] = useState(true)
   const layanansAreUpdatedLocal = useSelector((state: any) => state.layanansAreUpdated)
@@ -58,6 +59,18 @@ const GeraiDetailPemilik: React.FC = (data: any) => {
       kode: geraiDetails.kode
     }
     dispatch(hapusGeraiAsync(params))
+  }
+
+  function hapusGeraiAlert() {
+    setShowAlertDelete(true)
+  }
+
+  function hapusGeraiConfirm() {
+    if($("#konfirmasi-hapus").val()==kode){
+      hapusGerai()
+    } else {
+      toast("Konfirmasi gagal. Batal dihapus")
+    }
   }
 
   var payload = {
@@ -102,7 +115,7 @@ const GeraiDetailPemilik: React.FC = (data: any) => {
             </IonLabel>
           </IonItemDivider>
           {
-            isLoadingLayanans ? (
+            loadingLayananIsComplete ? (
               <IonItem>
                 <IonSpinner></IonSpinner>
               </IonItem>
@@ -135,26 +148,47 @@ const GeraiDetailPemilik: React.FC = (data: any) => {
               Action
             </IonLabel>
           </IonItemDivider>
-          <IonItem button routerLink={curl + "/daftar"}>
-            <IonAvatar>
-              <img src="/assets/img/add-circle-outline.svg" />
-            </IonAvatar>
+          <IonItem button routerLink={curl + "/tambah"}>
+          <IonIcon icon={addCircleOutline} size="large" color="dark" /> &nbsp;
             <IonLabel>
-              <p>
-                Buat layanan baru
-              </p>
+              <h3>Tambahkan layanan baru</h3>
             </IonLabel>
           </IonItem>
-          <IonItem button onClick={() => hapusGerai()}>
-            <IonIcon icon={trashOutline} />
+          <IonItem button onClick={() => hapusGeraiAlert()}>
+            <IonIcon icon={trashOutline} size="large" color="danger" /> &nbsp;
             <IonLabel>
-              <p color="danger">
-                Hapus gerai
-              </p>
+              <h3>Hapus gerai</h3>
             </IonLabel>
           </IonItem>
         </IonList>
-        <IonButton color="danger" onClick={() => hapusGerai()}>Hapus Gerai</IonButton>
+        <IonAlert
+          isOpen={showAlertDelete}
+          onDidDismiss={() => setShowAlertDelete(false)}
+          header={'Hapus gerai?'}
+          message={'Mohon ketik <b>'+kode+'</b> untuk mengonfirmasi'}
+          buttons={[
+            {
+              text: 'Batal',
+              role: 'cancel',
+              handler: blah => {
+                //console.log('Confirm Cancel: blah');
+              }
+            },
+            {
+              text: 'Hapus',
+              handler: () => {
+                hapusGeraiConfirm()
+              }
+            }
+          ]}
+          inputs={
+            [{
+              id: 'konfirmasi-hapus',
+              type: 'text',
+              placeholder: 'Kode gerai'
+            }]
+          }
+        />
       </IonContent>
       <IonButton id="btn-back" className="custom-hidden" routerLink="/pemilik/gerai" />
     </>

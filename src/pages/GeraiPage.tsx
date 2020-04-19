@@ -94,9 +94,9 @@ const GeraiPage: React.FC = () => {
           <IonItem button routerLink={curl + "/daftar"}>
             <IonIcon size="large" icon={addCircleOutline} color="dark" /> &nbsp;
             <IonLabel>
-              <p>
+              <h3>
                 Daftarkan gerai baru
-              </p>
+              </h3>
             </IonLabel>
 
           </IonItem>
