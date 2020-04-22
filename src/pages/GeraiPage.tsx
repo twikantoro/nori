@@ -74,7 +74,7 @@ const GeraiPage: React.FC = () => {
                   <IonIcon icon={locationOutline} color="black" size="large" /> &nbsp;
                   <IonLabel>
                     <h3>{gerai.nama}</h3>
-                    <p>{gerai.kode}</p>
+                    <p>@{gerai.kode}</p>
                   </IonLabel>
                 </IonItem>
               )
@@ -88,7 +88,7 @@ const GeraiPage: React.FC = () => {
             )}
           <IonItemDivider mode="ios">
             <IonLabel>
-              Action
+              Opsi
             </IonLabel>
           </IonItemDivider>
           <IonItem button routerLink={curl + "/daftar"}>

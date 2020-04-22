@@ -1,6 +1,7 @@
 import Axios from "axios"
 import queryString from "query-string"
 import apiSite from "../config/apiSite"
+import { stringify } from "querystring"
 
 export const setUserState = (payload: any) => {
   return { type: 'SET_USER_STATE', payload }
@@ -70,7 +71,7 @@ export const removeGerai = (payload: any) => {
 
 export const hapusGeraiAsync = (payload: any) => {
   return (dispatch: any) => {
-    Axios.get(apiSite+"/gerai/deletebykode?"+queryString.stringify(payload)).then(response => {
+    Axios.get(apiSite + "/gerai/deletebykode?" + queryString.stringify(payload)).then(response => {
       dispatch(removeGerai(payload))
     })
   }
@@ -82,7 +83,7 @@ export const setLayanans = (payload: any) => {
 
 export const fetchLayanansAsync = (payload: any) => {
   return (dispatch: any) => {
-    Axios.get(apiSite+"/layanan/getAllByKode?"+queryString.stringify(payload)).then(response => {
+    Axios.get(apiSite + "/layanan/getAllByKode?" + queryString.stringify(payload)).then(response => {
       var newPayload = {
         kode: payload.kode,
         layanans: response
@@ -98,7 +99,7 @@ export const layanansAreUpdated = (payload: any) => {
 
 export const loadLayanansAsync = (payload: any) => {
   return (dispatch: any) => {
-    Axios.get(apiSite+"/layanan/getAllByKode?"+queryString.stringify(payload)).then(response => {
+    Axios.get(apiSite + "/layanan/getAllByKode?" + queryString.stringify(payload)).then(response => {
       var newPayload = {
         kode: payload.kode,
         layanans: response
@@ -110,4 +111,44 @@ export const loadLayanansAsync = (payload: any) => {
 
 export const loadingLayananIsCompleteGlobal = (payload: any) => {
   return { type: 'LOADING_LAYANAN_IS_COMPLETE', payload }
+}
+
+export const setJadwal = (payload: any) => {
+  return { type: 'SET_JADWAL', payload }
+}
+
+export const addLayananIsComplete = (payload: any) => {
+  return { type: 'ADD_LAYANAN_IS_COMPLETE', payload }
+}
+
+export const setLayananIsComplete = (payload: any) => {
+  return { type: 'SET_LAYANAN_IS_COMPLETE', payload }
+}
+
+export const addLayananAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + "/layanan/create?" + stringify(payload)).then(response => {
+      //console.log(payload)
+      console.log("addLayanan?: " + response.data)
+      dispatch(addLayananIsComplete(true))
+    })
+  }
+}
+
+export const fetchLayanansByKodeAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + "/layanan/getAllByKode?" + stringify(payload)).then(response => {
+      console.log("fetchLayanan?: ", response.data)
+      var payloadNew = {
+        kode: payload.kode,
+        layanans: new Array(0)
+      }
+      if (Array.isArray(response.data)) {
+        payloadNew.layanans = response.data
+        dispatch(setLayanans(payloadNew))
+      } else {
+        dispatch(setLayanans(payloadNew))
+      }
+    })
+  }
 }

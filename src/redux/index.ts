@@ -36,7 +36,11 @@ const initialState = {
   gerais: new Array(0),
   geraiNeedsUpdate: false,
   layanansAreUpated: false,
-  layanans: new Array(0)
+  layanans: new Array(0),
+  jadwal: ["", "", "", "", "", "", ""],
+  addLayananIsComplete: false,
+  setLayananIsComplete: false,
+  geraisWithLayanansLoaded: new Array(0)
 }
 
 export default function reducer(state = initialState,
@@ -124,11 +128,34 @@ export default function reducer(state = initialState,
         layanansAreUpated: payload
       }
     case 'SET_LAYANANS':
-      var newLayanans = state.layanans
-      newLayanans[payload.kode] = payload.layanans
+      var temp = state.geraisWithLayanansLoaded
+      if(state.geraisWithLayanansLoaded.includes(payload.kode)){
+        
+      } else {
+        temp.push(payload.kode)
+      }
       return {
         ...state,
-        layanans: newLayanans
+        layanans: payload.layanans,
+        setLayananIsComplete: true,
+        geraisWithLayanansLoaded: temp
+      }
+    case 'SET_JADWAL':
+      var newJadwal = state.jadwal
+      newJadwal[payload.hari] = payload.jadwal
+      return {
+        ...state,
+        jadwal: newJadwal
+      }
+    case 'ADD_LAYANAN_IS_COMPLETE':
+      return {
+        ...state,
+        addLayananIsComplete: payload
+      }
+    case 'SET_LAYANAN_IS_COMPLETE':
+      return {
+        ...state,
+        setLayananIsComplete: payload
       }
   }
 }

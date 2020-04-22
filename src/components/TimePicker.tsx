@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { IonItem, IonLabel, IonDatetime, IonIcon, IonChip, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonItemDivider } from '@ionic/react'
 import { addCircleOutline } from 'ionicons/icons'
 import $ from 'jquery'
+import TimePickerDay from './TimePickerDay'
 
 const TimePicker: React.FC = () => {
   const [sen, setSen] = useState(true)
@@ -12,8 +13,14 @@ const TimePicker: React.FC = () => {
   const [sab, setSab] = useState(false)
   const [min, setMin] = useState(false)
   const [haris, setHaris] = useState([sen, sel, rab, kam, jum, sab, min])
-
+  const [chosenHari, setChosenHari] = useState(0)
+  const [pageInitiated, setPageInitiated] = useState(false)
+  
   const [hariDisplay, setHariDisplay] = useState('')
+
+  const styleShown = {
+    display: "block"
+  }
 
   const ItemDividerStyle = {
     minHeight: "1px"
@@ -32,7 +39,7 @@ const TimePicker: React.FC = () => {
         appendTitle('start', i - 1)
       }
       // print end
-      if (!haris[i] && haris[i-1]) {
+      if (!haris[i] && haris[i - 1]) {
         end = i - 1
         appendTitle('end', i - 1)
       }
@@ -42,7 +49,7 @@ const TimePicker: React.FC = () => {
       }
     }
     //if ends none
-    if(end==undefined){
+    if (end == undefined) {
       appendTitle('end', 6)
     }
 
@@ -121,37 +128,39 @@ const TimePicker: React.FC = () => {
     changeHariDisplay()
   }
 
+  function chooseHari(hari: any) {
+    $(".item-hari").hide()
+    $('#item'+hari).show()
+    setChosenHari(hari)
+  }
+
+  if(pageInitiated){
+    chooseHari(0)
+    setPageInitiated(true)
+  }
+
   return (
     <>
       <IonCard>
         <IonCardHeader>
-          <IonCardTitle id="hari-display"></IonCardTitle>
-          <IonCardSubtitle>07:30-11.00, 12:00-15.00</IonCardSubtitle>
+          <IonItem lines="none">
+            <IonChip onClick={() => chooseHari(0)} color={chosenHari == 0 ? "" : "light"}>S</IonChip>
+            <IonChip onClick={() => chooseHari(1)} color={chosenHari == 1 ? "" : "light"}>S</IonChip>
+            <IonChip onClick={() => chooseHari(2)} color={chosenHari == 2 ? "" : "light"}>R</IonChip>
+            <IonChip onClick={() => chooseHari(3)} color={chosenHari == 3 ? "" : "light"}>K</IonChip>
+            <IonChip onClick={() => chooseHari(4)} color={chosenHari == 4 ? "" : "light"}>J</IonChip>
+            <IonChip onClick={() => chooseHari(5)} color={chosenHari == 5 ? "" : "light"}>S</IonChip>
+            <IonChip onClick={() => chooseHari(6)} color={chosenHari == 6 ? "" : "light"}>M</IonChip>
+          </IonItem>
         </IonCardHeader>
         <IonItemDivider style={ItemDividerStyle}></IonItemDivider>
-        <IonCardContent>
-          <IonItem lines="none">
-            <IonLabel>Buka</IonLabel>
-            <IonDatetime value="2020-01-01T07:30" displayFormat="HH:mm"></IonDatetime>
-          </IonItem>
-          <IonItem lines="none">
-            <IonLabel>Tutup</IonLabel>
-            <IonDatetime value="2020-01-01T15:30" displayFormat="HH:mm"></IonDatetime>
-          </IonItem>
-          <IonItem lines="none">
-            <IonIcon icon={addCircleOutline} />
-            <IonLabel><p>Tambah waktu istirahat...</p></IonLabel>
-          </IonItem>
-          <IonItem lines="none">
-            <IonChip onClick={() => toggleHari(0)} color={sen ? "primary" : "light"} outline={true}>S</IonChip>
-            <IonChip onClick={() => toggleHari(1)} color={sel ? "primary" : "light"} outline={true}>S</IonChip>
-            <IonChip onClick={() => toggleHari(2)} color={rab ? "primary" : "light"} outline={true}>R</IonChip>
-            <IonChip onClick={() => toggleHari(3)} color={kam ? "primary" : "light"} outline={true}>K</IonChip>
-            <IonChip onClick={() => toggleHari(4)} color={jum ? "primary" : "light"} outline={true}>J</IonChip>
-            <IonChip onClick={() => toggleHari(5)} color={sab ? "primary" : "light"} outline={true}>S</IonChip>
-            <IonChip onClick={() => toggleHari(6)} color={min ? "primary" : "light"} outline={true}>M</IonChip>
-          </IonItem>
-        </IonCardContent>
+        <TimePickerDay hariID="0" />
+        <TimePickerDay hariID="1" />
+        <TimePickerDay hariID="2" />
+        <TimePickerDay hariID="3" />
+        <TimePickerDay hariID="4" />
+        <TimePickerDay hariID="5" />
+        <TimePickerDay hariID="6" />
       </IonCard>
     </>
   )
