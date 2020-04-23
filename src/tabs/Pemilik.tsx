@@ -12,7 +12,7 @@ import queryString, { stringify } from 'query-string'
 import { toast } from '../components/toast'
 import { useSelector, useDispatch } from 'react-redux'
 import Busy from '../pages/Busy'
-import { setPemilikData, setGerais } from '../redux/actions'
+import { setPemilikData, setGerais, setPemilikBelongings } from '../redux/actions'
 import PemilikRegisterPage from '../pages/PemilikRegisterPage'
 
 const Pemilik: React.FC = () => {
@@ -35,7 +35,11 @@ const Pemilik: React.FC = () => {
           id: response.data,
           isRegistered: true
         }))
-        loadGerais(response.data)
+        var paramsNew = {
+          token: params.token,
+          id_pemilik: response.data
+        }
+        loadBelongings(response.data)
       } else {
         //nothing
       }
@@ -46,20 +50,18 @@ const Pemilik: React.FC = () => {
       console.log(error)
     })
   }
-  async function loadGerais(id_pemilik: any) {
+  async function loadBelongings(id_pemilik: any) {
     setBusy(true)
     var params = {
       token: await getToken(),
       id_pemilik: id_pemilik
     }
     console.log("params", params)
-    Axios.get(apiSite + "/gerai/get_all?" + stringify(params)).then(response => {
-      if (Array.isArray(response.data)) {
-        dispatch(setGerais(response.data))
-      }
-      console.log("gerais:", response.data)
+    Axios.get(apiSite + "/pemilik/getAllBelongings?" + stringify(params)).then(response => {
+      //handle all belongings
+      dispatch(setPemilikBelongings(response.data))
     }).catch(e => {
-      console.log(e)
+      toast("Terjadi kesalahan")
     }).then(() => {
       setBusy(false)
     })

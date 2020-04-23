@@ -1,3 +1,8 @@
+const initialGerais = {
+  layanans: new Array(0),
+  klasters: new Array(0)
+}
+
 const initialState = {
   antrians: [
     {
@@ -30,7 +35,8 @@ const initialState = {
     }
   ],
   pemilik: {
-    isRegistered: false
+    isRegistered: false,
+    gerais: initialGerais
   },
   geraisLoaded: false,
   gerais: new Array(0),
@@ -40,7 +46,10 @@ const initialState = {
   jadwal: ["", "", "", "", "", "", ""],
   addLayananIsComplete: false,
   setLayananIsComplete: false,
-  geraisWithLayanansLoaded: new Array(0)
+  geraisWithLayanansLoaded: new Array(0),
+  addKlasterIsComplete: false,
+  pemilikBelongingsUpToDate: false,
+  fetchingPemilikBelongings: false
 }
 
 export default function reducer(state = initialState,
@@ -90,9 +99,11 @@ export default function reducer(state = initialState,
         geraisLoaded: payload
       }
     case 'SET_GERAIS':
+      var newPemilik = state.pemilik
+      newPemilik.gerais = payload
       return {
         ...state,
-        gerais: payload
+        pemilik: newPemilik
       }
     case 'SET_LOCAL_TOKEN':
       return {
@@ -129,8 +140,8 @@ export default function reducer(state = initialState,
       }
     case 'SET_LAYANANS':
       var temp = state.geraisWithLayanansLoaded
-      if(state.geraisWithLayanansLoaded.includes(payload.kode)){
-        
+      if (state.geraisWithLayanansLoaded.includes(payload.kode)) {
+
       } else {
         temp.push(payload.kode)
       }
@@ -148,14 +159,46 @@ export default function reducer(state = initialState,
         jadwal: newJadwal
       }
     case 'ADD_LAYANAN_IS_COMPLETE':
+      var justInCase = payload ? false : state.pemilikBelongingsUpToDate
       return {
         ...state,
-        addLayananIsComplete: payload
+        addLayananIsComplete: payload,
+        pemilikBelongingsUpToDate: justInCase
       }
     case 'SET_LAYANAN_IS_COMPLETE':
       return {
         ...state,
         setLayananIsComplete: payload
+      }
+    case 'ADD_KLASTER_IS_COMPLETE':
+      var justInCase = payload ? false : state.pemilikBelongingsUpToDate
+      return {
+        ...state,
+        addKlasterIsComplete: payload,
+        pemilikBelongingsUpToDate: justInCase
+      }
+    case 'SET_KLASTER_BY_KODE':
+      var newPemilik = state.pemilik
+      return {
+        ...state,
+        pemilik: newPemilik
+      }
+    case 'SET_PEMILIK_BELONGINGS':
+      var newPemilik = state.pemilik
+      newPemilik = {
+        ...newPemilik,
+        ...payload
+      }
+      return {
+        ...state,
+        pemilik: newPemilik,
+        pemilikBelongingsUpToDate: true,
+        fetchingPemilikBelongings: false
+      }
+    case 'SET_FETCHING_PEMILIK_BELONGINGS':
+      return {
+        ...state,
+        fetchingPemilikBelongings: payload
       }
   }
 }

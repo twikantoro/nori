@@ -8,20 +8,6 @@ import { toast } from '../components/toast'
 import $ from 'jquery'
 import { trashOutline, addCircleOutline, bookmarksOutline, bookmarkOutline, chevronBackOutline } from 'ionicons/icons'
 
-
-/*
-Briefing
-
->> Handling delete gerai
-- dispatch
-- useEffect
-
->> Handling load layanans
-- dispatch
-- useEffect
-
-*/
-
 const GeraiDetailPemilik: React.FC = (data: any) => {
   const [showAlertDelete, setShowAlertDelete] = useState(false)
   const loadingLayananIsComplete = useSelector((state: any) => state.loadingLayananIsComplete)

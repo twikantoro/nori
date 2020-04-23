@@ -26,3 +26,12 @@
 .item-hari {
   display: none;
 }
+.bg-medium {
+  background-color: #d7d8da;
+}
+.opacity-0 {
+  opacity: 0;
+}
+.bg-850 {
+  background-color: #dbdbdb;
+}
