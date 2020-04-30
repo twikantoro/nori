@@ -49,7 +49,9 @@ const initialState = {
   geraisWithLayanansLoaded: new Array(0),
   addKlasterIsComplete: false,
   pemilikBelongingsUpToDate: false,
-  fetchingPemilikBelongings: false
+  fetchingPemilikBelongings: false,
+  chosenGeraiKode: '',
+  error: ''
 }
 
 export default function reducer(state = initialState,
@@ -189,16 +191,28 @@ export default function reducer(state = initialState,
         ...newPemilik,
         ...payload
       }
+      var chosenGerai = Array.isArray(payload.gerais) ? payload.gerais[0].kode : ""
       return {
         ...state,
         pemilik: newPemilik,
         pemilikBelongingsUpToDate: true,
-        fetchingPemilikBelongings: false
+        fetchingPemilikBelongings: false,
+        chosenGeraiKode: chosenGerai
       }
     case 'SET_FETCHING_PEMILIK_BELONGINGS':
       return {
         ...state,
         fetchingPemilikBelongings: payload
       }
+    case 'SET_CHOSEN_GERAI':
+      return {
+        ...state,
+        chosenGeraiKode: payload
+      }
+      case 'SET_ERROR':
+        return {
+          ...state,
+          error: payload
+        }
   }
 }

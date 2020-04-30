@@ -129,7 +129,7 @@ export const addLayananAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/layanan/create?" + stringify(payload)).then(response => {
       dispatch(addLayananIsComplete(true))
-    }).catch(e=>{
+    }).catch(e => {
       dispatch(addLayananIsComplete(true))
     })
   }
@@ -201,4 +201,12 @@ export const fetchPemilikBelongingsAsync = (payload: any) => {
 
 export const setFetchingPemilikBelongings = (payload: any) => {
   return { type: 'SET_FETCHING_PEMILIK_BELONGINGS', payload }
+}
+
+export const setChosenGerai = (payload: any) => {
+  return { type: 'SET_CHOSEN_GERAI', payload }
+}
+
+export const setError = (payload: any) => {
+  return { type: 'SET_ERROR', payload }
 }

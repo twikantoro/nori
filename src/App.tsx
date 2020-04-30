@@ -32,6 +32,7 @@ import { setUserState, setRole } from './redux/actions';
 import { getCurrentUser, isPemilik, isStaf } from './config/firebaseConfig'
 import Pemilik from './tabs/Pemilik';
 import BusyPage from './pages/Busy';
+import ErrorPage from './pages/ErrorPage';
 
 const RoutingSystem: React.FC = () => {
   return (
@@ -39,9 +40,10 @@ const RoutingSystem: React.FC = () => {
       <IonRouterOutlet>
         <Route exact path="/pengantri" component={Pengantri} />
         <Route exact path="/pemilik" component={Pemilik} />
-        <Route exact path="/" render={() => <Redirect to="/pengantri" />} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/signup" component={Signup} />
+        <Route exact path="/error" component={ErrorPage} />
+        <Route exact path="/" render={() => <Redirect to="/pengantri" />} />
       </IonRouterOutlet>
     </IonReactRouter>
   )

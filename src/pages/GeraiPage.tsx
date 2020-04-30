@@ -17,10 +17,10 @@ import { getToken } from "../config/firebaseConfig"
 
 const HasNoGeraiComp: React.FC = () => {
   return (
-    <div>
+    <div className="ion-padding">
       <h1>Buat gerai</h1>
       <p>Anda belum mempunyai gerai. Apakah anda ingin membuatnya?</p>
-      <IonButton routerLink="/pemilik/gerai/buat">Buat</IonButton>
+      <IonButton routerLink="/pemilik/gerai/daftar">Buat</IonButton>
     </div>
   )
 }
@@ -31,14 +31,24 @@ const GeraiPage: React.FC = () => {
   const dispatch = useDispatch()
   const id_pemilik = useSelector((state: any) => state.pemilik.id)
   const state = useSelector((state: any) => state)
+  var id_gerai = ''
   //gerais
   const gerais = state.pemilik.gerais
   //has gerai?
   const hasGerai = (Array.isArray(gerais) && gerais.length > 0) ? true : false
-  //chosen gerai
-  const chosenGerai = hasGerai ? gerais[0] : new Array(0)
   //kode
-  const kode = chosenGerai.kode
+  const kode = state.chosenGeraiKode
+  //chosen gerai
+  var chosenGerai = { nama: '', kode: '', deskripsi: '' }
+  //assign values of chosen gerai
+  if (hasGerai) {
+    for (let gerai of gerais) {
+      if (gerai.kode == kode) {
+        chosenGerai = gerai
+        id_gerai = gerai.id
+      }
+    }
+  }
   const pemilikBelongingsUpToDateLocal = state.pemilikBelongingsUpToDate
   const fetchingPemilikBelongingsLocal = state.fetchingPemilikBelongings
   const [isFetching, setIsFetching] = useState(false)
@@ -52,7 +62,7 @@ const GeraiPage: React.FC = () => {
     if (fetchingPemilikBelongingsLocal) {
       setIsFetching(false)
     }
-    console.log("state: ", state)
+    //console.log("state: ", state)
   })
 
   async function otwFetchBelongings() {
@@ -65,11 +75,25 @@ const GeraiPage: React.FC = () => {
 
   const HasGeraiComp: React.FC = () => {
     const [chosenSegment, setChosenSegment] = useState('layanan')
-    const klasters = state.pemilik.klasters
+    const klastersAll = state.pemilik.klasters
+    var klasters = new Array(0)
+    var klastersWhitelist = new Array(0)
+    for (let klaster of klastersAll) {
+      if (klaster.id_gerai == id_gerai) {
+        klasters = klasters.concat(klaster)
+        klastersWhitelist = klastersWhitelist.concat(klaster.id)
+      }
+    }
     const hasKlaster = (Array.isArray(klasters) && klasters.length > 0) ? true : false
 
     const LayananSegment: React.FC = () => {
-      const layanans = state.pemilik.layanans
+      const layanansAll = state.pemilik.layanans
+      var layanans = new Array(0)
+      for (let layanan of layanansAll) {
+        if (klastersWhitelist.includes(layanan.id_klaster)) {
+          layanans = layanans.concat(layanan)
+        }
+      }
       const hasLayanan = layanans.length > 0 ? true : false
       const jmlLayanan = layanans.length
 
@@ -172,7 +196,7 @@ const GeraiPage: React.FC = () => {
             : <>
               {renderRow.map((row, index) => {
                 return (
-                  <IonRow key={"baris"+index}>
+                  <IonRow key={"baris" + index}>
                     {
                       row.map(layanan => {
                         if (layanan.title == '--tambahan') {
@@ -247,9 +271,7 @@ const GeraiPage: React.FC = () => {
           </IonItem>
           <div className="ion-padding-top ion-padding-horizontal">
             <IonLabel>
-              <h3>
-                Ini adalah deskripsi. Ini adalah deskripsi.
-          </h3>
+              <h3>{chosenGerai.deskripsi}</h3>
             </IonLabel>
           </div>
         </div>

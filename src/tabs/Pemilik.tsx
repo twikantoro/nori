@@ -12,7 +12,7 @@ import queryString, { stringify } from 'query-string'
 import { toast } from '../components/toast'
 import { useSelector, useDispatch } from 'react-redux'
 import Busy from '../pages/Busy'
-import { setPemilikData, setGerais, setPemilikBelongings } from '../redux/actions'
+import { setPemilikData, setGerais, setPemilikBelongings, setError } from '../redux/actions'
 import PemilikRegisterPage from '../pages/PemilikRegisterPage'
 
 const Pemilik: React.FC = () => {
@@ -41,13 +41,19 @@ const Pemilik: React.FC = () => {
         }
         loadBelongings(response.data)
       } else {
-        //nothing
+        //setBusy(false)
+        dispatch(setPemilikData({
+          id: null,
+          isRegistered: false
+        }))
       }
-      //setBusy(false)
+      setBusy(false)
     }).catch(error => {
       setBusy(false)
-      toast('terjadi kesalahan')
+      toast('terjadi kesalahan:'+error)
       console.log(error)
+      dispatch(setError(error))
+      //window.location.href = '/error'
     })
   }
   async function loadBelongings(id_pemilik: any) {
