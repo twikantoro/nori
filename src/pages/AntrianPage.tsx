@@ -59,7 +59,7 @@ const DefaultAntrianPage: React.FC = () => {
           </div>
           <div id="segment-mendatang" className="customSegments" style={hidden}>
             {antrians.map(function (curr: any) {
-              return curr.status == 'dipesan' ? (
+              return curr.status === 'dipesan' ? (
                 <CardAntrian
                   key={curr.id}
                   gerai={curr.gerai}

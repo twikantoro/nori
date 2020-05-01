@@ -21,9 +21,9 @@ const Signup: React.FC = () => {
       await signupUser(email, password, function (response: any) {
         setBusy(false)
         console.log(response)
-        // if (response.substring(0, 1) == 'E') {
+        // if (response.substring(0, 1) === 'E') {
         //   toast(response)
-        // } else if (response.substring(0, 3) == 'Ber') {
+        // } else if (response.substring(0, 3) === 'Ber') {
         //   toast(response)
         // }
       })

@@ -42,9 +42,9 @@ export async function loginUser(email: string, password: string, callback: Funct
     })
     .catch(function (response) {
       console.log(response)
-      if (response.code == 'auth/user-not-found') {
+      if (response.code === 'auth/user-not-found') {
         callback('User tidak ditemukan')
-      } else if (response.code == 'auth/wrong-password') {
+      } else if (response.code === 'auth/wrong-password') {
         callback('Password salah')
       } else {
         callback('Anda sedang offline')
@@ -64,7 +64,7 @@ export async function signupUserOld(email: string, password: string, callback: F
     .then(function (response) {
       // handle success
       console.log(response);
-      if (response.data.code == 'auth/email-already-exists') {
+      if (response.data.code === 'auth/email-already-exists') {
         callback('Email sudah terdaftar')
       } else {
         callback('Berhasil! Silahkan login')
@@ -83,7 +83,7 @@ export async function signupUser(email: string, password: string, callback: Func
     callback('Berhasil')
     document.location.href="/login"
   }).catch((error)=>{
-    if(error=='Error: The email address is already in use by another account.'){
+    if(error==='Error: The email address is already in use by another account.'){
       callback('Email sudah terdaftar')
     } else {
       callback('Terjadi kesalahan')

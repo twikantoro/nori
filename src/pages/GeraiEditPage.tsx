@@ -1,37 +1,35 @@
-import { IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonTitle, IonToolbar, IonButtons, IonBackButton, IonLoading, IonGrid, IonInput, IonRow, IonCol, IonButton, IonTextarea } from "@ionic/react"
-import { chevronForwardOutline, logoGoogle } from "ionicons/icons"
-import $ from 'jquery'
-import React, { useState, useEffect } from "react"
-import { connect, useSelector, useDispatch } from "react-redux"
-import { Link } from "react-router-dom"
-import axios from "axios"
-import apiSite from "../config/apiSite"
-import { getToken } from "../config/firebaseConfig"
-import queryString from "query-string"
-import { setPemilikData, geraiNeedsUpdate } from "../redux/actions"
-import { toast } from "../components/toast"
-import Dispatcher from "../cheats/Dispatcher"
-import { createGeraiAsync } from "../redux/actions"
+import React, { useState, useEffect } from 'react'
+import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonButton, IonLoading, IonGrid, IonList, IonItem, IonInput, IonTextarea, IonRow, IonCol } from '@ionic/react'
+import { useSelector, useDispatch } from 'react-redux'
+import { toast } from '../components/toast'
+import { getToken } from '../config/firebaseConfig'
+import { createGeraiAsync, geraiNeedsUpdate, editGeraiAsync } from '../redux/actions'
 
-const DaftarGerai: React.FC = () => {
-  const theState = useSelector((state: any) => state)
+const GeraiEditPage: React.FC = () => {
   const [busy, setBusy] = useState(false)
+  const state = useSelector((state: any) => state)
   const [nama, setNama] = useState('')
   const [deskripsi, setDeskripsi] = useState('')
   const [alamat, setAlamat] = useState('')
   const [wilayah, setWilayah] = useState('')
   const [kode, setKode] = useState('')
   const pemilik = useSelector((state: any) => state.pemilik)
-  //console.log(antrians)
-  const shown = { display: 'block' }
-  const hidden = { display: 'none' }
-  //dispatcher
-  const [dispatcher, showDispatcher] = useState(false)
   const dispatch = useDispatch()
-  //geraineeds update?
-  const geraiNeedsUpdateLocal = useSelector((state:any)=>state.geraiNeedsUpdate)
+  const geraiNeedsUpdateLocal = useSelector((state: any) => state.geraiNeedsUpdate)
+  const gerais = state.pemilik.gerais
 
-  async function submitGerai() {
+  const pemilikBelongingsUpToDateLocal = state.pemilikBelongingsUpToDate
+
+  const geraiKode = window.location.href.split("/")[5]
+
+  var id_gerai = ''
+  for (const gerai of gerais) {
+    if (gerai.kode === geraiKode) {
+      id_gerai = gerai.id
+    }
+  }
+
+  async function submitEditGerai() {
     if (nama === '' || kode === '' || deskripsi === '' || alamat === '' || wilayah === '') {
       toast("Mohon isi formulir secara lengkap")
       return false
@@ -44,14 +42,14 @@ const DaftarGerai: React.FC = () => {
       kode: kode,
       deskripsi: deskripsi,
       alamat: alamat,
-      wilayah: wilayah
+      wilayah: wilayah,
+      id_gerai: id_gerai
     }
-    dispatch(createGeraiAsync(params))
+    dispatch(editGeraiAsync(params))
   }
 
-  useEffect(()=>{
-    if(geraiNeedsUpdateLocal){
-      dispatch(geraiNeedsUpdate(false))
+  useEffect(() => {
+    if (!pemilikBelongingsUpToDateLocal) {
       setBusy(false)
       toast("Berhasil")
       $('#btnToGerai').click()
@@ -65,13 +63,13 @@ const DaftarGerai: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton defaultHref="/pemilik/gerai"></IonBackButton>
             <IonTitle>
-              Daftar Gerai
+              Edit Gerai
           </IonTitle>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <IonButton id="btnToGerai" style={hidden} routerLink="/pemilik/gerai" />
+        <IonButton id="btnToGerai" className="custom-hidden" routerLink="/pemilik/gerai" />
         <IonLoading isOpen={busy} />
         <IonGrid>
           <IonList>
@@ -132,7 +130,7 @@ const DaftarGerai: React.FC = () => {
               <IonButton
                 type="submit"
                 expand="block"
-                onClick={() => submitGerai()}
+                onClick={() => submitEditGerai()}
               >Daftarkan
               </IonButton>
             </IonCol>
@@ -143,4 +141,4 @@ const DaftarGerai: React.FC = () => {
   )
 }
 
-export default connect()(DaftarGerai)
+export default GeraiEditPage

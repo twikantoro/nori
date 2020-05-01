@@ -51,7 +51,8 @@ const initialState = {
   pemilikBelongingsUpToDate: false,
   fetchingPemilikBelongings: false,
   chosenGeraiKode: '',
-  error: ''
+  error: '',
+  backURLs: new Array(0)
 }
 
 export default function reducer(state = initialState,
@@ -209,10 +210,32 @@ export default function reducer(state = initialState,
         ...state,
         chosenGeraiKode: payload
       }
-      case 'SET_ERROR':
-        return {
-          ...state,
-          error: payload
-        }
+    case 'SET_ERROR':
+      return {
+        ...state,
+        error: payload
+      }
+    case 'ADD_BACK_URL':
+      var currBackUrl = state.backURLs
+      var newBackUrl = {
+        payload,
+        ...currBackUrl
+      }
+      return {
+        ...state,
+        backURLs: newBackUrl
+      }
+    case 'DEL_BACK_URL':
+      var currBackUrl = state.backURLs
+      currBackUrl.shift()
+      return {
+        ...state,
+        backURLs: currBackUrl
+      }
+    case 'SET_PEMILIK_UP_TO_DATE':
+      return {
+        ...state,
+        pemilikBelongingsUpToDate: payload
+      }
   }
 }

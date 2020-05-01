@@ -38,7 +38,7 @@ const GeraiDetailPemilik: React.FC = (data: any) => {
     layanans: []
   }
   gerais.forEach((gerai: any) => {
-    if (gerai.kode == kode) {
+    if (gerai.kode === kode) {
       geraiDetails = gerai
     }
   })
@@ -59,7 +59,7 @@ const GeraiDetailPemilik: React.FC = (data: any) => {
   }
 
   function hapusGeraiConfirm() {
-    if ($("#konfirmasi-hapus").val() == kode) {
+    if ($("#konfirmasi-hapus").val() === kode) {
       hapusGerai()
     } else {
       toast("Konfirmasi gagal. Batal dihapus")

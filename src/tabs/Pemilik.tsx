@@ -47,9 +47,9 @@ const Pemilik: React.FC = () => {
           isRegistered: false
         }))
       }
-      setBusy(false)
+      //setBusy(false)
     }).catch(error => {
-      setBusy(false)
+      //setBusy(false)
       toast('terjadi kesalahan:'+error)
       console.log(error)
       dispatch(setError(error))

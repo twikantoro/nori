@@ -34,7 +34,7 @@ const TimePicker: React.FC = () => {
     var start = undefined, end = undefined
     for (i = 1; i < 7; i++) {
       // print start
-      if (haris[i - 1] && (start == undefined || end !== undefined)) {
+      if (haris[i - 1] && (start === undefined || end !== undefined)) {
         start = i - 1
         appendTitle('start', i - 1)
       }
@@ -49,7 +49,7 @@ const TimePicker: React.FC = () => {
       }
     }
     //if ends none
-    if (end == undefined) {
+    if (end === undefined) {
       appendTitle('end', 6)
     }
 
@@ -72,9 +72,9 @@ const TimePicker: React.FC = () => {
     var lastCharacter = display.substring(display.length, 1)
     // eksekusi - start
     var displayHari = getDay(hari)
-    if (role == 'start' && !lastCharacter.match(/^[A-Za-z]+$/)) {
+    if (role === 'start' && !lastCharacter.match(/^[A-Za-z]+$/)) {
       $('#hari-display').text($('#hari-display').text() + displayHari)
-    } else if (role == 'start') {
+    } else if (role === 'start') {
       $('#hari-display').text($('#hari-display').text() + ", " + displayHari)
     } else {
       $('#hari-display').text($('#hari-display').text() + " - " + displayHari)
@@ -144,13 +144,13 @@ const TimePicker: React.FC = () => {
       <IonCard>
         <IonCardHeader>
           <IonItem lines="none">
-            <IonChip onClick={() => chooseHari(0)} color={chosenHari == 0 ? "" : "light"}>S</IonChip>
-            <IonChip onClick={() => chooseHari(1)} color={chosenHari == 1 ? "" : "light"}>S</IonChip>
-            <IonChip onClick={() => chooseHari(2)} color={chosenHari == 2 ? "" : "light"}>R</IonChip>
-            <IonChip onClick={() => chooseHari(3)} color={chosenHari == 3 ? "" : "light"}>K</IonChip>
-            <IonChip onClick={() => chooseHari(4)} color={chosenHari == 4 ? "" : "light"}>J</IonChip>
-            <IonChip onClick={() => chooseHari(5)} color={chosenHari == 5 ? "" : "light"}>S</IonChip>
-            <IonChip onClick={() => chooseHari(6)} color={chosenHari == 6 ? "" : "light"}>M</IonChip>
+            <IonChip onClick={() => chooseHari(0)} color={chosenHari === 0 ? "" : "light"}>S</IonChip>
+            <IonChip onClick={() => chooseHari(1)} color={chosenHari === 1 ? "" : "light"}>S</IonChip>
+            <IonChip onClick={() => chooseHari(2)} color={chosenHari === 2 ? "" : "light"}>R</IonChip>
+            <IonChip onClick={() => chooseHari(3)} color={chosenHari === 3 ? "" : "light"}>K</IonChip>
+            <IonChip onClick={() => chooseHari(4)} color={chosenHari === 4 ? "" : "light"}>J</IonChip>
+            <IonChip onClick={() => chooseHari(5)} color={chosenHari === 5 ? "" : "light"}>S</IonChip>
+            <IonChip onClick={() => chooseHari(6)} color={chosenHari === 6 ? "" : "light"}>M</IonChip>
           </IonItem>
         </IonCardHeader>
         <IonItemDivider style={ItemDividerStyle}></IonItemDivider>

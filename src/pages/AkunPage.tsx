@@ -41,7 +41,7 @@ const DefaultAkunPage: React.FC = () => {
       <IonContent>
         <IonButton onClick={() => {
           logoutUser(function (response: any) {
-            if (response == true) {
+            if (response === true) {
               window.location.href = "/"
             }
           })

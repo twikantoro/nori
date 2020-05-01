@@ -8,6 +8,7 @@ import DaftarGeraiPage from "../../pages/DaftarGeraiPage"
 import GeraiDetailPemilik from "../../pages/GeraiDetailPemilik"
 import TambahLayananPage from "../../pages/TambahLayanan"
 import TambahKlasterPage from "../../pages/TambahKlaster"
+import GeraiEditPage from "../../pages/GeraiEditPage"
 
 const GeraiTab: React.FC = () => {
   const username = useSelector((state: any) => state.user.username)
@@ -25,6 +26,7 @@ const GeraiTab: React.FC = () => {
           <Route exact path="/pemilik/gerai/:id" component={GeraiPage} />
           <Route exact path="/pemilik/gerai/:id/tambahLayanan" component={TambahLayananPage} />
           <Route exact path="/pemilik/gerai/:id/tambahKlaster" component={TambahKlasterPage} />
+          <Route exact path="/pemilik/gerai/:id/edit" component={GeraiEditPage} />
         </Switch>
       </IonReactRouter>
     </IonPage>

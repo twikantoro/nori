@@ -195,6 +195,7 @@ export const fetchPemilikBelongingsAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/pemilik/getAllBelongings?" + stringify(payload)).then(response => {
       dispatch(setPemilikBelongings(response.data))
+      console.log("belongings?", response.data)
     })
   }
 }
@@ -209,4 +210,25 @@ export const setChosenGerai = (payload: any) => {
 
 export const setError = (payload: any) => {
   return { type: 'SET_ERROR', payload }
+}
+
+export const addBackURL = (payload: any) => {
+  return { type: 'ADD_BACK_URL', payload }
+}
+
+export const delBackURL = (payload: any) => {
+  return { type: 'DEL_BACK_URL', payload }
+}
+
+export const setPemilikBelongingsUpToDate = (payload: any) => {
+  return { type: 'SET_PEMILIK_UP_TO_DATE', payload }
+}
+
+export const editGeraiAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + "/gerais/edit?" + stringify(payload)).then(response => {
+      console.log(response.data)
+      dispatch(setPemilikBelongingsUpToDate(false))
+    })
+  }
 }

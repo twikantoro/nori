@@ -67,9 +67,9 @@ const TimePickerDay: React.FC<OwnProps> = ({ hariID }) => {
   })
 
   return (
-    <IonCardContent className="item-hari" id={"item" + hariID} style={hariID == "0" ? styleShown : none}>
+    <IonCardContent className="item-hari" id={"item" + hariID} style={hariID === "0" ? styleShown : none}>
       <input type="hidden" id={"jadwal-hari-" + hariID}></input>
-      {hariID == "0" ? "" :
+      {hariID === "0" ? "" :
         <IonItem lines="none">
           <IonLabel><p>Sama seperti Senin</p></IonLabel>
           <IonToggle onClick={() => toggleSameAsSenin()}></IonToggle>

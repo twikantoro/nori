@@ -35,7 +35,7 @@ const TambahKlasterPage: React.FC = () => {
     setBusy(true)
     var jadwal = new Array(0)
     for (var i = 0; i < 7; i++) {
-      if ($('#jadwal-hari-' + i).val() == "s") {
+      if ($('#jadwal-hari-' + i).val() === "s") {
         jadwal[i] = $('#jadwal-hari-0').val()
       } else {
         jadwal[i] = $('#jadwal-hari-' + i).val()

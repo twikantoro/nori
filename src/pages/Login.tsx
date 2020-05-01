@@ -21,7 +21,7 @@ const Login: React.FC = () => {
       const res = await loginUser(email, password, function (response: any) {
         setBusy(false)
         toast(response)
-        if (response.substring(0, 1) == 'B') {
+        if (response.substring(0, 1) === 'B') {
           window.history.replaceState({}, '', '/pengantri')
           return (
             window.location.replace('/pengantri')

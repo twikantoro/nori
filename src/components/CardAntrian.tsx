@@ -45,9 +45,9 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ gerai, subLayanan, prefix, sl
           <h3><b>Bank Ngadirejo</b></h3>
           <p>Tukar Uang</p>
         </IonLabel>
-        {statusLocal == 'berlangsung' ?
+        {statusLocal === 'berlangsung' ?
           <IonBadge color="warning">Berlangsung</IonBadge> : (
-            statusLocal == 'terlambat' ? 
+            statusLocal === 'terlambat' ? 
             <IonBadge color="danger">Terlambat</IonBadge> :
             <IonBadge color="light">Dipesan</IonBadge>
           )
@@ -63,12 +63,12 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ gerai, subLayanan, prefix, sl
             <IonCardSubtitle>Slot Anda</IonCardSubtitle>
             <IonBadge color="primary">A-117</IonBadge>
           </IonCol>
-          {statusLocal == 'berlangsung' ?
+          {statusLocal === 'berlangsung' ?
             <IonCol>
               <IonCardSubtitle>Berlangsung</IonCardSubtitle>
               <IonBadge color="warning">A-17</IonBadge>
             </IonCol> : (
-              statusLocal == 'terlambat' ? 
+              statusLocal === 'terlambat' ? 
               <IonCol>
               <IonCardSubtitle>Berlangsung</IonCardSubtitle>
               <IonBadge color="danger">A-118</IonBadge></IonCol> : ''

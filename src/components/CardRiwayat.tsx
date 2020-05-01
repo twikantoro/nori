@@ -72,9 +72,9 @@ const CardRiwayat: React.FC<CardAntrianProps> = ({gerai,subLayanan,prefix,slot,t
               </IonCol>
               <IonCol>
                 <IonCardSubtitle>Penilaian</IonCardSubtitle>
-                {stars == '0' ?
+                {stars === '0' ?
                   <>
-                    {starsBusy && stars == '0' ? <IonSpinner /> : '-'}
+                    {starsBusy && stars === '0' ? <IonSpinner /> : '-'}
                   </> :
                   <><IonIcon icon={star} color="warning" />
                     <IonIcon icon={star} color="warning" />

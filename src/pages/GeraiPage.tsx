@@ -1,7 +1,7 @@
-import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCol, IonContent, IonHeader, IonItem, IonLabel, IonList, IonLoading, IonRow, IonTitle, IonToolbar, IonItemDivider, IonIcon, IonButton, IonSegment, IonSegmentButton } from "@ionic/react"
+import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCol, IonContent, IonHeader, IonItem, IonLabel, IonList, IonLoading, IonRow, IonTitle, IonToolbar, IonItemDivider, IonIcon, IonButton, IonSegment, IonSegmentButton, IonButtons, IonSelect, IonSelectOption } from "@ionic/react"
 import React, { useEffect, useState } from "react"
 import { connect, useDispatch, useSelector } from "react-redux"
-import { locationOutline, addCircleOutline, businessOutline, heart, hourglassOutline, bookmarkOutline, bookmarksOutline } from "ionicons/icons"
+import { locationOutline, addCircleOutline, businessOutline, heart, hourglassOutline, bookmarkOutline, bookmarksOutline, pencilSharp, pencilOutline, createOutline } from "ionicons/icons"
 import $ from 'jquery'
 import { addKlasterIsComplete, fetchPemilikBelongingsAsync, setFetchingPemilikBelongings } from "../redux/actions"
 import { getToken } from "../config/firebaseConfig"
@@ -43,7 +43,7 @@ const GeraiPage: React.FC = () => {
   //assign values of chosen gerai
   if (hasGerai) {
     for (let gerai of gerais) {
-      if (gerai.kode == kode) {
+      if (gerai.kode === kode) {
         chosenGerai = gerai
         id_gerai = gerai.id
       }
@@ -73,15 +73,21 @@ const GeraiPage: React.FC = () => {
     dispatch(fetchPemilikBelongingsAsync(params))
   }
 
+  function setChosenGerai(kode: any) {
+    dispatch(setChosenGerai(kode))
+  }
+
   const HasGeraiComp: React.FC = () => {
     const [chosenSegment, setChosenSegment] = useState('layanan')
     const klastersAll = state.pemilik.klasters
     var klasters = new Array(0)
     var klastersWhitelist = new Array(0)
-    for (let klaster of klastersAll) {
-      if (klaster.id_gerai == id_gerai) {
-        klasters = klasters.concat(klaster)
-        klastersWhitelist = klastersWhitelist.concat(klaster.id)
+    if (Array.isArray(klastersAll) && klastersAll.length === 0) {
+      for (let klaster of klastersAll) {
+        if (klaster.id_gerai === id_gerai) {
+          klasters = klasters.concat(klaster)
+          klastersWhitelist = klastersWhitelist.concat(klaster.id)
+        }
       }
     }
     const hasKlaster = (Array.isArray(klasters) && klasters.length > 0) ? true : false
@@ -89,9 +95,11 @@ const GeraiPage: React.FC = () => {
     const LayananSegment: React.FC = () => {
       const layanansAll = state.pemilik.layanans
       var layanans = new Array(0)
-      for (let layanan of layanansAll) {
-        if (klastersWhitelist.includes(layanan.id_klaster)) {
-          layanans = layanans.concat(layanan)
+      if (Array.isArray(layanansAll) && layanansAll.length === 0) {
+        for (let layanan of layanansAll) {
+          if (klastersWhitelist.includes(layanan.id_klaster)) {
+            layanans = layanans.concat(layanan)
+          }
         }
       }
       const hasLayanan = layanans.length > 0 ? true : false
@@ -141,7 +149,7 @@ const GeraiPage: React.FC = () => {
                 </IonCardContent>
               </IonCard>
             </IonCol>
-            {width == '1' ? "" : <IonCol key="invis2">
+            {width === '1' ? "" : <IonCol key="invis2">
               <IonCard mode="md" className="ion-no-margin opacity-0">
                 <IonCardContent className="ion-justify-content-center ion-text-center">
                   <IonIcon icon={addCircleOutline} size="large" color="dark" />
@@ -185,7 +193,7 @@ const GeraiPage: React.FC = () => {
       }
 
       //console.log("layanan display: ", renderRow)
-
+      //this is layanansegment's return
       return (
         <>
           {!hasLayanan ?
@@ -199,8 +207,8 @@ const GeraiPage: React.FC = () => {
                   <IonRow key={"baris" + index}>
                     {
                       row.map(layanan => {
-                        if (layanan.title == '--tambahan') {
-                          if (layanan.tumbuhanID == 0) {
+                        if (layanan.title === '--tambahan') {
+                          if (layanan.tumbuhanID === 0) {
                             return <LayananAddComp key="tambahan" />
                           } else {
                             return <LayananInvisComp width="1" key={"tambahan" + layanan.tumbuhanID} />
@@ -259,15 +267,17 @@ const GeraiPage: React.FC = () => {
       )
     }
 
+    //this is hasgeraicomp's return
     return (
       <>
         <div className="ion-padding-vertical">
-          <IonItem lines="none">
+          <IonItem lines="none" mode="md">
             <IonIcon icon={businessOutline} size="large" />&nbsp;
         <IonLabel>
               <h3>{chosenGerai.nama}</h3>
               <p>@{chosenGerai.kode}</p>
             </IonLabel>
+            <IonIcon slot="end" icon={createOutline} onClick={()=>$('#btn-edit').click()} />
           </IonItem>
           <div className="ion-padding-top ion-padding-horizontal">
             <IonLabel>
@@ -286,26 +296,42 @@ const GeraiPage: React.FC = () => {
             <IonLabel>Staf</IonLabel>
           </IonSegmentButton>
         </IonSegment>
-        <div className={chosenSegment == 'layanan' ? "" : "custom-hidden"}>
+        <div className={chosenSegment === 'layanan' ? "" : "custom-hidden"}>
           <LayananSegment />
         </div>
-        <div className={chosenSegment == 'klaster' ? "" : "custom-hidden"}>
+        <div className={chosenSegment === 'klaster' ? "" : "custom-hidden"}>
           <KlasterSegment />
         </div>
-        <div className={chosenSegment == 'staf' ? "" : "custom-hidden"}>
+        <div className={chosenSegment === 'staf' ? "" : "custom-hidden"}>
           staf
         </div>
+        <IonButton className="custom-hidden" routerLink={"/pemilik/gerai/"+kode+"/edit"} id="btn-edit" />
       </>
     )
   }
+
+  console.log(gerais)
 
   return (
     <>
       <IonHeader>
         <IonToolbar>
+          <IonButtons slot="start">
+
+          </IonButtons>
+
           <IonTitle>
             Gerai
           </IonTitle>
+          <IonButtons slot="end">
+            {gerais.length > 1 ?
+              <IonSelect interface="popover" value={chosenGerai.kode}>
+                {gerais.map((gerai: any) => {
+                  return (<IonSelectOption key={gerai.id} value={gerai.kode}>@{gerai.kode}</IonSelectOption>)
+                })}
+              </IonSelect> : ""
+            }
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent>

@@ -39,11 +39,11 @@ const TambahLayananPage: React.FC = () => {
     //validate
     var inputsValid = true
     if (
-      inputs.nama == '' ||
-      inputs.kode == '' ||
-      inputs.deskripsi == '' ||
-      inputs.syarat == '' ||
-      inputs.durasi == ''
+      inputs.nama === '' ||
+      inputs.kode === '' ||
+      inputs.deskripsi === '' ||
+      inputs.syarat === '' ||
+      inputs.durasi === ''
     ) {
       inputsValid = false
     }
