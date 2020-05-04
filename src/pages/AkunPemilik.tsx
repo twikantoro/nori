@@ -36,16 +36,10 @@ const AkunPemilik: React.FC = () => {
       <IonContent>
         <IonLoading isOpen={busy} />
         <IonItemDivider mode="ios">Gerai</IonItemDivider>
-        <IonItem routerLink="/pemilik/gerai/daftar">
+        <IonItem routerLink="/pemilik/gerai/daftar" mode="md">
           <IonIcon icon={addCircleOutline}/>&nbsp;
           <IonLabel>
             <h3>Buat gerai baru</h3>
-          </IonLabel>
-        </IonItem>
-        <IonItem>
-          <IonIcon icon={trashOutline} color="danger" />&nbsp;
-          <IonLabel>
-            <h3>Hapus gerai...</h3>
           </IonLabel>
         </IonItem>
         <IonItemDivider mode="ios">Logout</IonItemDivider>

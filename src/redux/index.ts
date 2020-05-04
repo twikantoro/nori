@@ -192,7 +192,10 @@ export default function reducer(state = initialState,
         ...newPemilik,
         ...payload
       }
-      var chosenGerai = Array.isArray(payload.gerais) ? payload.gerais[0].kode : ""
+      var chosenGerai = state.chosenGeraiKode
+      if(chosenGerai==''){
+        chosenGerai = Array.isArray(payload.gerais) ? payload.gerais[0].kode : ""
+      }
       return {
         ...state,
         pemilik: newPemilik,
@@ -206,6 +209,7 @@ export default function reducer(state = initialState,
         fetchingPemilikBelongings: payload
       }
     case 'SET_CHOSEN_GERAI':
+      console.log("state.chosengeraikode: "+payload)
       return {
         ...state,
         chosenGeraiKode: payload

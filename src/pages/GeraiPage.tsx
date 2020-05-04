@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import { connect, useDispatch, useSelector } from "react-redux"
 import { locationOutline, addCircleOutline, businessOutline, heart, hourglassOutline, bookmarkOutline, bookmarksOutline, pencilSharp, pencilOutline, createOutline } from "ionicons/icons"
 import $ from 'jquery'
-import { addKlasterIsComplete, fetchPemilikBelongingsAsync, setFetchingPemilikBelongings } from "../redux/actions"
+import { addKlasterIsComplete, fetchPemilikBelongingsAsync, setFetchingPemilikBelongings, setChosenGerai, setPemilikBelongingsUpToDate } from "../redux/actions"
 import { getToken } from "../config/firebaseConfig"
 
 /* 
@@ -26,7 +26,10 @@ const HasNoGeraiComp: React.FC = () => {
 }
 
 const GeraiPage: React.FC = () => {
+  //make sure its all loaded
+  const [madeSure, setMadeSure] = useState(false)
   const [busy, setBusy] = useState(false)
+  const [firstTime, setFirstTime] = useState(true)
   const curl = '/pemilik/gerai'
   const dispatch = useDispatch()
   const id_pemilik = useSelector((state: any) => state.pemilik.id)
@@ -52,6 +55,7 @@ const GeraiPage: React.FC = () => {
   const pemilikBelongingsUpToDateLocal = state.pemilikBelongingsUpToDate
   const fetchingPemilikBelongingsLocal = state.fetchingPemilikBelongings
   const [isFetching, setIsFetching] = useState(false)
+  const chosenGeraiKode = state.chosenGeraiKode
 
   useEffect(() => {
     if (!pemilikBelongingsUpToDateLocal && !fetchingPemilikBelongingsLocal) {
@@ -62,7 +66,21 @@ const GeraiPage: React.FC = () => {
     if (fetchingPemilikBelongingsLocal) {
       setIsFetching(false)
     }
-    //console.log("state: ", state)
+    //detect chosen gerai change
+    if (chosenGerai.kode !== chosenGeraiKode) {
+      gerais.forEach((gerai: any) => {
+        if (gerai.kode == chosenGeraiKode) {
+          chosenGerai = gerai
+        }
+      })
+    }
+    //trying to debug: klaster n layanan not showing
+    if (!Array.isArray(state.pemilik.klasters) && !madeSure) {
+      setMadeSure(true)
+      dispatch(setPemilikBelongingsUpToDate(false))
+    }
+    //debug: chosen gerai is the deleted gerai, showing emptiness
+    // later i guess
   })
 
   async function otwFetchBelongings() {
@@ -73,8 +91,8 @@ const GeraiPage: React.FC = () => {
     dispatch(fetchPemilikBelongingsAsync(params))
   }
 
-  function setChosenGerai(kode: any) {
-    dispatch(setChosenGerai(kode))
+  function changeChosenGerai(target: any) {
+    dispatch(setChosenGerai(target.value))
   }
 
   const HasGeraiComp: React.FC = () => {
@@ -82,9 +100,11 @@ const GeraiPage: React.FC = () => {
     const klastersAll = state.pemilik.klasters
     var klasters = new Array(0)
     var klastersWhitelist = new Array(0)
-    if (Array.isArray(klastersAll) && klastersAll.length === 0) {
+    if (Array.isArray(klastersAll) && klastersAll.length !== 0) {
       for (let klaster of klastersAll) {
-        if (klaster.id_gerai === id_gerai) {
+        //console.log(klaster.id_gerai+" vs "+id_gerai)
+        if (klaster.id_gerai == id_gerai) {
+          //console.log('happening')
           klasters = klasters.concat(klaster)
           klastersWhitelist = klastersWhitelist.concat(klaster.id)
         }
@@ -95,7 +115,7 @@ const GeraiPage: React.FC = () => {
     const LayananSegment: React.FC = () => {
       const layanansAll = state.pemilik.layanans
       var layanans = new Array(0)
-      if (Array.isArray(layanansAll) && layanansAll.length === 0) {
+      if (Array.isArray(layanansAll) && layanansAll.length !== 0) {
         for (let layanan of layanansAll) {
           if (klastersWhitelist.includes(layanan.id_klaster)) {
             layanans = layanans.concat(layanan)
@@ -246,11 +266,10 @@ const GeraiPage: React.FC = () => {
             <>
               {klasters.map((klaster: any) => {
                 return (
-                  <IonItem key={klaster.id}>
+                  <IonItem key={klaster.id} mode="md" routerLink={"/pemilik/gerai/"+kode+"/klaster/"+klaster.id}>
                     <IonIcon icon={bookmarksOutline} size="large" />&nbsp;
                     <IonLabel>
                       <h3>{klaster.nama}</h3>
-                      <p>Buka tiap hari</p>
                     </IonLabel>
                   </IonItem>
                 )
@@ -277,7 +296,7 @@ const GeraiPage: React.FC = () => {
               <h3>{chosenGerai.nama}</h3>
               <p>@{chosenGerai.kode}</p>
             </IonLabel>
-            <IonIcon slot="end" icon={createOutline} onClick={()=>$('#btn-edit').click()} />
+            <IonIcon slot="end" icon={createOutline} onClick={() => $('#btn-edit').click()} />
           </IonItem>
           <div className="ion-padding-top ion-padding-horizontal">
             <IonLabel>
@@ -305,12 +324,12 @@ const GeraiPage: React.FC = () => {
         <div className={chosenSegment === 'staf' ? "" : "custom-hidden"}>
           staf
         </div>
-        <IonButton className="custom-hidden" routerLink={"/pemilik/gerai/"+kode+"/edit"} id="btn-edit" />
+        <IonButton className="custom-hidden" routerLink={"/pemilik/gerai/" + kode + "/edit"} id="btn-edit" />
       </>
     )
   }
 
-  console.log(gerais)
+  //console.log(gerais)
 
   return (
     <>
@@ -319,15 +338,30 @@ const GeraiPage: React.FC = () => {
           <IonButtons slot="start">
 
           </IonButtons>
-
           <IonTitle>
             Gerai
           </IonTitle>
           <IonButtons slot="end">
+            {/* tryna debug by doubling em */}
             {gerais.length > 1 ?
-              <IonSelect interface="popover" value={chosenGerai.kode}>
+              <IonSelect interface="popover" value={kode} onIonChange={(e) => changeChosenGerai(e.target)}>
                 {gerais.map((gerai: any) => {
-                  return (<IonSelectOption key={gerai.id} value={gerai.kode}>@{gerai.kode}</IonSelectOption>)
+                  if (gerai.kode === kode) {
+                    return (<IonSelectOption key={gerai.id} value={gerai.kode}
+                      onClick={() => changeChosenGerai(gerai.kode)}
+                    >
+                      @{gerai.kode.length < 11 ? gerai.kode : gerai.kode.substring(0, 11) + "..."}
+                    </IonSelectOption>)
+                  }
+                })}
+                {gerais.map((gerai: any) => {
+                  if (gerai.kode !== kode) {
+                    return (<IonSelectOption key={gerai.id} value={gerai.kode}
+                      onClick={() => changeChosenGerai(gerai.kode)}
+                    >
+                      @{gerai.kode.length < 11 ? gerai.kode : gerai.kode.substring(0, 11) + "..."}
+                    </IonSelectOption>)
+                  }
                 })}
               </IonSelect> : ""
             }

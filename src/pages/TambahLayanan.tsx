@@ -19,7 +19,7 @@ const TambahLayananPage: React.FC = () => {
     durasi: ''
   })
   const klasters = state.pemilik.klasters
-  const hasKlaster = klasters.length > 0 ? true : false
+  const hasKlaster = (Array.isArray(klasters) && klasters.length > 0) ? true : false
   const [chosenKlaster, setChosenKlaster] = useState()
   const dispatch = useDispatch()
   const addLayananIsCompleteLocal = state.addLayananIsComplete
@@ -28,7 +28,7 @@ const TambahLayananPage: React.FC = () => {
     if (hasKlaster) {
       setChosenKlaster(klasters[0].id)
     }
-    if(addLayananIsCompleteLocal){
+    if (addLayananIsCompleteLocal) {
       setBusy(false)
       dispatch(addLayananIsComplete(false))
       $('#btn-back').click()
@@ -148,9 +148,10 @@ const TambahLayananPage: React.FC = () => {
               </IonSelect>
             </IonItem>
           </IonList>}
-        <div className="ion-padding">
+        {hasKlaster ? <div className="ion-padding">
           <IonButton expand="block" onClick={() => submitLayanan()}>Buat</IonButton>
-        </div>
+        </div> : ""}
+
       </IonContent>
       <IonButton className="custom-hidden" id="btn-back" routerLink={motherURL} />
     </>

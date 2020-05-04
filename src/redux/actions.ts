@@ -72,7 +72,7 @@ export const removeGerai = (payload: any) => {
 export const hapusGeraiAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/gerai/deletebykode?" + queryString.stringify(payload)).then(response => {
-      dispatch(removeGerai(payload))
+      dispatch(setPemilikBelongingsUpToDate(false))
     })
   }
 }
@@ -225,10 +225,17 @@ export const setPemilikBelongingsUpToDate = (payload: any) => {
 }
 
 export const editGeraiAsync = (payload: any) => {
+  console.log("params:", payload)
   return (dispatch: any) => {
-    Axios.get(apiSite + "/gerais/edit?" + stringify(payload)).then(response => {
+    Axios.get(apiSite + "/gerai/edit?" + stringify(payload)).then(response => {
       console.log(response.data)
       dispatch(setPemilikBelongingsUpToDate(false))
     })
+  }
+}
+
+export const editKlasterAsync = (payload: any) => {
+  return (dispatch: any) => {
+    //noting
   }
 }

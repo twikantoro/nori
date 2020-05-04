@@ -54,7 +54,8 @@ const DaftarGerai: React.FC = () => {
       dispatch(geraiNeedsUpdate(false))
       setBusy(false)
       toast("Berhasil")
-      $('#btnToGerai').click()
+      //$('#btnToGerai').click()
+      window.location.href="/pemilik/gerai"
     }
   })
 
