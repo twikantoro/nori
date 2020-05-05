@@ -126,9 +126,6 @@ const EditKlasterPage: React.FC = () => {
             <IonCol>
               <IonButton fill="outline" color="danger" expand="block" onClick={() => setShowAlert(true)}>Hapus Klaster</IonButton>
             </IonCol>
-            <IonCol>
-              <IonButton fill="outline" expand="block" onClick={() => $('#btn-back').click()}>Batal</IonButton>
-            </IonCol>
           </IonRow>
         </IonList>
         <IonAlert

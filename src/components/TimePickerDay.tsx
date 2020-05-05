@@ -32,9 +32,11 @@ const TimePickerDay: React.FC<OwnProps> = ({ hariID, jadwalDay }) => {
   const [jamMulaiIstirahat, setJamMulaiIstirahat] = useState('2020-01-01T12:00')
   const [jamSelesaiIstirahat, setJamSelesaiIstirahat] = useState('2020-01-01T13:00')
   const dispatch = useDispatch()
+  const [initialized, setInitialized] = useState(false)
 
   function toggleSameAsSenin() {
-    setSameAsSenin(!sameAsSenin)
+    console.log("sameAsSenin? " + sameAsSenin)
+    setSameAsSenin(sameAsSenin ? false : true)
   }
 
   function toggleLibur() {
@@ -46,32 +48,34 @@ const TimePickerDay: React.FC<OwnProps> = ({ hariID, jadwalDay }) => {
   }
 
   useEffect(() => {
-    //new. trying to decode from db
-    if (jadwalDay !== 'e') { //inputted, not empty
-      if (jadwalDay == 's') { //same as senin
-        setSameAsSenin(true)
-      } else { //not same as senin
-        if (jadwalDay == '') { //libur
-          setIsLibur(true)
-        } else { //masuk
-          if (jadwalDay.includes(",")) {
-            //with istirahat
-            var sesi1 = jadwalDay.split(",")[0]
-            setJamBuka('2020-01-01T' + sesi1.split("-")[0])
-            setJamMulaiIstirahat('2020-01-01T' + sesi1.split("-")[1])
-            var sesi2 = jadwalDay.split(",")[1]
-            setJamSelesaiIstirahat('2020-01-01T' + sesi2.split("-")[0])
-            setJamTutup('2020-01-01T' + sesi2.split("-")[1])
-            setIstirahat(true)
-          } else {
-            //without istirahat
-            setJamBuka('2020-01-01T' + jadwalDay.split("-")[0])
-            setJamTutup('2020-01-01T' + jadwalDay.split("-")[1])
+    if (!initialized) {
+      //new. trying to decode from db
+      if (jadwalDay !== 'e') { //inputted, not empty
+        if (jadwalDay == 's') { //same as senin
+          setSameAsSenin(true)
+        } else { //not same as senin
+          if (jadwalDay == '') { //libur
+            setIsLibur(true)
+          } else { //masuk
+            if (jadwalDay.includes(",")) {
+              //with istirahat
+              var sesi1 = jadwalDay.split(",")[0]
+              setJamBuka('2020-01-01T' + sesi1.split("-")[0])
+              setJamMulaiIstirahat('2020-01-01T' + sesi1.split("-")[1])
+              var sesi2 = jadwalDay.split(",")[1]
+              setJamSelesaiIstirahat('2020-01-01T' + sesi2.split("-")[0])
+              setJamTutup('2020-01-01T' + sesi2.split("-")[1])
+              setIstirahat(true)
+            } else {
+              //without istirahat
+              setJamBuka('2020-01-01T' + jadwalDay.split("-")[0])
+              setJamTutup('2020-01-01T' + jadwalDay.split("-")[1])
+            }
           }
         }
       }
+      setInitialized(true)
     }
-
     //old
     var jadwalString
     if (isLibur) {
@@ -100,12 +104,12 @@ const TimePickerDay: React.FC<OwnProps> = ({ hariID, jadwalDay }) => {
       {hariID === "0" ? "" :
         <IonItem lines="none">
           <IonLabel><p>Sama seperti Senin</p></IonLabel>
-          <IonToggle onClick={() => toggleSameAsSenin()} checked={sameAsSenin ? true : false}></IonToggle>
+          <IonToggle onClick={() => toggleSameAsSenin()} checked={sameAsSenin}></IonToggle>
         </IonItem>
       }
       {sameAsSenin ? "" : <IonItem lines="none">
         <IonLabel><p>Libur</p></IonLabel>
-        <IonToggle onClick={() => toggleLibur()} checked={isLibur ? true : false}></IonToggle>
+        <IonToggle onClick={() => toggleLibur()} checked={isLibur}></IonToggle>
       </IonItem>
       }
       <IonItemDivider style={height1px}></IonItemDivider>

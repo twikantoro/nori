@@ -173,11 +173,6 @@ const GeraiEditPage: React.FC = () => {
                 Hapus gerai
               </IonButton>
             </IonCol>
-            <IonCol>
-              <IonButton fill="outline" expand="block" onClick={() => $('#btnToGerai').click()}>
-                Batal
-              </IonButton>
-            </IonCol>
           </IonRow>
         </IonGrid>
         <IonAlert

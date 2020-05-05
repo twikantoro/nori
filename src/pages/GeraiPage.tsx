@@ -126,12 +126,17 @@ const GeraiPage: React.FC = () => {
       const jmlLayanan = layanans.length
 
       interface layananCompProps {
-        title: any
+        title: any,
+        laykode: any,
+        aktif: any
       }
-      const LayananComp: React.FC<layananCompProps> = ({ title }) => {
+      const LayananComp: React.FC<layananCompProps> = ({ title, laykode, aktif }) => {
+        const bgGrey = {
+          backgroundColor: "#dddddd"
+        }
         return (
           <IonCol>
-            <IonCard mode="md" className="ion-no-margin">
+            <IonCard style={aktif ? {} : bgGrey} mode="md" className="ion-no-margin" button routerLink={"/pemilik/gerai/" + kode + "/layanan/" + laykode}>
               <IonCardContent className="ion-justify-content-center ion-text-center">
                 <IonIcon icon={hourglassOutline} size="large" color="primary" />
                 <br />
@@ -234,7 +239,7 @@ const GeraiPage: React.FC = () => {
                             return <LayananInvisComp width="1" key={"tambahan" + layanan.tumbuhanID} />
                           }
                         } else {
-                          return <LayananComp title={layanan.nama} key={layanan.id} />
+                          return <LayananComp title={layanan.nama} key={layanan.id} laykode={layanan.kode} aktif={layanan.aktif} />
                         }
                       })
                     }
@@ -266,7 +271,7 @@ const GeraiPage: React.FC = () => {
             <>
               {klasters.map((klaster: any) => {
                 return (
-                  <IonItem key={klaster.id} mode="md" routerLink={"/pemilik/gerai/"+kode+"/klaster/"+klaster.id}>
+                  <IonItem key={klaster.id} mode="md" routerLink={"/pemilik/gerai/" + kode + "/klaster/" + klaster.id}>
                     <IonIcon icon={bookmarksOutline} size="large" />&nbsp;
                     <IonLabel>
                       <h3>{klaster.nama}</h3>

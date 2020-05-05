@@ -251,3 +251,39 @@ export const hapusKlasterAsync = (payload: any) => {
     })
   }
 }
+
+export const editLayananAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + "/layanan/edit?" + stringify(payload)).then(response => {
+      console.log("editlayanan?: "+response.data)
+      dispatch(setPemilikBelongingsUpToDate(false))
+    })
+  }
+}
+
+export const hapusLayananAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + "/layanan/hapus?" + stringify(payload)).then(response => {
+      console.log("hapuslayanan?: "+response.data)
+      dispatch(setPemilikBelongingsUpToDate(false))
+    })
+  }
+}
+
+export const deaktivasiLayananAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + "/layanan/deaktivasi?" + stringify(payload)).then(response => {
+      console.log("deaktivasilayanan?: "+response.data)
+      dispatch(setPemilikBelongingsUpToDate(false))
+    })
+  }
+}
+
+export const aktivasiLayananAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + "/layanan/aktivasi?" + stringify(payload)).then(response => {
+      console.log("aktivasilayanan?: "+response.data)
+      dispatch(setPemilikBelongingsUpToDate(false))
+    })
+  }
+}
