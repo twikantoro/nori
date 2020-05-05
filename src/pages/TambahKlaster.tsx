@@ -94,7 +94,7 @@ const TambahKlasterPage: React.FC = () => {
           <IonItem lines="none">
             <b>Waktu operasional:</b>&nbsp;
           </IonItem>
-          <TimePicker />
+          <TimePicker jadwal="empty" />
           <div className="ion-padding">
             <IonButton expand="block" onClick={() => submitLayanan()}>Buat</IonButton>
           </div>

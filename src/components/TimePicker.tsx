@@ -4,7 +4,24 @@ import { addCircleOutline } from 'ionicons/icons'
 import $ from 'jquery'
 import TimePickerDay from './TimePickerDay'
 
-const TimePicker: React.FC = () => {
+interface OwnProps {
+  jadwal: any
+}
+
+const TimePicker: React.FC<OwnProps> = ({ jadwal }) => {
+  var jadwalArr = new Array(0)
+
+  if (jadwal === 'empty') {
+    jadwalArr = ["e", "e", "e", "e", "e", "e", "e"]
+  } else {
+    jadwalArr = JSON.parse(jadwal)
+    for (let i = 1; i < 7; i++) {
+      if (jadwalArr[0] === jadwalArr[i]) {
+        jadwalArr[i] = 's'
+      }
+    }
+  }
+
   const [sen, setSen] = useState(true)
   const [sel, setSel] = useState(false)
   const [rab, setRab] = useState(false)
@@ -15,7 +32,7 @@ const TimePicker: React.FC = () => {
   const [haris, setHaris] = useState([sen, sel, rab, kam, jum, sab, min])
   const [chosenHari, setChosenHari] = useState(0)
   const [pageInitiated, setPageInitiated] = useState(false)
-  
+
   const [hariDisplay, setHariDisplay] = useState('')
 
   const styleShown = {
@@ -130,11 +147,11 @@ const TimePicker: React.FC = () => {
 
   function chooseHari(hari: any) {
     $(".item-hari").hide()
-    $('#item'+hari).show()
+    $('#item' + hari).show()
     setChosenHari(hari)
   }
 
-  if(pageInitiated){
+  if (pageInitiated) {
     chooseHari(0)
     setPageInitiated(true)
   }
@@ -154,13 +171,13 @@ const TimePicker: React.FC = () => {
           </IonItem>
         </IonCardHeader>
         <IonItemDivider style={ItemDividerStyle}></IonItemDivider>
-        <TimePickerDay hariID="0" />
-        <TimePickerDay hariID="1" />
-        <TimePickerDay hariID="2" />
-        <TimePickerDay hariID="3" />
-        <TimePickerDay hariID="4" />
-        <TimePickerDay hariID="5" />
-        <TimePickerDay hariID="6" />
+        <TimePickerDay hariID="0" jadwalDay={jadwalArr[0]} />
+        <TimePickerDay hariID="1" jadwalDay={jadwalArr[1]} />
+        <TimePickerDay hariID="2" jadwalDay={jadwalArr[2]} />
+        <TimePickerDay hariID="3" jadwalDay={jadwalArr[3]} />
+        <TimePickerDay hariID="4" jadwalDay={jadwalArr[4]} />
+        <TimePickerDay hariID="5" jadwalDay={jadwalArr[5]} />
+        <TimePickerDay hariID="6" jadwalDay={jadwalArr[6]} />
       </IonCard>
     </>
   )

@@ -6,7 +6,8 @@ import { setJadwal } from '../redux/actions'
 import $ from 'jquery'
 
 interface OwnProps {
-  hariID: string
+  hariID: string,
+  jadwalDay: any
 }
 
 const styleShown = {
@@ -21,7 +22,7 @@ const height1px = {
   minHeight: '1px'
 }
 
-const TimePickerDay: React.FC<OwnProps> = ({ hariID }) => {
+const TimePickerDay: React.FC<OwnProps> = ({ hariID, jadwalDay }) => {
   const [jamBuka, setJamBuka] = useState('2020-01-01T07:30')
   const [jamTutup, setJamTutup] = useState('2020-01-01T15:00')
   const [sameAsSenin, setSameAsSenin] = useState(false)
@@ -45,6 +46,33 @@ const TimePickerDay: React.FC<OwnProps> = ({ hariID }) => {
   }
 
   useEffect(() => {
+    //new. trying to decode from db
+    if (jadwalDay !== 'e') { //inputted, not empty
+      if (jadwalDay == 's') { //same as senin
+        setSameAsSenin(true)
+      } else { //not same as senin
+        if (jadwalDay == '') { //libur
+          setIsLibur(true)
+        } else { //masuk
+          if (jadwalDay.includes(",")) {
+            //with istirahat
+            var sesi1 = jadwalDay.split(",")[0]
+            setJamBuka('2020-01-01T' + sesi1.split("-")[0])
+            setJamMulaiIstirahat('2020-01-01T' + sesi1.split("-")[1])
+            var sesi2 = jadwalDay.split(",")[1]
+            setJamSelesaiIstirahat('2020-01-01T' + sesi2.split("-")[0])
+            setJamTutup('2020-01-01T' + sesi2.split("-")[1])
+            setIstirahat(true)
+          } else {
+            //without istirahat
+            setJamBuka('2020-01-01T' + jadwalDay.split("-")[0])
+            setJamTutup('2020-01-01T' + jadwalDay.split("-")[1])
+          }
+        }
+      }
+    }
+
+    //old
     var jadwalString
     if (isLibur) {
       jadwalString = ""
@@ -72,12 +100,12 @@ const TimePickerDay: React.FC<OwnProps> = ({ hariID }) => {
       {hariID === "0" ? "" :
         <IonItem lines="none">
           <IonLabel><p>Sama seperti Senin</p></IonLabel>
-          <IonToggle onClick={() => toggleSameAsSenin()}></IonToggle>
+          <IonToggle onClick={() => toggleSameAsSenin()} checked={sameAsSenin ? true : false}></IonToggle>
         </IonItem>
       }
       {sameAsSenin ? "" : <IonItem lines="none">
         <IonLabel><p>Libur</p></IonLabel>
-        <IonToggle onClick={() => toggleLibur()}></IonToggle>
+        <IonToggle onClick={() => toggleLibur()} checked={isLibur ? true : false}></IonToggle>
       </IonItem>
       }
       <IonItemDivider style={height1px}></IonItemDivider>

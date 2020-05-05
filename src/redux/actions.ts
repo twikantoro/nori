@@ -236,6 +236,18 @@ export const editGeraiAsync = (payload: any) => {
 
 export const editKlasterAsync = (payload: any) => {
   return (dispatch: any) => {
-    //noting
+    Axios.get(apiSite + "/klaster/edit?" + stringify(payload)).then(response => {
+      console.log("editklaster?: "+response.data)
+      dispatch(setPemilikBelongingsUpToDate(false))
+    })
+  }
+}
+
+export const hapusKlasterAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + "/klaster/hapus?" + stringify(payload)).then(response => {
+      console.log("hapusklaster?: "+response.data)
+      dispatch(setPemilikBelongingsUpToDate(false))
+    })
   }
 }
