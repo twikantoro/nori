@@ -130,9 +130,10 @@ const Login: React.FC = () => {
           {/* <IonButton color="facebook" className="no-text-transform" expand="block" onClick={()=>loginWithFacebook()}>
             <IonIcon icon={logoFacebook} slot="start" />
              Login dengan Facebook</IonButton> */}
-          <IonButton color="google" className="no-text-transform" expand="block" onClick={()=>loginWithGoogle()}>
-            <IonIcon icon={logoGoogle} slot="start" />
-            Login dengan Google</IonButton>
+          <IonButton mode="md" color="white" className="no-text-transform custom-login-text-google" expand="block" onClick={()=>loginWithGoogle()}>
+            {/* <IonIcon icon={logoGoogle} slot="start" /> */}
+            <img src="/assets/img/google-logo.png" className="custom-login-pic-google"/>
+            Masuk dengan Google</IonButton>
           <IonRow className="ion-justify-content-center">
             <p>Atau <Link to="/signup">daftar</Link> dengan email</p>
           </IonRow>

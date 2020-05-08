@@ -13,7 +13,7 @@ const Pengantri: React.FC = () => {
   return (
     <IonTabs>
       <IonRouterOutlet>
-        <Redirect exact from="/pengantri" to="/pengantri/akun" />
+        <Redirect exact from="/pengantri" to="/pengantri/cari" />
         <Route path="/pengantri/antrian" render={() => <AntrianTab />} exact={true} />
         <Route path="/pengantri/cari" render={() => <CariTab />} exact={true} />
         <Route path="/pengantri/notifikasi" render={() => <NotifikasiTab />} exact={true} />
@@ -31,7 +31,7 @@ const Pengantri: React.FC = () => {
         </IonTabButton>
         <IonTabButton tab="cari" href="/pengantri/cari">
           <IonIcon icon={duplicateOutline} />
-          <IonLabel>Cari gerai</IonLabel>
+          <IonLabel>Reservasi</IonLabel>
         </IonTabButton>
         <IonTabButton tab="notifikasi" href="/pengantri/notifikasi">
           <IonIcon icon={notificationsOutline} />

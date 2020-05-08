@@ -1,37 +1,74 @@
 #nori-logo-big {
   --padding-start: 20vw;
 }
+
 .persyaratan-content {
-  padding: 0px 20px 20px 20px ;
-  margin: 0px ;
+  padding: 0px 20px 20px 20px;
+  margin: 0px;
 }
+
 .height-45vh {
   height: 48vh;
 }
+
 .height-50-percent {
   height: 50vh;
 }
+
 .bg-transparent {
   background: transparent;
 }
+
 .ripple-transparent {
   --ripple-color: transparent;
 }
+
 .no-text-transform {
   text-transform: none;
 }
+
 .custom-hidden {
   display: none;
 }
+
 .item-hari {
   display: none;
 }
+
 .bg-medium {
   background-color: #d7d8da;
 }
+
 .opacity-0 {
   opacity: 0;
 }
+
 .bg-850 {
   background-color: #dbdbdb;
+}
+
+.custom-divider {
+  min-height: 1px;
+}
+
+.custom-review-text {
+  font-size: 0.8em;
+}
+
+.custom-login-pic {
+  width: 2em;
+  height: auto;
+  margin-right: 0.5em;
+}
+
+.custom-login-pic-google {
+  width: 1.5em;
+  height: auto;
+  margin-right: 0.5em;
+}
+
+.custom-login-text-google {
+  color: black;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
 }

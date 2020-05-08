@@ -237,7 +237,7 @@ export const editGeraiAsync = (payload: any) => {
 export const editKlasterAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/klaster/edit?" + stringify(payload)).then(response => {
-      console.log("editklaster?: "+response.data)
+      console.log("editklaster?: " + response.data)
       dispatch(setPemilikBelongingsUpToDate(false))
     })
   }
@@ -246,7 +246,7 @@ export const editKlasterAsync = (payload: any) => {
 export const hapusKlasterAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/klaster/hapus?" + stringify(payload)).then(response => {
-      console.log("hapusklaster?: "+response.data)
+      console.log("hapusklaster?: " + response.data)
       dispatch(setPemilikBelongingsUpToDate(false))
     })
   }
@@ -255,7 +255,7 @@ export const hapusKlasterAsync = (payload: any) => {
 export const editLayananAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/layanan/edit?" + stringify(payload)).then(response => {
-      console.log("editlayanan?: "+response.data)
+      console.log("editlayanan?: " + response.data)
       dispatch(setPemilikBelongingsUpToDate(false))
     })
   }
@@ -264,7 +264,7 @@ export const editLayananAsync = (payload: any) => {
 export const hapusLayananAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/layanan/hapus?" + stringify(payload)).then(response => {
-      console.log("hapuslayanan?: "+response.data)
+      console.log("hapuslayanan?: " + response.data)
       dispatch(setPemilikBelongingsUpToDate(false))
     })
   }
@@ -273,7 +273,7 @@ export const hapusLayananAsync = (payload: any) => {
 export const deaktivasiLayananAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/layanan/deaktivasi?" + stringify(payload)).then(response => {
-      console.log("deaktivasilayanan?: "+response.data)
+      console.log("deaktivasilayanan?: " + response.data)
       dispatch(setPemilikBelongingsUpToDate(false))
     })
   }
@@ -282,8 +282,21 @@ export const deaktivasiLayananAsync = (payload: any) => {
 export const aktivasiLayananAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/layanan/aktivasi?" + stringify(payload)).then(response => {
-      console.log("aktivasilayanan?: "+response.data)
+      console.log("aktivasilayanan?: " + response.data)
       dispatch(setPemilikBelongingsUpToDate(false))
     })
   }
+}
+
+export const searchGeraiOrLayanan = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + "/layanan/searchGeraiOrLayanan?" + stringify(payload)).then(response => {
+      console.log("searchGeraiOrLayanan?: " + response.data)
+      dispatch(setHasilSearch(response.data))
+    })
+  }
+}
+
+export const setHasilSearch = (payload: any) => {
+  return { type: 'SET_HASIL_SEARCH', payload }
 }

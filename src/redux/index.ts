@@ -193,7 +193,7 @@ export default function reducer(state = initialState,
         ...payload
       }
       var chosenGerai = state.chosenGeraiKode
-      if(chosenGerai==''){
+      if (chosenGerai == '') {
         chosenGerai = Array.isArray(payload.gerais) ? payload.gerais[0].kode : ""
       }
       return {
@@ -209,7 +209,7 @@ export default function reducer(state = initialState,
         fetchingPemilikBelongings: payload
       }
     case 'SET_CHOSEN_GERAI':
-      console.log("state.chosengeraikode: "+payload)
+      console.log("state.chosengeraikode: " + payload)
       return {
         ...state,
         chosenGeraiKode: payload
@@ -240,6 +240,15 @@ export default function reducer(state = initialState,
       return {
         ...state,
         pemilikBelongingsUpToDate: payload
+      }
+    case 'SET_HASIL_SEARCH':
+      var newPayload = new Array(0)
+      if (Array.isArray(payload)) {
+        newPayload = payload
+      }
+      return {
+        ...state,
+        hasilSearch: newPayload
       }
   }
 }
