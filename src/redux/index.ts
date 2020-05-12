@@ -52,7 +52,8 @@ const initialState = {
   fetchingPemilikBelongings: false,
   chosenGeraiKode: '',
   error: '',
-  backURLs: new Array(0)
+  backURLs: new Array(0),
+  isSearching: false
 }
 
 export default function reducer(state = initialState,
@@ -241,6 +242,11 @@ export default function reducer(state = initialState,
         ...state,
         pemilikBelongingsUpToDate: payload
       }
+    case 'SET_IS_SEARCHING':
+      return {
+        ...state,
+        isSearching: payload
+      }
     case 'SET_HASIL_SEARCH':
       var newPayload = new Array(0)
       if (Array.isArray(payload)) {
@@ -248,7 +254,8 @@ export default function reducer(state = initialState,
       }
       return {
         ...state,
-        hasilSearch: newPayload
+        hasilSearch: newPayload,
+        isSearching: false
       }
   }
 }

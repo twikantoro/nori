@@ -290,8 +290,8 @@ export const aktivasiLayananAsync = (payload: any) => {
 
 export const searchGeraiOrLayanan = (payload: any) => {
   return (dispatch: any) => {
-    Axios.get(apiSite + "/layanan/searchGeraiOrLayanan?" + stringify(payload)).then(response => {
-      console.log("searchGeraiOrLayanan?: " + response.data)
+    Axios.get(apiSite + "/layanan/searchRefined?" + stringify(payload)).then(response => {
+      console.log("searchGeraiOrLayanan?: ", response.data)
       dispatch(setHasilSearch(response.data))
     })
   }
@@ -299,4 +299,8 @@ export const searchGeraiOrLayanan = (payload: any) => {
 
 export const setHasilSearch = (payload: any) => {
   return { type: 'SET_HASIL_SEARCH', payload }
+}
+
+export const setIsSearching = (payload: any) => {
+  return { type: 'SET_IS_SEARCHING', payload }
 }

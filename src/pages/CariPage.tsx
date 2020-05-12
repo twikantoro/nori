@@ -1,17 +1,33 @@
 import React, { useState } from 'react'
-import { IonToolbar, IonTitle, IonHeader, IonContent, IonLoading, IonSearchbar, IonCol, IonRow, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonButtons, IonItemDivider, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonFooter, IonIcon, IonAvatar, IonInput } from '@ionic/react'
-import { starSharp, starHalfSharp, chevronDownOutline, chevronBackOutline, filterSharp, filterOutline, settingsOutline, funnelOutline, funnelSharp } from 'ionicons/icons'
-import { useDispatch } from 'react-redux'
-import { searchGeraiOrLayanan } from '../redux/actions'
+import { IonToolbar, IonTitle, IonHeader, IonContent, IonLoading, IonSearchbar, IonCol, IonRow, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonButtons, IonItemDivider, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonFooter, IonIcon, IonAvatar, IonInput, IonSpinner } from '@ionic/react'
+import { starSharp, starHalfSharp, chevronDownOutline, chevronBackOutline, filterSharp, filterOutline, settingsOutline, funnelOutline, funnelSharp, search, searchOutline } from 'ionicons/icons'
+import { useDispatch, useSelector } from 'react-redux'
+import { searchGeraiOrLayanan, setIsSearching } from '../redux/actions'
 
 const CariPage: React.FC = () => {
   const [busy, setBusy] = useState(false)
   const [searchText, setSearchText] = useState('')
-  const [filterExpanded, setFilterExpanded] = useState(true)
+  const [filterExpanded, setFilterExpanded] = useState(false)
   const dispatch = useDispatch()
+  const state = useSelector((state: any) => state)
+  const [lastSearch, setLastSearch] = useState('')
+
+  interface CardSearchProps {
+    props: any
+  }
+
+  const hasilSearchLocal = state.hasilSearch
+  const isSearchingLocal = state.isSearching
 
   //cardSearch component
-  const CardSearch: React.FC = () => {
+  const CardSearch: React.FC<CardSearchProps> = ({ props }) => {
+    var layanansNames = ''
+    if (props.layanans.length > 0) {
+      var layanansNamesArray = props.layanans.map((layanan: any) => layanan.nama)
+      layanansNames = layanansNamesArray.join(', ')
+    } else {
+      layanansNames = '-'
+    }
     return (
       <IonCard>
         <IonCardHeader className="ion-no-padding ion-padding-vertical">
@@ -20,8 +36,8 @@ const CariPage: React.FC = () => {
               <img src="/assets/img/location-outline.svg" />&nbsp;
             </IonAvatar>
             <IonLabel>
-              <h3>Ali's Barbershop</h3>
-              <p>Surakarta</p>
+              <h3>{props.nama}</h3>
+              <p>@{props.kode}</p>
             </IonLabel>
             <div slot="end" className="ion-text-right ion-justify-content-right custom-review-text">
               <IonIcon icon={starSharp} color="warning" />
@@ -37,22 +53,40 @@ const CariPage: React.FC = () => {
         <IonCardContent>
           <p>
             <b>Deskripsi: </b>
-          Melayani tukar uang dan layanan lainnya
-        </p>
+            {props.deskripsi}
+          </p>
           <p>
             <b>Alamat: </b>
-          Jl. Perintis kemerdekaan No 69 Surakarta
-        </p>
+            {props.alamat}
+          </p>
+          <p>
+            <b>Wilayah: </b>
+            {props.wilayah}
+          </p>
+          <p>
+            <b>Layanan: </b>
+            {layanansNames}
+          </p>
         </IonCardContent>
       </IonCard>
     )
   }
 
+  const TiadaHasil: React.FC = () => {
+    return (
+      <>
+        <p className="ion-padding-horizontal">Tiada hasil untuk <b>"{searchText}"</b></p>
+      </>
+    )
+  }
+
   async function goSearch() {
-    console.log('search: '+searchText)
+    setLastSearch(searchText)
+    console.log('search: ' + searchText)
     let params = {
       searchText: searchText
     }
+    dispatch(setIsSearching(true))
     dispatch(searchGeraiOrLayanan(params))
   }
 
@@ -68,28 +102,42 @@ const CariPage: React.FC = () => {
       </IonHeader>
       <IonContent>
         <IonLoading isOpen={busy} />
-        <IonRow>
+        <IonRow className="ion-align-items-center">
           <IonCol>
-            <IonSearchbar value={searchText} onIonChange={(e: any) => { setSearchText(e.detail.value); goSearch() }} mode="ios"
-              placeholder="Cari gerai atau layanan"
+            <IonSearchbar value={searchText} onIonChange={(e: any) => { setSearchText(e.detail.value) }}
+              placeholder="gerai atau layanan"
             />
           </IonCol>
+
           <div className="ion-margin-end">
-            <IonButton mode="md" color="primary" fill={!filterExpanded ? "outline" : "solid"} className="ion-margin-vertical"
+            <IonButton onClick={() => goSearch()}><IonIcon icon={searchOutline} /></IonButton>
+            <IonButton color="primary" fill={!filterExpanded ? "outline" : "solid"} className="ion-margin-vertical"
               onClick={() => setFilterExpanded(!filterExpanded)}
             ><IonIcon size="small" icon={funnelSharp} /></IonButton>
           </div>
         </IonRow>
         {filterExpanded ?
-          <IonItem lines="none">
-            <IonLabel>Wilayah:</IonLabel>
-            <IonSelect value="surakarta" interface="alert">
-              <IonSelectOption value="surakarta">Surakarta</IonSelectOption>
-            </IonSelect>
-          </IonItem>
+          <>
+            <IonItem lines="none">
+              <IonLabel>Wilayah:</IonLabel>
+              <IonSelect value="surakarta" interface="alert">
+                <IonSelectOption value="surakarta">Surakarta</IonSelectOption>
+              </IonSelect>
+            </IonItem>
+            <IonItemDivider className="custom-divider" />
+          </>
           : ""}
-        <IonItemDivider className="custom-divider" />
-        <CardSearch />
+
+        {
+          isSearchingLocal ? <div className="custom-expand ion-justify-content-center ion-align-items-center">
+            <IonSpinner /></div> :
+            (Array.isArray(hasilSearchLocal) && hasilSearchLocal.length > 0) ?
+              hasilSearchLocal.map(gerai => {
+                //console.log(gerai)
+                return <CardSearch key={gerai.id} props={gerai} />
+              })
+              : searchText === '' ? "" : searchText === lastSearch ? <TiadaHasil /> : ""
+        }
       </IonContent>
     </>
   )
