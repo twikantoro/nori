@@ -63,10 +63,12 @@ const CariPage: React.FC = () => {
             <b>Wilayah: </b>
             {props.wilayah}
           </p>
-          <p>
-            <b>Layanan: </b>
-            {layanansNames}
-          </p>
+          {props.layanans.length < 1 ? "" :
+            <p>
+              <b>Layanan: </b>
+              {layanansNames}
+            </p>
+          }
         </IonCardContent>
       </IonCard>
     )
@@ -129,9 +131,9 @@ const CariPage: React.FC = () => {
           : ""}
 
         {
-          isSearchingLocal ? <div className="custom-expand ion-justify-content-center ion-align-items-center">
+          isSearchingLocal ? <div className="ion-padding">
             <IonSpinner /></div> :
-            (Array.isArray(hasilSearchLocal) && hasilSearchLocal.length > 0) ?
+            (Array.isArray(hasilSearchLocal) && hasilSearchLocal.length > 0 && searchText === lastSearch) ?
               hasilSearchLocal.map(gerai => {
                 //console.log(gerai)
                 return <CardSearch key={gerai.id} props={gerai} />
