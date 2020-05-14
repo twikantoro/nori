@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonTitle, IonToolbar, IonButtons, IonBackButton, IonLoading, IonGrid, IonInput, IonRow, IonCol, IonButton, IonTextarea } from "@ionic/react"
+import { IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonTitle, IonToolbar, IonButtons, IonBackButton, IonLoading, IonGrid, IonInput, IonRow, IonCol, IonButton, IonTextarea, IonSelectOption, IonSelect } from "@ionic/react"
 import { chevronForwardOutline, logoGoogle } from "ionicons/icons"
 import $ from 'jquery'
 import React, { useState, useEffect } from "react"
@@ -12,6 +12,7 @@ import { setPemilikData, geraiNeedsUpdate } from "../redux/actions"
 import { toast } from "../components/toast"
 import Dispatcher from "../cheats/Dispatcher"
 import { createGeraiAsync } from "../redux/actions"
+import kotKabs from "../json/kota-kabupaten"
 
 const DaftarGerai: React.FC = () => {
   const theState = useSelector((state: any) => state)
@@ -29,7 +30,7 @@ const DaftarGerai: React.FC = () => {
   const [dispatcher, showDispatcher] = useState(false)
   const dispatch = useDispatch()
   //geraineeds update?
-  const geraiNeedsUpdateLocal = useSelector((state:any)=>state.geraiNeedsUpdate)
+  const geraiNeedsUpdateLocal = useSelector((state: any) => state.geraiNeedsUpdate)
 
   async function submitGerai() {
     if (nama === '' || kode === '' || deskripsi === '' || alamat === '' || wilayah === '') {
@@ -49,13 +50,13 @@ const DaftarGerai: React.FC = () => {
     dispatch(createGeraiAsync(params))
   }
 
-  useEffect(()=>{
-    if(geraiNeedsUpdateLocal){
+  useEffect(() => {
+    if (geraiNeedsUpdateLocal) {
       dispatch(geraiNeedsUpdate(false))
       setBusy(false)
       toast("Berhasil")
       //$('#btnToGerai').click()
-      window.location.href="/pemilik/gerai"
+      window.location.href = "/pemilik/gerai"
     }
   })
 
@@ -114,11 +115,13 @@ const DaftarGerai: React.FC = () => {
             </IonItem>
             <IonItem>
               <b>Wilayah:</b>&nbsp;
-              <IonInput
-                type="text"
-                onIonChange={(e: any) => setWilayah(e.target.value)}
-                placeholder="Meikarta"
-              />
+              <IonSelect slot="end" value={"Surakarta"} interface="alert" onIonChange={(e) => setWilayah(e.detail.value)}>
+                {kotKabs.map(kotKab => {
+                  return (
+                    <IonSelectOption key={kotKab} value={kotKab}>{kotKab}</IonSelectOption>
+                  )
+                })}
+              </IonSelect>
             </IonItem>
             {/* <IonItem>
               <b>Lokasi:</b>&nbsp;

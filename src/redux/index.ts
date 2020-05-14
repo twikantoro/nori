@@ -53,7 +53,14 @@ const initialState = {
   chosenGeraiKode: '',
   error: '',
   backURLs: new Array(0),
-  isSearching: false
+  isSearching: false,
+  pengantri: {
+    id: ''
+  },
+  pengguna: {
+    uid: ''
+  },
+  tabRefresh: 'antrian'
 }
 
 export default function reducer(state = initialState,
@@ -117,10 +124,11 @@ export default function reducer(state = initialState,
       }
 
     case 'ADD_GERAI':
+      var newGerai = state.gerais
+      newGerai[payload.kode] = payload
       return {
         ...state,
-        gerais: state.gerais.concat(payload),
-        geraiNeedsUpdate: true
+        gerais: newGerai
       }
 
     case 'REMOVE_GERAI':
@@ -256,6 +264,16 @@ export default function reducer(state = initialState,
         ...state,
         hasilSearch: newPayload,
         isSearching: false
+      }
+    case 'SET_PENGGUNA_DATA':
+      return {
+        ...state,
+        pengguna: payload
+      }
+    case 'SET_TAB_REFRESH':
+      return {
+        ...state,
+        tabRefresh: payload
       }
   }
 }

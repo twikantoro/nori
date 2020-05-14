@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react"
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonSegment, IonSegmentButton, IonLabel, IonRefresher, IonRefresherContent, IonList, IonListHeader, IonItem, IonBadge, IonSelect, IonSelectOption, IonButtons, IonButton } from "@ionic/react"
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonSegment, IonSegmentButton, IonLabel, IonRefresher, IonRefresherContent, IonList, IonListHeader, IonItem, IonBadge, IonSelect, IonSelectOption, IonButtons, IonButton, IonAvatar, IonIcon, IonItemDivider } from "@ionic/react"
 import CardAntrian from "../components/CardAntrian"
 import { useSelector, connect } from "react-redux"
 import $ from 'jquery'
 import { logoutUser } from "../config/firebaseConfig"
+import { createOutline } from "ionicons/icons"
 
 const DefaultAkunPage: React.FC = () => {
   const antrians = useSelector((state: any) => state.antrians)
@@ -13,6 +14,8 @@ const DefaultAkunPage: React.FC = () => {
   //console.log(antrians)
   const shown = { display: 'block' }
   const hidden = { display: 'none' }
+  const state = useSelector((state: any) => state)
+  const pengguna = state.pengguna
 
   const swithSegmentTo = (segment: any) => {
     setActiveSegment(segment)
@@ -36,10 +39,32 @@ const DefaultAkunPage: React.FC = () => {
               <IonSelectOption value="staf">Staf</IonSelectOption>
             </IonSelect>
           </IonButtons>
+          <IonButtons slot="end">
+            <IonButton fill="clear" color="danger">Logout</IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <IonButton onClick={() => {
+        <div className="ion-padding-vertical ion-padding-end">
+          <IonItem lines="none">
+            <IonAvatar>
+              <img src="/assets/img/person-circle-outline.svg" />
+            </IonAvatar>&nbsp;
+          <IonLabel>
+              <h3>{pengguna.displayName ? pengguna.displayName : "user tanpa nama"}</h3>
+              <p></p>
+            </IonLabel>
+            <IonIcon icon={createOutline} />
+          </IonItem>
+        </div>
+        <IonItemDivider className="custom-divider" />
+
+        <IonItem lines="none">
+          <IonLabel><h3>Email</h3></IonLabel>
+          <IonLabel slot="end" className="ion-text-right"><p>{pengguna.email}</p></IonLabel>
+        </IonItem>
+
+        <IonButton className="ion-hide" id="btn-logout" onClick={() => {
           logoutUser(function (response: any) {
             if (response === true) {
               window.location.href = "/"

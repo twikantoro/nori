@@ -348,7 +348,7 @@ const GeraiPage: React.FC = () => {
           </IonTitle>
           <IonButtons slot="end">
             {/* tryna debug by doubling em */}
-            {gerais.length > 1 ?
+            {typeof gerais === "undefined" ? "" : gerais.length > 1 ?
               <IonSelect interface="popover" value={kode} onIonChange={(e) => changeChosenGerai(e.target)}>
                 {gerais.map((gerai: any) => {
                   if (gerai.kode === kode) {

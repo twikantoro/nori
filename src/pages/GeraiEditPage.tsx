@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonButton, IonLoading, IonGrid, IonList, IonItem, IonInput, IonTextarea, IonRow, IonCol, IonAlert } from '@ionic/react'
+import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonButton, IonLoading, IonGrid, IonList, IonItem, IonInput, IonTextarea, IonRow, IonCol, IonAlert, IonSelect, IonSelectOption } from '@ionic/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { toast } from '../components/toast'
 import { getToken } from '../config/firebaseConfig'
 import { createGeraiAsync, geraiNeedsUpdate, editGeraiAsync, hapusGeraiAsync } from '../redux/actions'
 import $ from 'jquery'
 import { Link } from 'react-router-dom'
+import kotKabs from '../json/kota-kabupaten'
 
 const GeraiEditPage: React.FC = () => {
   const [busy, setBusy] = useState(false)
@@ -35,7 +36,7 @@ const GeraiEditPage: React.FC = () => {
   const [wilayah, setWilayah] = useState(currGerai.wilayah)
   const [kode, setKode] = useState(currGerai.kode)
 
-  const [showAlertDelete,setShowAlertDelete] = useState(false)
+  const [showAlertDelete, setShowAlertDelete] = useState(false)
 
   async function submitEditGerai() {
     if (nama === '' || kode === '' || deskripsi === '' || alamat === '' || wilayah === '') {
@@ -142,12 +143,13 @@ const GeraiEditPage: React.FC = () => {
             </IonItem>
             <IonItem>
               <b>Wilayah:</b>&nbsp;
-              <IonInput
-                type="text"
-                onIonChange={(e: any) => setWilayah(e.target.value)}
-                placeholder="Meikarta"
-                value={wilayah}
-              />
+              <IonSelect slot="end" value={wilayah} interface="alert" onIonChange={(e) => setWilayah(e.detail.value)}>
+                {kotKabs.map(kotKab => {
+                  return (
+                    <IonSelectOption key={kotKab} value={kotKab}>{kotKab}</IonSelectOption>
+                  )
+                })}
+              </IonSelect>
             </IonItem>
             {/* <IonItem>
               <b>Lokasi:</b>&nbsp;
@@ -169,7 +171,7 @@ const GeraiEditPage: React.FC = () => {
           </IonRow>
           <IonRow>
             <IonCol>
-              <IonButton color="danger" fill="outline" expand="block" onClick={()=>setShowAlertDelete(true)}>
+              <IonButton color="danger" fill="outline" expand="block" onClick={() => setShowAlertDelete(true)}>
                 Hapus gerai
               </IonButton>
             </IonCol>

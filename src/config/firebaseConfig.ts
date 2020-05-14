@@ -19,7 +19,7 @@ var config = {
 
 };
 firebase.initializeApp(config);
-firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
 
 function arrayToGet(array: any) {
   var encoded = ''

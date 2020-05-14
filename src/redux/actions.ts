@@ -47,10 +47,6 @@ export const newState = (payload: any) => {
   return { type: 'NEW_STATE', payload }
 }
 
-export const addGerai = (payload: any) => {
-  return { type: 'ADD_GERAI', payload }
-}
-
 export const createGeraiAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/gerai/create?" + queryString.stringify(payload)).then(response => {
@@ -304,3 +300,31 @@ export const setHasilSearch = (payload: any) => {
 export const setIsSearching = (payload: any) => {
   return { type: 'SET_IS_SEARCHING', payload }
 }
+
+export const getGeraiAsyncPublic = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + "/gerai/" + payload).then(response => {
+      console.log("gerGerai?", response.data)
+      dispatch(addGerai(response.data))
+    })
+  }
+}
+
+export const addGerai = (payload: any) => {
+  return { type: 'ADD_GERAI', payload }
+}
+
+export const setPenggunaData = (payload: any) => {
+  return { type: 'SET_PENGGUNA_DATA', payload }
+}
+
+export const setTabRefresh = (payload: any) => {
+  return { type: 'SET_TAB_REFRESH', payload }
+}
+
+export const getLayananForOrderAsyncPublic = (payload: any) => {
+  return (dispatch: any) => {
+    //please write
+  }
+}
+

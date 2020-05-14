@@ -3,6 +3,7 @@ import { IonToolbar, IonTitle, IonHeader, IonContent, IonLoading, IonSearchbar, 
 import { starSharp, starHalfSharp, chevronDownOutline, chevronBackOutline, filterSharp, filterOutline, settingsOutline, funnelOutline, funnelSharp, search, searchOutline } from 'ionicons/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { searchGeraiOrLayanan, setIsSearching } from '../redux/actions'
+import { Link } from 'react-router-dom'
 
 const CariPage: React.FC = () => {
   const [busy, setBusy] = useState(false)
@@ -29,7 +30,7 @@ const CariPage: React.FC = () => {
       layanansNames = '-'
     }
     return (
-      <IonCard>
+      <IonCard button routerLink={'/pengantri/cari/'+props.kode}>
         <IonCardHeader className="ion-no-padding ion-padding-vertical">
           <IonItem lines="none">
             <IonAvatar>
@@ -140,6 +141,7 @@ const CariPage: React.FC = () => {
               })
               : searchText === '' ? "" : searchText === lastSearch ? <TiadaHasil /> : ""
         }
+        <Link to="/pengantri/cari/geraibaru/priksamata" >shortcut</Link>
       </IonContent>
     </>
   )
