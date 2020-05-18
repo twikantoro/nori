@@ -8,6 +8,7 @@ import GeraiView from "../../pages/GeraiView"
 import LayananView from "../../pages/LayananView"
 import { setTabRefresh } from "../../redux/actions"
 import $ from 'jquery'
+import OrderView from "../../pages/OrderView"
 
 const AntrianTab: React.FC = () => {
   const username = useSelector((state: any) => state.user.username)
@@ -38,6 +39,7 @@ const AntrianTab: React.FC = () => {
           <Route exact path="/pengantri/cari" component={CariPage} />
           <Route exact path="/pengantri/cari/:id" component={GeraiView} />
           <Route exact path="/pengantri/cari/:id/:id" component={LayananView} />
+          <Route exact path="/pengantri/cari/:id/:id/order" component={OrderView} />
         </Switch>
       </IonReactRouter>
       <IonButton className="ion-hide" id="btn-cari-refresh" routerLink="/pengantri/cari"></IonButton>

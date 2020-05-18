@@ -8,13 +8,13 @@ const LayananView: React.FC = () => {
   let URLarray = window.location.href.split("/")
   let kodeGerai = URLarray[5]
   let kodeLayanan = URLarray[6]
-  const state = useSelector((state:any)=>state)
+  const state = useSelector((state: any) => state)
   const tabRefresh = state.tabRefresh
   const dispatch = useDispatch()
 
   const [busy, setBusy] = useState(false)
 
-  useEffect(()=>{
+  useEffect(() => {
     if (tabRefresh === 'cari') {
       $('#btn-cari-refresh').click()
       dispatch(setTabRefresh(''))
@@ -53,7 +53,8 @@ const LayananView: React.FC = () => {
             <IonItemDivider className="custom-divider" />
             <div className="ion-padding">
               <IonButton expand="block">Pesan cepat (07.30)</IonButton>
-              <IonButton expand="block" fill="outline">Pesan (pilih waktu)</IonButton>
+              <IonButton routerLink={"/pengantri/cari/" + kodeGerai + "/" + kodeLayanan + "/order"}
+                expand="block" fill="outline">Pesan (pilih waktu)</IonButton>
             </div>
           </>
         }
