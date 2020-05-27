@@ -60,7 +60,21 @@ const initialState = {
   pengguna: {
     uid: ''
   },
-  tabRefresh: 'antrian'
+  tabRefresh: 'antrian',
+  sacredPath: {
+    antrian: '',
+    riwayat: '',
+    cari: '',
+    notifikasi: '',
+    akun: ''
+  },
+  pathHistory: {
+    antrian: '',
+    riwayat: '',
+    cari: '',
+    notifikasi: '',
+    akun: ''
+  }
 }
 
 export default function reducer(state = initialState,
@@ -274,6 +288,29 @@ export default function reducer(state = initialState,
       return {
         ...state,
         tabRefresh: payload
+      }
+    case 'SET_SACRED_PATH':
+      var newSacredPath = state.sacredPath
+      if (payload.tab === 'antrian') {
+        newSacredPath.antrian = payload.path
+      } else if (payload.tab === 'riwayat') {
+        newSacredPath.riwayat = payload.path
+      } else if (payload.tab === 'cari') {
+        newSacredPath.cari = payload.path
+      } else if (payload.tab === 'notifikasi') {
+        newSacredPath.notifikasi = payload.path
+      } else if (payload.tab === 'akun') {
+        newSacredPath.akun = payload.path
+      }
+      return {
+        ...state,
+        sacredPath: newSacredPath
+      }
+    case 'SMART_PATH_MANAGER':
+      let tab = payload.split("/")[4]
+      return {
+        ...state,
+        pathHistory: ''
       }
   }
 }

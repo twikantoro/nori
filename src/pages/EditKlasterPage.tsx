@@ -16,6 +16,7 @@ const EditKlasterPage: React.FC = () => {
   const id_pemilik = useSelector((state: any) => state.pemilik.id)
   const [busy, setBusy] = useState(false)
   const addKlasterIsCompleteLocal = state.addKlasterIsComplete
+  const [durasi, setDurasi] = useState('')
   //inputs 
   const klasterID = window.location.href.split("/")[7]
   const klasters = state.pemilik.klasters
@@ -68,7 +69,8 @@ const EditKlasterPage: React.FC = () => {
       kode: kode,
       nama: nama,
       jadwal: JSON.stringify(jadwal),
-      id_klaster: klasterID
+      id_klaster: klasterID,
+      durasi: durasi
     }
     dispatch(editKlasterAsync(params))
   }
@@ -117,6 +119,14 @@ const EditKlasterPage: React.FC = () => {
             <b>Waktu operasional:</b>&nbsp;
           </IonItem>
           <TimePicker jadwal={currKlaster.jadwal} />
+          <IonItem lines="none">
+            <b>Perkiraan durasi:</b>&nbsp;
+            <IonInput
+              type="text"
+              placeholder="5 (menit)"
+              onIonChange={(e: any) => setDurasi(e.target.value)}
+            ></IonInput>
+          </IonItem>
           <IonRow>
             <IonCol>
               <IonButton expand="block" onClick={() => submitLayanan()}>Submit</IonButton>

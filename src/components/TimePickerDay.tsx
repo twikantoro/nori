@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { IonCardContent, IonItem, IonLabel, IonDatetime, IonIcon, IonCheckbox, IonItemDivider, IonToggle } from '@ionic/react'
-import { addCircleOutline } from 'ionicons/icons'
+import { addCircleOutline, trashBinOutline, trashOutline } from 'ionicons/icons'
 import { useDispatch } from 'react-redux'
 import { setJadwal } from '../redux/actions'
 import $ from 'jquery'
@@ -140,6 +140,11 @@ const TimePickerDay: React.FC<OwnProps> = ({ hariID, jadwalDay }) => {
             <IonLabel>Tutup</IonLabel>
             <IonDatetime value={jamTutup} displayFormat="HH:mm" onIonChange={(e: any) => setJamTutup(e.target.value)}></IonDatetime>
           </IonItem>
+          {istirahat ?
+            <IonItem lines="none" mode="md" button onClick={() => setIstirahat(false)}>
+              <IonIcon icon={trashOutline} color="danger" />&nbsp;
+              <IonLabel><p color="danger">Hapus istirahat...</p></IonLabel>
+            </IonItem> : ""}
         </>
       }
     </IonCardContent>

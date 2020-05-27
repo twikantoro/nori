@@ -18,6 +18,7 @@ const TambahKlasterPage: React.FC = () => {
   const addKlasterIsCompleteLocal = state.addKlasterIsComplete
   //inputs 
   const [nama, setNama] = useState('')
+  const [durasi, setDurasi] = useState('')
   //hari
   // const initialHari = [
   //   [true,true,true,true,false,false,false],
@@ -46,7 +47,8 @@ const TambahKlasterPage: React.FC = () => {
       id_pemilik: id_pemilik,
       kode: kode,
       nama: nama,
-      jadwal: JSON.stringify(jadwal)
+      jadwal: JSON.stringify(jadwal),
+      durasi: durasi
     }
     dispatch(addKlasterAsync(params))
   }
@@ -95,6 +97,14 @@ const TambahKlasterPage: React.FC = () => {
             <b>Waktu operasional:</b>&nbsp;
           </IonItem>
           <TimePicker jadwal="empty" />
+          <IonItem lines="none">
+            <b>Perkiraan durasi:</b>&nbsp;
+            <IonInput
+              type="text"
+              placeholder="5 (menit)"
+              onIonChange={(e: any) => setDurasi(e.target.value)}
+            ></IonInput>
+          </IonItem>
           <div className="ion-padding">
             <IonButton expand="block" onClick={() => submitLayanan()}>Buat</IonButton>
           </div>

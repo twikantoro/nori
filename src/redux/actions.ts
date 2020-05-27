@@ -328,3 +328,18 @@ export const getLayananForOrderAsyncPublic = (payload: any) => {
   }
 }
 
+export const getLayananData = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/gerai/' + payload.gerai + "/" + payload.layanan).then(response => {
+      console.log("layananData?", response.data)
+    })
+  }
+}
+
+export const setSacredPath = (payload: any) => {
+  return { type: 'SET_SACRED_PATH', payload }
+}
+
+export const smartPathManager = (payload: any) => {
+  return { type: 'SMART_PATH_MANAGER', payload }
+}

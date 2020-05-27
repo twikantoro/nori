@@ -16,7 +16,6 @@ const TambahLayananPage: React.FC = () => {
     kode: '',
     deskripsi: '',
     syarat: '',
-    durasi: ''
   })
   const klasters = state.pemilik.klasters
   const hasKlaster = (Array.isArray(klasters) && klasters.length > 0) ? true : false
@@ -42,16 +41,13 @@ const TambahLayananPage: React.FC = () => {
       inputs.nama === '' ||
       inputs.kode === '' ||
       inputs.deskripsi === '' ||
-      inputs.syarat === '' ||
-      inputs.durasi === ''
+      inputs.syarat === ''
     ) {
       inputsValid = false
     }
 
     if (!inputsValid) {
       toast("Harap isi dengan lengkap"); return
-    } else if (!inputs.durasi.match(/^-{0,1}\d+$/)) {
-      toast("Durasi slot harus berupa angka"); return
     } else if (!inputs.kode.match(/^\S*$/)) {
       toast("Kode tidak boleh mengandung spasi"); return
     } else if (!inputs.kode.match(/^[a-zA-Z0-9_.-]*$/)) {
@@ -124,15 +120,6 @@ const TambahLayananPage: React.FC = () => {
                 placeholder="Uang lama atau rusak, KTP"
                 onIonChange={(e: any) => setInputs({ ...inputs, syarat: e.target.value })}
               ></IonTextarea>
-            </IonItem>
-            {/* durasi slot */}
-            <IonItem>
-              <b>Durasi slot (menit):</b>&nbsp;
-            <IonInput
-                type="text"
-                placeholder="5"
-                onIonChange={(e: any) => setInputs({ ...inputs, durasi: e.target.value })}
-              ></IonInput>
             </IonItem>
             {/* klaster */}
             <IonItem>

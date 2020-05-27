@@ -6,7 +6,7 @@ import { Switch, Route, Redirect } from "react-router"
 import CariPage from "../../pages/CariPage"
 import GeraiView from "../../pages/GeraiView"
 import LayananView from "../../pages/LayananView"
-import { setTabRefresh } from "../../redux/actions"
+import { setTabRefresh, setSacredPath } from "../../redux/actions"
 import $ from 'jquery'
 import OrderView from "../../pages/OrderView"
 
@@ -17,7 +17,18 @@ const AntrianTab: React.FC = () => {
   const tabRefresh = state.tabRefresh
   const dispatch = useDispatch()
   const [busy, setBusy] = useState(false)
+  const sacredPath = getPath()
   //console.log('state: ', state)
+
+  function getPath() {
+    var arr = window.location.href.split("/")
+    arr.shift()
+    arr.shift()
+    arr.shift()
+    // arr.shift()
+    // arr.shift()
+    return arr.join("/")
+  }
 
   useEffect(() => {
     //console.log("tabRefresh:"+tabRefresh)
@@ -29,7 +40,20 @@ const AntrianTab: React.FC = () => {
     } else {
       setBusy(false)
     }
+    //updates last path in every tab
+    let tab = window.location.href.split("/")[4]
+    updateSacredPath(tab)
   })
+
+  function updateSacredPath(tab: any) {
+    if (state.sacredPath[tab] !== sacredPath) {
+      dispatch(setSacredPath({
+        tab: tab,
+        path: sacredPath
+      }))
+      console.log("sacredpath: ", state.sacredPath)
+    }
+  }
 
   return (
     <IonPage>

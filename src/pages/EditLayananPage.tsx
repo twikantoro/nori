@@ -19,7 +19,6 @@ const EditLayananPage: React.FC = () => {
     kode: '',
     deskripsi: '',
     syarat: '',
-    durasi: '',
     aktif: true
   }
   for (let layanan of layanans) {
@@ -67,16 +66,15 @@ const EditLayananPage: React.FC = () => {
       inputs.nama === '' ||
       inputs.kode === '' ||
       inputs.deskripsi === '' ||
-      inputs.syarat === '' ||
-      inputs.durasi === ''
+      inputs.syarat === ''
     ) {
       inputsValid = false
     }
 
     if (!inputsValid) {
       toast("Harap isi dengan lengkap"); return
-    } else if (!inputs.durasi.match(/^-{0,1}\d+$/)) {
-      toast("Durasi slot harus berupa angka"); return
+    // } else if (!inputs.durasi.match(/^-{0,1}\d+$/)) {
+    //   toast("Durasi slot harus berupa angka"); return
     } else if (!inputs.kode.match(/^\S*$/)) {
       toast("Kode tidak boleh mengandung spasi"); return
     } else if (!inputs.kode.match(/^[a-zA-Z0-9_.-]*$/)) {
@@ -133,7 +131,7 @@ const EditLayananPage: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton defaultHref={motherURL}></IonBackButton>
           </IonButtons>
-          <IonTitle>Buat Layanan</IonTitle>
+          <IonTitle>Edit Layanan</IonTitle>
           <IonButtons slot="end">
             <IonButton>
               <IonIcon icon={helpCircleOutline} />
@@ -186,16 +184,6 @@ const EditLayananPage: React.FC = () => {
               onIonChange={(e: any) => setInputs({ ...inputs, syarat: e.target.value })}
               value={inputs.syarat}
             ></IonTextarea>
-          </IonItem>
-          {/* durasi slot */}
-          <IonItem>
-            <b>Durasi slot (menit):</b>&nbsp;
-            <IonInput
-              type="text"
-              placeholder="5"
-              onIonChange={(e: any) => setInputs({ ...inputs, durasi: e.target.value })}
-              value={inputs.durasi}
-            ></IonInput>
           </IonItem>
           {/* klaster */}
           <IonItem>

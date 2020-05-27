@@ -34,6 +34,9 @@ import Pemilik from './tabs/Pemilik';
 import BusyPage from './pages/Busy';
 import ErrorPage from './pages/ErrorPage';
 
+import socketIOClient from "socket.io-client";
+import socketServer from './config/socketServer';
+
 const RoutingSystem: React.FC = () => {
   return (
     <IonReactRouter>
@@ -63,19 +66,28 @@ const App: React.FC = () => {
   // })
 
   useEffect(() => {
+    /*
+    const socket = socketIOClient(socketServer);
+    socket.on('connect', () => {
+      console.log("socket", socket.id)
+    })
+    socket.on('hello', (data:any) => {
+      console.log(data)
+    })
+    */
     getCurrentUser().then((user: any) => {
       if (user) {
         console.log(user)
         dispatch(setUserState(user.email))
         if (/*amiPemilik || amiStaf*/ false) {
           window.history.replaceState({}, '', '/chooseRole')
-        } else if(window.location.href.includes('pengantri')) {
+        } else if (window.location.href.includes('pengantri')) {
           dispatch(setRole('pengantri'))
           window.history.replaceState({}, '', '/pengantri')
-        } else if(window.location.href.includes('pemilik')) {
+        } else if (window.location.href.includes('pemilik')) {
           dispatch(setRole('pemilik'))
           window.history.replaceState({}, '', '/pemilik')
-        } else if(window.location.href.includes('staf')) {
+        } else if (window.location.href.includes('staf')) {
           dispatch(setRole('staf'))
           window.history.replaceState({}, '', '/staf')
         } else {

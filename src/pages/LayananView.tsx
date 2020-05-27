@@ -1,23 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonSpinner, IonItem, IonLabel, IonItemDivider, IonSelect, IonSelectOption, IonRow, IonCol, IonButton } from '@ionic/react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setTabRefresh } from '../redux/actions'
+import { setTabRefresh, getLayananData } from '../redux/actions'
 import $ from 'jquery'
 
 const LayananView: React.FC = () => {
   let URLarray = window.location.href.split("/")
-  let kodeGerai = URLarray[5]
-  let kodeLayanan = URLarray[6]
+  const kodeGerai = URLarray[5]
+  const kodeLayanan = URLarray[6]
   const state = useSelector((state: any) => state)
   const tabRefresh = state.tabRefresh
   const dispatch = useDispatch()
+  const calonSlot = state.calonSlot
 
   const [busy, setBusy] = useState(false)
 
+  let currLayanan = typeof state.layanans[kodeGerai + kodeLayanan] === 'undefined' ? [] : state.layanans[kodeGerai + kodeLayanan]
+
   useEffect(() => {
-    if (tabRefresh === 'cari') {
-      $('#btn-cari-refresh').click()
-      dispatch(setTabRefresh(''))
+    
+    if (typeof state.layanans[kodeGerai + kodeLayanan] === 'undefined') {
+      var payload = {
+        gerai: kodeGerai,
+        layanan: kodeLayanan
+      }
+      dispatch(getLayananData(payload))
     }
   })
 
@@ -52,9 +59,9 @@ const LayananView: React.FC = () => {
             </IonItem>
             <IonItemDivider className="custom-divider" />
             <div className="ion-padding">
-              <IonButton expand="block">Pesan cepat (07.30)</IonButton>
-              <IonButton routerLink={"/pengantri/cari/" + kodeGerai + "/" + kodeLayanan + "/order"}
-                expand="block" fill="outline">Pesan (pilih waktu)</IonButton>
+              <IonButton expand="block">Pesan slot (
+                {/* {calonSlot.displayText} */}
+                )</IonButton>
             </div>
           </>
         }
