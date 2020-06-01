@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonSegment, IonSegmentButton, IonLabel, IonRefresher, IonRefresherContent, IonList, IonListHeader, IonItem, IonBadge, IonSelect, IonSelectOption, IonButtons, IonButton, IonAvatar, IonIcon, IonItemDivider } from "@ionic/react"
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonSegment, IonSegmentButton, IonLabel, IonRefresher, IonRefresherContent, IonList, IonListHeader, IonItem, IonBadge, IonSelect, IonSelectOption, IonButtons, IonButton, IonAvatar, IonIcon, IonItemDivider, IonPage } from "@ionic/react"
 import CardAntrian from "../components/CardAntrian"
 import { useSelector, connect } from "react-redux"
 import $ from 'jquery'

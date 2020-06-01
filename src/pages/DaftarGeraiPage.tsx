@@ -31,6 +31,7 @@ const DaftarGerai: React.FC = () => {
   const dispatch = useDispatch()
   //geraineeds update?
   const geraiNeedsUpdateLocal = useSelector((state: any) => state.geraiNeedsUpdate)
+  const backURL = '/pemilik/akun'
 
   async function submitGerai() {
     if (nama === '' || kode === '' || deskripsi === '' || alamat === '' || wilayah === '') {
@@ -65,7 +66,7 @@ const DaftarGerai: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/pemilik/gerai"></IonBackButton>
+            <IonBackButton defaultHref={backURL}></IonBackButton>
             <IonTitle>
               Daftar Gerai
           </IonTitle>

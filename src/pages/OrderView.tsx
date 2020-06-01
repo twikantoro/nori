@@ -1,12 +1,12 @@
 import React from 'react'
-import { IonHeader, IonButtons, IonBackButton, IonTitle, IonContent, IonToolbar } from '@ionic/react'
+import { IonHeader, IonButtons, IonBackButton, IonTitle, IonContent, IonToolbar, IonPage } from '@ionic/react'
 
 const OrderView: React.FC = () => {
   let urlArray = window.location.href.split("/")
   let kodeGerai = urlArray[5]
   let kodeLayanan = urlArray[6]
   return (
-    <>
+    <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonButtons>
@@ -18,7 +18,7 @@ const OrderView: React.FC = () => {
       <IonContent>
 
       </IonContent>
-    </>
+    </IonPage>
   )
 }
 

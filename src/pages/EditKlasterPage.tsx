@@ -16,11 +16,11 @@ const EditKlasterPage: React.FC = () => {
   const id_pemilik = useSelector((state: any) => state.pemilik.id)
   const [busy, setBusy] = useState(false)
   const addKlasterIsCompleteLocal = state.addKlasterIsComplete
-  const [durasi, setDurasi] = useState('')
+
   //inputs 
   const klasterID = window.location.href.split("/")[7]
   const klasters = state.pemilik.klasters
-  var currKlaster = { nama: '', jadwal: '' }
+  var currKlaster = { nama: '', jadwal: '', durasi: '', prefix: '' }
   for (let klaster of klasters) {
     if (klaster.id === klasterID) {
       currKlaster = klaster
@@ -36,8 +36,9 @@ const EditKlasterPage: React.FC = () => {
   }
 
   const [showAlert, setShowAlert] = useState(false)
-
+  const [durasi, setDurasi] = useState(currKlaster.durasi)
   const [nama, setNama] = useState(currKlaster.nama)
+  const [prefix, setPrefix] = useState(currKlaster.prefix)
   //hari
   // const initialHari = [
   //   [true,true,true,true,false,false,false],
@@ -50,6 +51,10 @@ const EditKlasterPage: React.FC = () => {
   //   newHari[seri][hari] = !hari[seri][hari]
   //   setHari(newHari)
   // }
+
+  useEffect(() => {
+    $("#the-tabbar").hide()
+  })
 
   const pemilikBelongingsUpToDateLocal = state.pemilikBelongingsUpToDate
 
@@ -70,7 +75,8 @@ const EditKlasterPage: React.FC = () => {
       nama: nama,
       jadwal: JSON.stringify(jadwal),
       id_klaster: klasterID,
-      durasi: durasi
+      durasi: durasi,
+      prefix: prefix
     }
     dispatch(editKlasterAsync(params))
   }
@@ -120,11 +126,21 @@ const EditKlasterPage: React.FC = () => {
           </IonItem>
           <TimePicker jadwal={currKlaster.jadwal} />
           <IonItem lines="none">
-            <b>Perkiraan durasi:</b>&nbsp;
+            <b>Perkiraan durasi (menit):</b>&nbsp;
             <IonInput
               type="text"
               placeholder="5 (menit)"
+              value={durasi}
               onIonChange={(e: any) => setDurasi(e.target.value)}
+            ></IonInput>
+          </IonItem>
+          <IonItem lines="none">
+            <b>Prefix slot (huruf):</b>&nbsp;
+            <IonInput
+              type="text"
+              placeholder='misal "A"'
+              value={prefix}
+              onIonChange={(e: any) => setPrefix(e.target.value)}
             ></IonInput>
           </IonItem>
           <IonRow>

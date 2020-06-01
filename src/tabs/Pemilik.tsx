@@ -1,7 +1,7 @@
 import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, IonPage, IonContent, IonGrid, IonRow, IonSpinner } from '@ionic/react'
 import { businessOutline, personOutline } from 'ionicons/icons'
 import React, { useState } from 'react'
-import { Redirect, Route } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import AkunTab from './pemilik/AkunTab'
 import GeraiTab from './pemilik/GeraiTab'
 import Logout from '../pages/Logout'
@@ -14,6 +14,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import Busy from '../pages/Busy'
 import { setPemilikData, setGerais, setPemilikBelongings, setError } from '../redux/actions'
 import PemilikRegisterPage from '../pages/PemilikRegisterPage'
+import GeraiPage from '../pages/GeraiPage'
+import AkunPemilik from '../pages/AkunPemilik'
+import DaftarGeraiPage from '../pages/DaftarGeraiPage'
+import EditKlasterPage from '../pages/EditKlasterPage'
+import EditLayananPage from '../pages/EditLayananPage'
+import TambahLayananPage from '../pages/TambahLayanan'
+import TambahKlasterPage from '../pages/TambahKlaster'
+import GeraiEditPage from '../pages/GeraiEditPage'
 
 const Pemilik: React.FC = () => {
   //state
@@ -50,7 +58,7 @@ const Pemilik: React.FC = () => {
       //setBusy(false)
     }).catch(error => {
       //setBusy(false)
-      toast('terjadi kesalahan:'+error)
+      toast('terjadi kesalahan:' + error)
       console.log(error)
       dispatch(setError(error))
       //window.location.href = '/error'
@@ -83,14 +91,25 @@ const Pemilik: React.FC = () => {
       ) : (
           <IonTabs>
             <IonRouterOutlet>
-              <Redirect exact from="/pemilik" to="/pemilik/gerai" />
-              <Route path="/pemilik/register" component={PemilikRegisterPage} exact />
-              <Route path="/pemilik/gerai" render={() => <GeraiTab />} exact={true} />
-              <Route path="/pemilik/akun" render={() => <AkunTab />} exact={true} />
-              <Route path="/logout" render={() => <Logout />} exact={true} />
+              <Switch>
+                <Redirect exact from="/pemilik" to="/pemilik/gerai" />
+                <Route path="/pemilik/register" component={PemilikRegisterPage} exact />
+                <Route exact path="/pemilik/gerai" component={GeraiPage}></Route>
+                <Route exact path="/pemilik/gerai/daftar" component={DaftarGeraiPage}></Route>
+                <Route exact path="/pemilik/gerai/:id/klaster/:id" component={EditKlasterPage} />
+                <Route exact path="/pemilik/gerai/:id/layanan/:id" component={EditLayananPage} />
+                <Route exact path="/pemilik/gerai/:id" component={GeraiPage} />
+                <Route exact path="/pemilik/gerai/:id/tambahLayanan" component={TambahLayananPage} />
+                <Route exact path="/pemilik/gerai/:id/tambahKlaster" component={TambahKlasterPage} />
+                <Route exact path="/pemilik/gerai/:id/edit" component={GeraiEditPage} />
+                <Route exact path="/pemilik/akun" component={AkunPemilik} />
+                <Route exact path="/pemilik/akun/gerai/daftar" component={DaftarGeraiPage}></Route>
+                <Route exact path="/pemilik/akun/logout" component={Logout}></Route>
+                <Route path="/logout" render={() => <Logout />} exact={true} />
+              </Switch>
             </IonRouterOutlet>
             <IonTabBar slot="bottom" selectedTab="antrian">
-              <IonTabButton tab="gerai" href="/pemilik/gerai" selected>
+              <IonTabButton tab="gerai" href="/pemilik/gerai">
                 <IonIcon icon={businessOutline} />
                 <IonLabel>Gerai</IonLabel>
               </IonTabButton>

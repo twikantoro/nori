@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonSegment, IonSegmentButton, IonLabel, IonRefresher, IonRefresherContent, IonList } from "@ionic/react"
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonSegment, IonSegmentButton, IonLabel, IonRefresher, IonRefresherContent, IonList, IonPage } from "@ionic/react"
 import CardAntrian from "../components/CardAntrian"
 import { useSelector, connect } from "react-redux"
 import $ from 'jquery'
@@ -40,41 +40,41 @@ const DefaultAntrianPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-          <div id="segment-berlangsung" className="customSegments">
-            {antrians.map(function (curr: any) {
-              return curr.status !== 'dipesan' ? (
-                <CardAntrian
-                  key={curr.id}
-                  gerai={curr.gerai}
-                  subLayanan={curr.subLayanan}
-                  prefix={curr.prefix}
-                  slot={curr.slot}
-                  current={curr.current}
-                  tanggal="12 April 2020"
-                  waktu={curr.perkiraan}
-                  status={curr.status}
-                />
-              ) : ''
-            })}
-          </div>
-          <div id="segment-mendatang" className="customSegments" style={hidden}>
-            {antrians.map(function (curr: any) {
-              return curr.status === 'dipesan' ? (
-                <CardAntrian
-                  key={curr.id}
-                  gerai={curr.gerai}
-                  subLayanan={curr.subLayanan}
-                  prefix={curr.prefix}
-                  slot={curr.slot}
-                  current={curr.current}
-                  tanggal="12 April 2020"
-                  waktu={curr.perkiraan}
-                  status={curr.status}
-                />
-              ) : ''
-            })}
-          </div>
-        
+        <div id="segment-berlangsung" className="customSegments">
+          {antrians.map(function (curr: any) {
+            return curr.status !== 'dipesan' ? (
+              <CardAntrian
+                key={curr.id}
+                gerai={curr.gerai}
+                subLayanan={curr.subLayanan}
+                prefix={curr.prefix}
+                slot={curr.slot}
+                current={curr.current}
+                tanggal="12 April 2020"
+                waktu={curr.perkiraan}
+                status={curr.status}
+              />
+            ) : ''
+          })}
+        </div>
+        <div id="segment-mendatang" className="customSegments" style={hidden}>
+          {antrians.map(function (curr: any) {
+            return curr.status === 'dipesan' ? (
+              <CardAntrian
+                key={curr.id}
+                gerai={curr.gerai}
+                subLayanan={curr.subLayanan}
+                prefix={curr.prefix}
+                slot={curr.slot}
+                current={curr.current}
+                tanggal="12 April 2020"
+                waktu={curr.perkiraan}
+                status={curr.status}
+              />
+            ) : ''
+          })}
+        </div>
+
       </IonContent>
     </>
   )

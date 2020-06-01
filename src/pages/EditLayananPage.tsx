@@ -88,7 +88,7 @@ const EditLayananPage: React.FC = () => {
       id_pemilik: state.pemilik.id,
       ...inputs,
       id_klaster: chosenKlaster,
-      laykode: laykode,
+      laykode: currLayanan.kode,
       id_layanan: currLayanan.id
     }
     dispatch(editLayananAsync(params))

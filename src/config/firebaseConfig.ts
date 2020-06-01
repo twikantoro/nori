@@ -21,6 +21,8 @@ var config = {
 firebase.initializeApp(config);
 firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
 
+export const db = firebase.firestore()
+
 function arrayToGet(array: any) {
   var encoded = ''
   for (var key in array) {
@@ -79,11 +81,11 @@ export async function signupUserOld(email: string, password: string, callback: F
 }
 
 export async function signupUser(email: string, password: string, callback: Function) {
-  firebase.auth().createUserWithEmailAndPassword(email,password).then((response)=>{
+  firebase.auth().createUserWithEmailAndPassword(email, password).then((response) => {
     callback('Berhasil')
-    document.location.href="/login"
-  }).catch((error)=>{
-    if(error==='Error: The email address is already in use by another account.'){
+    document.location.href = "/login"
+  }).catch((error) => {
+    if (error === 'Error: The email address is already in use by another account.') {
       callback('Email sudah terdaftar')
     } else {
       callback('Terjadi kesalahan')
@@ -92,7 +94,7 @@ export async function signupUser(email: string, password: string, callback: Func
 }
 
 export function logoutUser(callback: any) {
-  firebase.auth().signOut().then(()=>{
+  firebase.auth().signOut().then(() => {
     callback(true)
   })
 }
@@ -130,21 +132,92 @@ export function getToken() {
 }
 
 export function isPemilik(callback: Function) {
-  getToken().then(function(result){
-    axios.get(apiSite + '/api/pemilik/ami?token=' + result,{
+  getToken().then(function (result) {
+    axios.get(apiSite + '/api/pemilik/ami?token=' + result, {
       withCredentials: false
-    }).then(function(result){
+    }).then(function (result) {
       callback(result)
     })
   })
 }
 
 export function isStaf(callback: Function) {
-  getToken().then(function(result){
-    axios.get(apiSite + '/api/staf/ami?token=' + result).then(function(result){
+  getToken().then(function (result) {
+    axios.get(apiSite + '/api/staf/ami?token=' + result).then(function (result) {
       callback(result)
     })
   })
+}
+
+export function getDateDisplay(data: any) {
+  let day = ""
+  switch (data.hari) {
+    case 0:
+      day = "Senin"
+      break;
+    case 1:
+      day = "Selasa"
+      break;
+    case 2:
+      day = "Rabu"
+      break;
+    case 3:
+      day = "Kamis"
+      break;
+    case 4:
+      day = "Jumat"
+      break;
+    case 5:
+      day = "Sabtu"
+      break;
+    case 6:
+      day = "Minggu"
+      break;
+    default:
+      break;
+  }
+  let month = ''
+  switch (data.bulan) {
+    case 0:
+      month = "Januari"
+      break;
+    case 1:
+      month = "Februari"
+      break;
+    case 2:
+      month = "Maret"
+      break;
+    case 3:
+      month = "April"
+      break;
+    case 4:
+      month = "Mei"
+      break;
+    case 5:
+      month = "Juni"
+      break;
+    case 6:
+      month = "Juli"
+      break;
+    case 7:
+      month = "Agustus"
+      break;
+    case 8:
+      month = "September"
+      break;
+    case 9:
+      month = "Oktober"
+      break;
+    case 10:
+      month = "November"
+      break;
+    case 11:
+      month = "Desember"
+      break;
+    default:
+      break;
+  }
+  return day + ", " + data.tanggal + " " + month
 }
 
 export const providerGoogle = new firebase.auth.GoogleAuthProvider();

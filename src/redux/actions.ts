@@ -330,10 +330,23 @@ export const getLayananForOrderAsyncPublic = (payload: any) => {
 
 export const getLayananData = (payload: any) => {
   return (dispatch: any) => {
-    Axios.get(apiSite + '/gerai/' + payload.gerai + "/" + payload.layanan).then(response => {
+    Axios.get(apiSite + '/layanan/getLayananData?' + stringify(payload)).then(response => {
       console.log("layananData?", response.data)
+      var data = {
+        ...response.data,
+        identifier: payload.geraiKode + "-" + payload.layananKode
+      }
+      dispatch(addLayananCache(data))
     })
   }
+}
+
+export const addLayananCache = (payload: any) => {
+  return { type: 'ADD_LAYANAN_CACHE', payload }
+}
+
+export const setIsFetching = (payload: any) => {
+  return { type: 'SET_IS_FETCHING', payload }
 }
 
 export const setSacredPath = (payload: any) => {

@@ -74,7 +74,8 @@ const initialState = {
     cari: '',
     notifikasi: '',
     akun: ''
-  }
+  },
+  isFetching: false
 }
 
 export default function reducer(state = initialState,
@@ -311,6 +312,19 @@ export default function reducer(state = initialState,
       return {
         ...state,
         pathHistory: ''
+      }
+    case 'ADD_LAYANAN_CACHE':
+      var newLayanans = state.layanans
+      newLayanans[payload.identifier] = payload
+      return {
+        ...state,
+        layanans: newLayanans,
+        isFetching: false
+      }
+    case 'SET_IS_FETCHING':
+      return {
+        ...state,
+        isFetching: payload
       }
   }
 }

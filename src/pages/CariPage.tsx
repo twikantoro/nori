@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { IonToolbar, IonTitle, IonHeader, IonContent, IonLoading, IonSearchbar, IonCol, IonRow, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonButtons, IonItemDivider, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonFooter, IonIcon, IonAvatar, IonInput, IonSpinner } from '@ionic/react'
+import { IonToolbar, IonTitle, IonHeader, IonContent, IonLoading, IonSearchbar, IonCol, IonRow, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonButtons, IonItemDivider, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonFooter, IonIcon, IonAvatar, IonInput, IonSpinner, IonPage } from '@ionic/react'
 import { starSharp, starHalfSharp, chevronDownOutline, chevronBackOutline, filterSharp, filterOutline, settingsOutline, funnelOutline, funnelSharp, search, searchOutline } from 'ionicons/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { searchGeraiOrLayanan, setIsSearching } from '../redux/actions'

@@ -66,15 +66,15 @@ const App: React.FC = () => {
   // })
 
   useEffect(() => {
-    /*
-    const socket = socketIOClient(socketServer);
-    socket.on('connect', () => {
-      console.log("socket", socket.id)
-    })
-    socket.on('hello', (data:any) => {
-      console.log(data)
-    })
-    */
+    // IMPORTANTNT DONT DLETE
+    // const socket = socketIOClient(socketServer);
+    // socket.on('connect', () => {
+    //   console.log("socket", socket.id)
+    // })
+    // socket.on('hello', (data:any) => {
+    //   console.log(data)
+    // })
+    
     getCurrentUser().then((user: any) => {
       if (user) {
         console.log(user)

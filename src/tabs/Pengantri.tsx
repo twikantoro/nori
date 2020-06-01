@@ -2,7 +2,7 @@ import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } 
 import { calendarOutline, duplicateOutline, notificationsOutline, personOutline, readerOutline } from 'ionicons/icons'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Redirect, Route } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import { getCurrentUser } from '../config/firebaseConfig'
 import { setPenggunaData, setTabRefresh } from '../redux/actions'
 import AkunTab from './pengantri/AkunTab'
@@ -10,6 +10,15 @@ import AntrianTab from './pengantri/AntrianTab'
 import CariTab from './pengantri/CariTab'
 import NotifikasiTab from './pengantri/NotifikasiTab'
 import RiwayatTab from './pengantri/RiwayatTab'
+import AntrianPage from '../pages/AntrianPage'
+import CariPage from '../pages/CariPage'
+import NotifikasiPage from '../pages/NotifikasiPage'
+import RiwayatPage from '../pages/RiwayatPage'
+import AkunPage from '../pages/AkunPage'
+import GeraiView from '../pages/GeraiView'
+import LayananView from '../pages/LayananView'
+import OrderView from '../pages/OrderView'
+import Logout from '../pages/Logout'
 
 const Pengantri: React.FC = () => {
   const state = useSelector((state: any) => state)
@@ -41,12 +50,18 @@ const Pengantri: React.FC = () => {
   return (
     <IonTabs>
       <IonRouterOutlet>
-        <Redirect exact from="/pengantri" to="/pengantri/cari" />
-        <Route path="/pengantri/antrian" render={() => <AntrianTab />} exact={true} />
-        <Route path="/pengantri/cari" render={() => <CariTab />} exact={true} />
-        <Route path="/pengantri/notifikasi" render={() => <NotifikasiTab />} exact={true} />
-        <Route path="/pengantri/riwayat" render={() => <RiwayatTab />} exact={true} />
-        <Route path="/pengantri/akun" render={() => <AkunTab />} exact={true} />
+        <Switch>
+          <Redirect exact from="/pengantri" to="/pengantri/cari" />
+          <Route path="/pengantri/antrian" render={() => <AntrianPage />} exact={true} />
+          <Route path="/pengantri/cari" render={() => <CariPage />} exact={true} />
+          <Route exact path="/pengantri/cari/:id" component={GeraiView} />
+          <Route exact path="/pengantri/cari/:id/:id" component={LayananView} />
+          <Route exact path="/pengantri/cari/:id/:id/order" component={OrderView} />
+          <Route path="/pengantri/notifikasi" render={() => <NotifikasiPage />} exact={true} />
+          <Route path="/pengantri/riwayat" render={() => <RiwayatPage />} exact={true} />
+          <Route path="/pengantri/akun" render={() => <AkunPage />} exact={true} />
+          <Route exact path="/pengantri/akun/logout" component={Logout}></Route>
+        </Switch>
       </IonRouterOutlet>
       <IonTabBar slot="bottom" selectedTab="antrian">
         <IonTabButton tab="antrian" href="/pengantri/antrian"
