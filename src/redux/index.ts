@@ -75,7 +75,8 @@ const initialState = {
     notifikasi: '',
     akun: ''
   },
-  isFetching: false
+  isFetching: false,
+  sedangPesan: false
 }
 
 export default function reducer(state = initialState,
@@ -325,6 +326,16 @@ export default function reducer(state = initialState,
       return {
         ...state,
         isFetching: payload
+      }
+    case 'SET_PENGANTRI_DATA':
+      return {
+        ...state,
+        pengantri: payload
+      }
+    case 'SEDANG_PESAN':
+      return {
+        ...state,
+        sedangPesan: payload
       }
   }
 }

@@ -124,6 +124,7 @@ export function getToken() {
     // }
     //if expired
     firebase.auth().currentUser?.getIdToken(true).then(function (idToken) {
+      //console.log(idToken)
       resolve(idToken)
     }).catch(function (error) {
       reject(error)
@@ -218,6 +219,61 @@ export function getDateDisplay(data: any) {
       break;
   }
   return day + ", " + data.tanggal + " " + month
+}
+
+export function getPerkiraan(data: any) {
+  var jadwalArr = data.jadwal
+  var jadwalHari = jadwalArr[data.hari]
+  var decodedJadwal = decodeJadwal(jadwalHari)
+  var durasi = parseInt(data.durasi)
+  var slots = new Array(0)
+  var slotNumber = 1
+  decodedJadwal.forEach(sesi => {
+    for (let i = sesi.mulai; i < sesi.selesai; i += durasi) {
+      var newSlot = {
+        mulai: minutesToTime(i),
+        durasi: durasi,
+        urutan: slotNumber
+      }
+      slots = slots.concat(newSlot)
+      slotNumber++
+    }
+  })
+  var perkiraan = ''
+  slots.forEach(slot => {
+    if (slot.urutan === data.slot) {
+      perkiraan = slot.mulai
+    }
+  })
+  return perkiraan
+}
+
+function decodeJadwal(jadwalHari: any) {
+  var sesis = jadwalHari.split(",")
+  var decodedSesis = new Array(0)
+  sesis.forEach((sesi: any) => {
+    var jamMulai = sesi.split("-")[0]
+    var jamSelesai = sesi.split("-")[1]
+    decodedSesis = decodedSesis.concat({
+      mulai: timeToMinutes(jamMulai),
+      selesai: timeToMinutes(jamSelesai)
+    })
+  })
+  return decodedSesis
+}
+
+function timeToMinutes(time: any) {
+  var hour = time.split(":")[0]
+  var minute = time.split(":")[1]
+  return parseInt(hour) * 60 + parseInt(minute)
+}
+
+function minutesToTime(minutes: any) {
+  var hour = Math.floor(minutes / 60)
+  var minute = minutes % 60
+  var newhour = hour < 10 ? "0" + hour : hour
+  var newminute = minute < 10 ? "0" + minute : minute
+  return newhour + ":" + newminute
 }
 
 export const providerGoogle = new firebase.auth.GoogleAuthProvider();

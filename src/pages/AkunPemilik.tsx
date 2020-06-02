@@ -21,7 +21,6 @@ const AkunPemilik: React.FC = () => {
 
   return (
     <>
-      <IonPage>
         <IonHeader>
           <IonToolbar>
             <IonButtons>
@@ -57,7 +56,6 @@ const AkunPemilik: React.FC = () => {
             </IonLabel>
           </IonItem>
         </IonContent>
-      </IonPage>
     </>
   )
 }

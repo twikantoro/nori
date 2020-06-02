@@ -356,3 +356,29 @@ export const setSacredPath = (payload: any) => {
 export const smartPathManager = (payload: any) => {
   return { type: 'SMART_PATH_MANAGER', payload }
 }
+
+export const pesanAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/pesanan/pesan?' + stringify(payload)).then(response => {
+      console.log("pesan?", response.data)
+      dispatch(sedangPesan(false))
+    })
+  }
+}
+
+export const sedangPesan = (payload: any) => {
+  return { type: 'SEDANG_PESAN', payload }
+}
+
+export const getOrCreatePengantri = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/pengantri/getData?' + stringify(payload)).then(response => {
+      //console.log("pengantriData?", response.data)
+      dispatch(setPengantriData(response.data))
+    })
+  }
+}
+
+export const setPengantriData = (payload: any) => {
+  return { type: 'SET_PENGANTRI_DATA', payload }
+}

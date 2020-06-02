@@ -3,8 +3,8 @@ import { calendarOutline, duplicateOutline, notificationsOutline, personOutline,
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
-import { getCurrentUser } from '../config/firebaseConfig'
-import { setPenggunaData, setTabRefresh } from '../redux/actions'
+import { getCurrentUser, getToken } from '../config/firebaseConfig'
+import { setPenggunaData, setTabRefresh, getOrCreatePengantri } from '../redux/actions'
 import AkunTab from './pengantri/AkunTab'
 import AntrianTab from './pengantri/AntrianTab'
 import CariTab from './pengantri/CariTab'
@@ -27,13 +27,17 @@ const Pengantri: React.FC = () => {
   const pengguna = state.pengguna
   useEffect(() => {
     if (pengantri.id === '') {
-      //
+      fetchPengantri()
     }
     if (pengguna.uid === '') {
       hehe()
     }
 
   })
+
+  async function fetchPengantri() {
+    dispatch(getOrCreatePengantri({ token: await getToken() }))
+  }
 
   async function hehe() {
     let currentUser = await getCurrentUser()
