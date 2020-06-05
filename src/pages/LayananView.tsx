@@ -155,7 +155,7 @@ const LayananView: React.FC = () => {
                     })}
                   </IonSelect>
                 </IonItem>
-                {listening ?
+                {jadwalCurrHari === '' ? "" : listening ?
                   sayaDahPesan ? <div className="ion-padding-horizontal">
                     < p > Anda sudah pesan layanan ini di hari tersebut. Untuk melihatnya, silahkan cek di Tab Antrian</p>
                   </div> :

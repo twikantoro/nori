@@ -76,7 +76,9 @@ const initialState = {
     akun: ''
   },
   isFetching: false,
-  sedangPesan: false
+  sedangPesan: false,
+  pesanans: new Array(0),
+  klasterRelateds: new Array(0)
 }
 
 export default function reducer(state = initialState,
@@ -330,12 +332,26 @@ export default function reducer(state = initialState,
     case 'SET_PENGANTRI_DATA':
       return {
         ...state,
+        isFetching: false,
         pengantri: payload
       }
     case 'SEDANG_PESAN':
       return {
         ...state,
         sedangPesan: payload
+      }
+    case 'SET_PESANANS':
+      return {
+        ...state,
+        pesanans: payload
+      }
+    case 'ADD_KLASTER_RELATED':
+      var newKlasterRelateds = state.klasterRelateds
+      newKlasterRelateds[payload.identifier] = payload
+      return {
+        ...state,
+        klasterRelateds: newKlasterRelateds,
+        isFetching: false
       }
   }
 }

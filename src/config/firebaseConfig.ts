@@ -241,7 +241,7 @@ export function getPerkiraan(data: any) {
   })
   var perkiraan = ''
   slots.forEach(slot => {
-    if (slot.urutan === data.slot) {
+    if (slot.urutan == data.slot) {
       perkiraan = slot.mulai
     }
   })
@@ -274,6 +274,43 @@ function minutesToTime(minutes: any) {
   var newhour = hour < 10 ? "0" + hour : hour
   var newminute = minute < 10 ? "0" + minute : minute
   return newhour + ":" + newminute
+}
+
+export function getTanggalHariIni() {
+  let date = new Date()
+  let year = date.getFullYear()
+  let month = date.getMonth() + 1
+  let newMonth = month < 10 ? "0" + month : month
+  let day = date.getDate()
+  let newDay = day < 10 ? "0" + day : day
+  return parseInt(year.toString() + newMonth + newDay)
+}
+
+export function getTanggalDisplay(tanggal: any) {
+  let tgl = tanggal.toString()
+  let tahun = parseInt(tgl.substr(0, 4))
+  let bulan = parseInt(tgl.substr(4, 2))
+  let hari = parseInt(tgl.substr(6, 2))
+  let date = new Date(tgl.substr(0, 4), bulan, hari - 2)
+  let bulans = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
+  const options = { weekday: 'long' }
+  let weekday = date.toLocaleDateString('id-id', options)
+  return weekday + ", " + hari + " " + bulans[bulan - 1] + " " + tahun
+}
+
+export function getHariKode(tanggal: any) {
+  let date = getDate(tanggal)
+  let hariKode = date.getDay() - 1
+  return hariKode < 0 ? hariKode + 7 : hariKode
+}
+
+function getDate(tanggal: any) {
+  let tgl = tanggal.toString()
+  let tahun = parseInt(tgl.substr(0, 4))
+  let bulan = parseInt(tgl.substr(4, 2))
+  let hari = parseInt(tgl.substr(6, 2))
+  let date = new Date(tgl.substr(0, 4), bulan, hari-2)
+  return date
 }
 
 export const providerGoogle = new firebase.auth.GoogleAuthProvider();

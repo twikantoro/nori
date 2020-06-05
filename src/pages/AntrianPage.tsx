@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react"
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonSegment, IonSegmentButton, IonLabel, IonRefresher, IonRefresherContent, IonList, IonPage } from "@ionic/react"
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonSegment, IonSegmentButton, IonLabel, IonRefresher, IonRefresherContent, IonList, IonPage, IonSpinner } from "@ionic/react"
 import CardAntrian from "../components/CardAntrian"
-import { useSelector, connect } from "react-redux"
+import { useSelector, connect, useDispatch } from "react-redux"
 import $ from 'jquery'
+import { db, getTanggalHariIni } from "../config/firebaseConfig"
+import { setPesanans } from "../redux/actions"
 
 const DefaultAntrianPage: React.FC = () => {
-  const antrians = useSelector((state: any) => state.antrians)
-  const theState = useSelector((state: any) => state)
+  const antrians = useSelector((state: any) => state.pesanans)
+  const state = useSelector((state: any) => state)
   const [activeSegment, setActiveSegment] = useState('berlangsung')
   //console.log(antrians)
   const shown = { display: 'block' }
   const hidden = { display: 'none' }
+  const tanggalHariIni = getTanggalHariIni()
+  const dispatch = useDispatch()
+  const pesanansLocal = state.pesanans
+  const [listening, setListening] = useState(false)
 
   const swithSegmentTo = (segment: any) => {
     setActiveSegment(segment)
@@ -18,6 +24,26 @@ const DefaultAntrianPage: React.FC = () => {
     $('.customSegments').hide()
     $('#segment-' + segment).show()
   }
+
+  useEffect(() => {
+    //firestore, listen to all my antrian
+    db.collection('pesanan').where('id_pengantri', '==', state.pengantri.id).onSnapshot(response => {
+      let pesanans = new Array(0)
+      response.forEach(doc => {
+        let pesanan = doc.data()
+        pesanan.id = doc.id
+        if (pesanan.tanggal < tanggalHariIni) {
+
+        } else {
+          pesanans = pesanans.concat(pesanan)
+        }
+      })
+      // console.log("pesn", pesanans)
+      // console.log("tgl", getTanggalHariIni())
+      dispatch(setPesanans(pesanans))
+      setListening(true)
+    })
+  })
 
   return (
     <>
@@ -40,41 +66,30 @@ const DefaultAntrianPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div id="segment-berlangsung" className="customSegments">
-          {antrians.map(function (curr: any) {
-            return curr.status !== 'dipesan' ? (
-              <CardAntrian
-                key={curr.id}
-                gerai={curr.gerai}
-                subLayanan={curr.subLayanan}
-                prefix={curr.prefix}
-                slot={curr.slot}
-                current={curr.current}
-                tanggal="12 April 2020"
-                waktu={curr.perkiraan}
-                status={curr.status}
-              />
-            ) : ''
-          })}
-        </div>
-        <div id="segment-mendatang" className="customSegments" style={hidden}>
-          {antrians.map(function (curr: any) {
-            return curr.status === 'dipesan' ? (
-              <CardAntrian
-                key={curr.id}
-                gerai={curr.gerai}
-                subLayanan={curr.subLayanan}
-                prefix={curr.prefix}
-                slot={curr.slot}
-                current={curr.current}
-                tanggal="12 April 2020"
-                waktu={curr.perkiraan}
-                status={curr.status}
-              />
-            ) : ''
-          })}
-        </div>
-
+        {!listening ? <div className="ion-padding"><IonSpinner /></div> :
+          <>
+            <div id="segment-berlangsung" className="customSegments">
+              {antrians.map(function (curr: any) {
+                return getTanggalHariIni() == curr.tanggal ? (
+                  <CardAntrian
+                    key={curr.id}
+                    props={curr}
+                  />
+                ) : ''
+              })}
+            </div>
+            <div id="segment-mendatang" className="customSegments" style={hidden}>
+              {antrians.map(function (curr: any) {
+                return getTanggalHariIni() != curr.tanggal ? (
+                  <CardAntrian
+                    key={curr.id}
+                    props={curr}
+                  />
+                ) : ''
+              })}
+            </div>
+          </>
+        }
       </IonContent>
     </>
   )

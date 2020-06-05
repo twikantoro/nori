@@ -382,3 +382,24 @@ export const getOrCreatePengantri = (payload: any) => {
 export const setPengantriData = (payload: any) => {
   return { type: 'SET_PENGANTRI_DATA', payload }
 }
+
+export const setPesanans = (payload: any) => {
+  return { type: 'SET_PESANANS', payload }
+}
+
+export const fetchKlasterRelateds = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/klaster/getRelatedData?' + stringify(payload)).then(response => {
+      //console.log("klasterRelated?", response.data)
+      var newPayload = {
+        ...response.data,
+        identifier: response.data.id
+      }
+      dispatch(addKlasterRelateds(newPayload))
+    })
+  }
+}
+
+export const addKlasterRelateds = (payload: any) => {
+  return { type: 'ADD_KLASTER_RELATED', payload }
+}

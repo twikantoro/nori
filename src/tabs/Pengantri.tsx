@@ -1,38 +1,34 @@
-import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react'
+import { IonIcon, IonLabel, IonLoading, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react'
 import { calendarOutline, duplicateOutline, notificationsOutline, personOutline, readerOutline } from 'ionicons/icons'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import { getCurrentUser, getToken } from '../config/firebaseConfig'
-import { setPenggunaData, setTabRefresh, getOrCreatePengantri } from '../redux/actions'
-import AkunTab from './pengantri/AkunTab'
-import AntrianTab from './pengantri/AntrianTab'
-import CariTab from './pengantri/CariTab'
-import NotifikasiTab from './pengantri/NotifikasiTab'
-import RiwayatTab from './pengantri/RiwayatTab'
+import AkunPage from '../pages/AkunPage'
 import AntrianPage from '../pages/AntrianPage'
 import CariPage from '../pages/CariPage'
-import NotifikasiPage from '../pages/NotifikasiPage'
-import RiwayatPage from '../pages/RiwayatPage'
-import AkunPage from '../pages/AkunPage'
 import GeraiView from '../pages/GeraiView'
 import LayananView from '../pages/LayananView'
-import OrderView from '../pages/OrderView'
 import Logout from '../pages/Logout'
+import NotifikasiPage from '../pages/NotifikasiPage'
+import OrderView from '../pages/OrderView'
+import RiwayatPage from '../pages/RiwayatPage'
+import { getOrCreatePengantri, setIsFetching, setPenggunaData, setTabRefresh } from '../redux/actions'
 
 const Pengantri: React.FC = () => {
   const state = useSelector((state: any) => state)
   const pengantri = state.pengantri
   const dispatch = useDispatch()
   const pengguna = state.pengguna
+  const isFetchingLocal = state.isFetching
   useEffect(() => {
-    if (pengantri.id === '') {
+    if (pengantri.id === '' && !isFetchingLocal) {
+      dispatch(setIsFetching(true))
       fetchPengantri()
     }
     if (pengguna.uid === '') {
       hehe()
     }
-
   })
 
   async function fetchPengantri() {
@@ -55,7 +51,7 @@ const Pengantri: React.FC = () => {
     <IonTabs>
       <IonRouterOutlet>
         <Switch>
-          <Redirect exact from="/pengantri" to="/pengantri/cari" />
+          <Redirect exact from="/pengantri" to="/pengantri/antrian" />
           <Route path="/pengantri/antrian" render={() => <AntrianPage />} exact={true} />
           <Route path="/pengantri/cari" render={() => <CariPage />} exact={true} />
           <Route exact path="/pengantri/cari/:id" component={GeraiView} />
@@ -67,6 +63,7 @@ const Pengantri: React.FC = () => {
           <Route exact path="/pengantri/akun/logout" component={Logout}></Route>
         </Switch>
       </IonRouterOutlet>
+      <IonLoading isOpen={isFetchingLocal} />
       <IonTabBar slot="bottom" selectedTab="antrian">
         <IonTabButton tab="antrian" href="/pengantri/antrian"
           onClick={() => {
