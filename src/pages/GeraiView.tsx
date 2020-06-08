@@ -2,7 +2,8 @@ import { IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, Ion
 import { businessOutline, starHalfSharp, starSharp, hourglassOutline, addCircleOutline } from 'ionicons/icons'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { getGeraiAsyncPublic } from '../redux/actions'
+import { getGeraiAsyncPublic, setIsFetching } from '../redux/actions'
+import { Link } from 'react-router-dom'
 
 const GeraiView: React.FC = () => {
   const [chosenSegment, setChosenSegment] = useState('layanan')
@@ -14,9 +15,11 @@ const GeraiView: React.FC = () => {
   const state = useSelector((state: any) => state)
   const gerais = state.gerais
   const currGerai = typeof gerais[kodeGerai] === "undefined" ? {} : gerais[kodeGerai]
+  const isFetchingLocal = state.isFetching
 
   useEffect(() => {
-    if (typeof currGerai.kode === 'undefined') {
+    if (typeof currGerai.kode === 'undefined' && !isFetchingLocal) {
+      dispatch(setIsFetching(true))
       setBusy(true)
       dispatch(getGeraiAsyncPublic(kodeGerai))
     } else {
@@ -192,6 +195,9 @@ const GeraiView: React.FC = () => {
               <div className="ion-padding-top ion-padding-horizontal">
                 <IonLabel>
                   <h3>{busy ? "Ini adalah deskripsi gerai" : currGerai.deskripsi}</h3>
+                  {typeof currGerai.alamat === 'undefined' ? "" :
+                    <h3><a target="_blank" className="cust-no-dec" href={currGerai.tautan === '' || typeof currGerai.tautan === 'undefined' ? 'https://www.google.co.id/maps/search/' + currGerai.alamat.replace(" ", "+") : currGerai.tautan}>
+                      {currGerai.alamat}</a></h3>}
                 </IonLabel>
               </div>
             </div>

@@ -403,3 +403,16 @@ export const fetchKlasterRelateds = (payload: any) => {
 export const addKlasterRelateds = (payload: any) => {
   return { type: 'ADD_KLASTER_RELATED', payload }
 }
+
+export const batalPesanAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/pesanan/batal?' + stringify(payload)).then(response => {
+      console.log("batal?",response.data)
+      dispatch(setIsDeleting(false))
+    })
+  }
+}
+
+export const setIsDeleting = (payload: any) => {
+  return { type: 'SET_IS_DELETING', payload }
+}

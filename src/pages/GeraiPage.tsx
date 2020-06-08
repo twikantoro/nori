@@ -5,6 +5,7 @@ import { locationOutline, addCircleOutline, businessOutline, heart, hourglassOut
 import $ from 'jquery'
 import { addKlasterIsComplete, fetchPemilikBelongingsAsync, setFetchingPemilikBelongings, setChosenGerai, setPemilikBelongingsUpToDate } from "../redux/actions"
 import { getToken } from "../config/firebaseConfig"
+import { Link } from "react-router-dom"
 
 /* 
   BRIEFING
@@ -42,7 +43,7 @@ const GeraiPage: React.FC = () => {
   //kode
   const kode = state.chosenGeraiKode
   //chosen gerai
-  var chosenGerai = { nama: '', kode: '', deskripsi: '' }
+  var chosenGerai = { nama: '', kode: '', deskripsi: '', alamat: '', tautan: '' }
   //assign values of chosen gerai
   if (hasGerai) {
     for (let gerai of gerais) {
@@ -306,6 +307,8 @@ const GeraiPage: React.FC = () => {
           <div className="ion-padding-top ion-padding-horizontal">
             <IonLabel>
               <h3>{chosenGerai.deskripsi}</h3>
+              <h3><a target="_blank" className="cust-no-dec" href={chosenGerai.tautan === '' || typeof chosenGerai.tautan === 'undefined' ? 'https://www.google.co.id/maps/search/' + chosenGerai.alamat.replace(" ", "+") : chosenGerai.tautan}>
+                {chosenGerai.alamat}</a></h3>
             </IonLabel>
           </div>
         </div>

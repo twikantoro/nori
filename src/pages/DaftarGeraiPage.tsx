@@ -1,18 +1,10 @@
-import { IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonTitle, IonToolbar, IonButtons, IonBackButton, IonLoading, IonGrid, IonInput, IonRow, IonCol, IonButton, IonTextarea, IonSelectOption, IonSelect } from "@ionic/react"
-import { chevronForwardOutline, logoGoogle } from "ionicons/icons"
-import $ from 'jquery'
-import React, { useState, useEffect } from "react"
-import { connect, useSelector, useDispatch } from "react-redux"
-import { Link } from "react-router-dom"
-import axios from "axios"
-import apiSite from "../config/apiSite"
-import { getToken } from "../config/firebaseConfig"
-import queryString from "query-string"
-import { setPemilikData, geraiNeedsUpdate } from "../redux/actions"
+import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonInput, IonItem, IonList, IonLoading, IonRow, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from "@ionic/react"
+import React, { useEffect, useState } from "react"
+import { connect, useDispatch, useSelector } from "react-redux"
 import { toast } from "../components/toast"
-import Dispatcher from "../cheats/Dispatcher"
-import { createGeraiAsync } from "../redux/actions"
+import { getToken } from "../config/firebaseConfig"
 import kotKabs from "../json/kota-kabupaten"
+import { createGeraiAsync, geraiNeedsUpdate } from "../redux/actions"
 
 const DaftarGerai: React.FC = () => {
   const theState = useSelector((state: any) => state)
@@ -22,6 +14,7 @@ const DaftarGerai: React.FC = () => {
   const [alamat, setAlamat] = useState('')
   const [wilayah, setWilayah] = useState('')
   const [kode, setKode] = useState('')
+  const [tautan, setTautan] = useState('')
   const pemilik = useSelector((state: any) => state.pemilik)
   //console.log(antrians)
   const shown = { display: 'block' }
@@ -46,7 +39,8 @@ const DaftarGerai: React.FC = () => {
       kode: kode,
       deskripsi: deskripsi,
       alamat: alamat,
-      wilayah: wilayah
+      wilayah: wilayah,
+      tautan: tautan
     }
     dispatch(createGeraiAsync(params))
   }
@@ -123,6 +117,14 @@ const DaftarGerai: React.FC = () => {
                   )
                 })}
               </IonSelect>
+            </IonItem>
+            <IonItem>
+              <b>Tautan lokasi (opsional):</b>&nbsp;
+              <IonInput
+                type="text"
+                placeholder="https://goo.gl/maps/yTzNq95m7WKJQgCp7"
+                onIonChange={(e: any) => setTautan(e.target.value)}
+              />
             </IonItem>
             {/* <IonItem>
               <b>Lokasi:</b>&nbsp;

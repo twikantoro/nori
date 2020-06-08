@@ -72,10 +72,10 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
         jadwal: jadwalWeek,
         durasi: currDetail.durasi
       }
-      console.log("perk",params)
+      //console.log("perk", params)
       let wtf = getPerkiraan(params)
       setPerkiraan(getPerkiraan(params))
-      console.log("pr", wtf)
+      //console.log("pr", wtf)
     }
   })
 
@@ -85,14 +85,16 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
   }
 
   return (
-    <IonCard className="card-antrian">
+    <IonCard className="card-antrian" button onClick={() => $('#btn-layanan'+props.id).click()} >
       {typeof currDetail === 'undefined' ? <IonSpinner /> : <>
-        <IonButton className="ion-hide" id="the-btn" routerLink={path} />
+        <IonButton className="ion-hide" id={"btn-gerai"+props.id} routerLink={"/pengantri/cari/" + currDetail.gerai.kode} />
+        <IonButton className="ion-hide" id={"btn-layanan"+props.id} routerLink={"/pengantri/cari/" + currDetail.gerai.kode + "/" + currDetail.layanan.kode + "/" + props.tanggal} />
         <IonItem style={colorInherit} lines="none" className="ripple-transparent">
           <IonLabel>
-            <h3 onClick={() => goto('/pengantri/cari/gerai/' + currDetail.gerai.kode)}>
+            <h3 onClick={() => $('#btn-gerai'+props.id).click()}>
               <b>{currDetail.gerai.nama}</b></h3>
-            <p>{currDetail.layanan.nama}</p>
+            <p onClick={() => $('#btn-layanan'+props.id).click()}
+            >{currDetail.layanan.nama}</p>
           </IonLabel>
           {props.tanggal == tanggal ?
             <IonBadge color="warning">Berlangsung</IonBadge> : (
@@ -110,7 +112,7 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
           <IonRow>
             <IonCol>
               <IonCardSubtitle>Slot Anda</IonCardSubtitle>
-              <IonBadge color="primary">{props.prefix+"-"+props.slot}</IonBadge>
+              <IonBadge color="primary">{props.prefix + "-" + props.slot}</IonBadge>
             </IonCol>
             {statusLocal === 'berlangsung' ?
               <IonCol>

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonSpinner, IonItem, IonLabel, IonItemDivider, IonSelect, IonSelectOption, IonRow, IonCol, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle } from '@ionic/react'
+import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonSpinner, IonItem, IonLabel, IonItemDivider, IonSelect, IonSelectOption, IonRow, IonCol, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonAlert } from '@ionic/react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setTabRefresh, getLayananData, setIsFetching, sedangPesan, pesanAsync } from '../redux/actions'
+import { setTabRefresh, getLayananData, setIsFetching, sedangPesan, pesanAsync, setIsDeleting, batalPesanAsync } from '../redux/actions'
 import $ from 'jquery'
-import { getDateDisplay, db, getPerkiraan, getToken } from '../config/firebaseConfig'
+import { getDateDisplay, db, getPerkiraan, getToken, getHariKode } from '../config/firebaseConfig'
 
 const LayananView: React.FC = () => {
   let URLarray = window.location.href.split("/")
@@ -15,7 +15,6 @@ const LayananView: React.FC = () => {
   const calonSlot = state.calonSlot
   const isFetchingLocal = state.isFetching
   const hariIni = getHariIni()
-  const [pleaseHariArr, setPleaseHariArr] = useState(new Array(0))
   const [chosenTanggal, setChosenTanggal] = useState('')
   const [hariKode, setHariKode] = useState(0)
   const [sayaDahPesan, setSayaDahPesan] = useState(false)
@@ -38,6 +37,9 @@ const LayananView: React.FC = () => {
   const [slotLimit, setSlotLimit] = useState(0)
   const [perkiraan, setPerkiraan] = useState('')
   const sedangPesanLocal = state.sedangPesan
+  const [showAlert, setShowAlert] = useState(false)
+  const isDeletingLocal = state.isDeleting
+  const [dbInitiated, setdbInitiated] = useState(false)
 
   useEffect(() => {
     if (typeof state.layanans[kodeGerai + "-" + kodeLayanan] === 'undefined' && !isFetchingLocal) {
@@ -75,22 +77,39 @@ const LayananView: React.FC = () => {
       //set slot limit
 
       //firestore
-      db.collection('pesanan').where('tanggal', '==', chosenTanggal).onSnapshot(response => {
-        setListening(true)
-        if (response.empty) setSlot(1)
-        var biggest = 0
-        response.forEach(doc => {
-          var temp = parseInt(doc.data().slot)
-          biggest = biggest < temp ? temp : biggest
-        })
-        if (true) setSlot(biggest + 1)
-        //apakah saya termasuk pemesan2 tersebut?
-        response.forEach(doc => {
-          if (doc.data().id_pengantri === state.pengantri.id) {
-            setSayaDahPesan(true)
-          }
-        })
-      })
+      // db.collection('pesanan').where('tanggal', '==', chosenTanggal).onSnapshot(response => {
+      //   //run once
+      //   if (!dbInitiated) {
+      //     setdbInitiated(true)
+      //     setListening(true)
+      //     //get biggest urutan
+      //     manageBiggest(response)
+      //     //apakah saya termasuk pemesan2 tersebut?
+      //     response.forEach(doc => {
+      //       let dahpesan = false
+      //       if (doc.data().id_pengantri === state.pengantri.id) {
+      //         dahpesan = true
+      //       }
+      //       setSayaDahPesan(dahpesan)
+      //     })
+      //   }
+      //   //listen
+      //   response.docChanges().forEach(change => {
+      //     if (change.type === "added") {
+      //       if (change.doc.data().id_pengantri === state.pengantri.id) {
+      //         setSayaDahPesan(true)
+      //       }
+      //       manageBiggest(change)
+      //     }
+      //     if (change.type === "removed") {
+      //       if (change.doc.data().id_pengantri === state.pengantri.id) {
+      //         setSayaDahPesan(false)
+      //       }
+      //       manageBiggest(change)
+      //     }
+      //   })
+
+      // })
       //set waktu perkiraan
       let params = {
         slot: slot,
@@ -99,9 +118,26 @@ const LayananView: React.FC = () => {
         durasi: currLayanan.klaster.durasi
       }
       setPerkiraan(getPerkiraan(params))
+      //test debug
+      //console.log("tgl",chosenTanggal)
+    }
+    //detect url to tanggal
+    if (typeof window.location.href.split('/')[7] !== 'undefined' && chosenTanggal == '') {
+      let tanggal = window.location.href.split('/')[7]
+      setChosenTanggal(tanggal)
 
     }
   })
+
+  function manageBiggest(snapshot: any) {
+    if (snapshot.empty) setSlot(1)
+    var biggest = 0
+    snapshot.forEach((doc:any) => {
+      var temp = parseInt(doc.data().slot)
+      biggest = biggest < temp ? temp : biggest
+    })
+    if (true) setSlot(biggest + 1)
+  }
 
   async function pesanSlot() {
     let params = {
@@ -117,6 +153,18 @@ const LayananView: React.FC = () => {
     dispatch(pesanAsync(params))
   }
 
+  async function batalReservasi() {
+    dispatch(setIsDeleting(true))
+    let params = {
+      token: await getToken(),
+      id_pengantri: state.pengantri.id,
+      tanggal: chosenTanggal
+    }
+    dispatch(batalPesanAsync(params))
+    $('#btn-to-antrian').click()
+  }
+
+
   return (
     <>
       <IonHeader>
@@ -128,6 +176,7 @@ const LayananView: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonButton id="btn-to-antrian" className="ion-hide" routerLink="/pengantri/antrian"></IonButton>
         {isFetchingLocal ? <div className="ion-padding"><IonSpinner /></div> :
           <>
             <IonItemDivider mode="ios">Detail</IonItemDivider>
@@ -158,6 +207,7 @@ const LayananView: React.FC = () => {
                 {jadwalCurrHari === '' ? "" : listening ?
                   sayaDahPesan ? <div className="ion-padding-horizontal">
                     < p > Anda sudah pesan layanan ini di hari tersebut. Untuk melihatnya, silahkan cek di Tab Antrian</p>
+                    <IonButton disabled={isDeletingLocal} onClick={() => setShowAlert(true)} color="danger">Batalkan reservasi</IonButton>
                   </div> :
                     <IonCard>
                       <IonCardContent>
@@ -185,6 +235,26 @@ const LayananView: React.FC = () => {
           </>
         }
         <IonButton className="ion-hide" id="btn-cari-refresh" routerLink="/pengantri/cari"></IonButton>
+        {typeof currLayanan.forSelect === 'undefined' ? "" :
+          <IonAlert
+            isOpen={showAlert}
+            onDidDismiss={() => setShowAlert(false)}
+            header={'Peringatan'}
+            message={'Batalkan reservasi untuk hari tersebut?'}
+            buttons={[
+              {
+                text: 'Tidak',
+                role: 'cancel',
+                cssClass: 'secondary'
+              },
+              {
+                text: 'Ya',
+                handler: () => {
+                  batalReservasi()
+                }
+              }
+            ]}
+          />}
       </IonContent >
     </>
   )

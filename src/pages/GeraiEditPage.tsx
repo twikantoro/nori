@@ -7,6 +7,7 @@ import { createGeraiAsync, geraiNeedsUpdate, editGeraiAsync, hapusGeraiAsync } f
 import $ from 'jquery'
 import { Link } from 'react-router-dom'
 import kotKabs from '../json/kota-kabupaten'
+import { Gmaps } from 'react-gmaps'
 
 const GeraiEditPage: React.FC = () => {
   const [busy, setBusy] = useState(false)
@@ -22,7 +23,7 @@ const GeraiEditPage: React.FC = () => {
   const geraiKode = window.location.href.split("/")[5]
 
   var id_gerai = ''
-  var currGerai = { nama: '', deskripsi: '', alamat: '', kode: '', wilayah: '' }
+  var currGerai = { nama: '', deskripsi: '', alamat: '', kode: '', wilayah: '', tautan: '' }
   for (const gerai of gerais) {
     if (gerai.kode === geraiKode) {
       id_gerai = gerai.id
@@ -35,6 +36,7 @@ const GeraiEditPage: React.FC = () => {
   const [alamat, setAlamat] = useState(currGerai.alamat)
   const [wilayah, setWilayah] = useState(currGerai.wilayah)
   const [kode, setKode] = useState(currGerai.kode)
+  const [tautan, setTautan] = useState(currGerai.tautan)
 
   const [showAlertDelete, setShowAlertDelete] = useState(false)
 
@@ -52,7 +54,8 @@ const GeraiEditPage: React.FC = () => {
       deskripsi: deskripsi,
       alamat: alamat,
       wilayah: wilayah,
-      id_gerai: id_gerai
+      id_gerai: id_gerai,
+      tautan: tautan
     }
     dispatch(editGeraiAsync(params))
   }
@@ -151,6 +154,16 @@ const GeraiEditPage: React.FC = () => {
                 })}
               </IonSelect>
             </IonItem>
+            <IonItem>
+              <b>Tautan lokasi (opsional):</b>&nbsp;
+              <IonInput
+                type="text"
+                placeholder="https://goo.gl/maps/yTzNq95m7WKJQgCp7"
+                onIonChange={(e: any) => setTautan(e.target.value)}
+                required
+                value={tautan}
+              />
+            </IonItem>
             {/* <IonItem>
               <b>Lokasi:</b>&nbsp;
               <iframe
@@ -158,7 +171,6 @@ const GeraiEditPage: React.FC = () => {
               </iframe>
             </IonItem> */}
           </IonList>
-
           <IonRow>
             <IonCol>
               <IonButton

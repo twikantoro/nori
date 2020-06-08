@@ -78,7 +78,8 @@ const initialState = {
   isFetching: false,
   sedangPesan: false,
   pesanans: new Array(0),
-  klasterRelateds: new Array(0)
+  klasterRelateds: new Array(0),
+  isDeleting: false
 }
 
 export default function reducer(state = initialState,
@@ -146,7 +147,8 @@ export default function reducer(state = initialState,
       newGerai[payload.kode] = payload
       return {
         ...state,
-        gerais: newGerai
+        gerais: newGerai,
+        isFetching: false
       }
 
     case 'REMOVE_GERAI':
@@ -328,6 +330,11 @@ export default function reducer(state = initialState,
       return {
         ...state,
         isFetching: payload
+      }
+    case 'SET_IS_DELETING':
+      return {
+        ...state,
+        isDeleting: payload
       }
     case 'SET_PENGANTRI_DATA':
       return {

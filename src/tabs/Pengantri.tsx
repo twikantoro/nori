@@ -56,7 +56,7 @@ const Pengantri: React.FC = () => {
           <Route path="/pengantri/cari" render={() => <CariPage />} exact={true} />
           <Route exact path="/pengantri/cari/:id" component={GeraiView} />
           <Route exact path="/pengantri/cari/:id/:id" component={LayananView} />
-          <Route exact path="/pengantri/cari/:id/:id/order" component={OrderView} />
+          <Route exact path="/pengantri/cari/:id/:id/:tanggal" component={LayananView} />
           <Route path="/pengantri/notifikasi" render={() => <NotifikasiPage />} exact={true} />
           <Route path="/pengantri/riwayat" render={() => <RiwayatPage />} exact={true} />
           <Route path="/pengantri/akun" render={() => <AkunPage />} exact={true} />
