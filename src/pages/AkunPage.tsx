@@ -40,7 +40,15 @@ const DefaultAkunPage: React.FC = () => {
             </IonSelect>
           </IonButtons>
           <IonButtons slot="end">
-            <IonButton fill="clear" color="danger">Logout</IonButton>
+            <IonButton fill="clear" color="danger"
+              onClick={() => {
+                logoutUser(function (response: any) {
+                  if (response === true) {
+                    window.location.href = "/"
+                  }
+                })
+              }}
+            >Logout</IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -48,13 +56,16 @@ const DefaultAkunPage: React.FC = () => {
         <div className="ion-padding-vertical ion-padding-end">
           <IonItem lines="none">
             <IonAvatar>
-              <img src="/assets/img/person-circle-outline.svg" />
+              {pengguna.photoURL ?
+                <img src={pengguna.photoURL} /> :
+                <img src="/assets/img/person-circle-outline.svg" />
+              }
             </IonAvatar>&nbsp;
           <IonLabel>
               <h3>{pengguna.displayName ? pengguna.displayName : "user tanpa nama"}</h3>
               <p></p>
             </IonLabel>
-            <IonIcon icon={createOutline} />
+            <IonIcon onClick={()=>$('#btn-edit-akun').click()} icon={createOutline} />
           </IonItem>
         </div>
         <IonItemDivider className="custom-divider" />
@@ -71,6 +82,7 @@ const DefaultAkunPage: React.FC = () => {
             }
           })
         }}>Logout</IonButton>
+        <IonButton className="ion-hide" routerLink="/pengantri/akun/edit" id="btn-edit-akun" />
       </IonContent>
     </>
   )

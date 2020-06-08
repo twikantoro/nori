@@ -76,40 +76,11 @@ const LayananView: React.FC = () => {
       setJadwalCurrHari(jadwalWeek[hariIndexTranslated])
       //set slot limit
 
-      //firestore
-      // db.collection('pesanan').where('tanggal', '==', chosenTanggal).onSnapshot(response => {
-      //   //run once
-      //   if (!dbInitiated) {
-      //     setdbInitiated(true)
-      //     setListening(true)
-      //     //get biggest urutan
-      //     manageBiggest(response)
-      //     //apakah saya termasuk pemesan2 tersebut?
-      //     response.forEach(doc => {
-      //       let dahpesan = false
-      //       if (doc.data().id_pengantri === state.pengantri.id) {
-      //         dahpesan = true
-      //       }
-      //       setSayaDahPesan(dahpesan)
-      //     })
-      //   }
-      //   //listen
-      //   response.docChanges().forEach(change => {
-      //     if (change.type === "added") {
-      //       if (change.doc.data().id_pengantri === state.pengantri.id) {
-      //         setSayaDahPesan(true)
-      //       }
-      //       manageBiggest(change)
-      //     }
-      //     if (change.type === "removed") {
-      //       if (change.doc.data().id_pengantri === state.pengantri.id) {
-      //         setSayaDahPesan(false)
-      //       }
-      //       manageBiggest(change)
-      //     }
-      //   })
+      //firestore listener
+      if (!dbInitiated) {
+        listenerManager('start', chosenTanggal)
+      }
 
-      // })
       //set waktu perkiraan
       let params = {
         slot: slot,
@@ -132,7 +103,7 @@ const LayananView: React.FC = () => {
   function manageBiggest(snapshot: any) {
     if (snapshot.empty) setSlot(1)
     var biggest = 0
-    snapshot.forEach((doc:any) => {
+    snapshot.forEach((doc: any) => {
       var temp = parseInt(doc.data().slot)
       biggest = biggest < temp ? temp : biggest
     })
@@ -161,9 +132,34 @@ const LayananView: React.FC = () => {
       tanggal: chosenTanggal
     }
     dispatch(batalPesanAsync(params))
-    $('#btn-to-antrian').click()
+    //$('#btn-to-antrian').click()
   }
 
+  function listenerManager(method: any, tanggal: any) {
+    let unsubscribe = db.collection('pesanan').where('id_klaster', '==', currLayanan.klaster.id).where('tanggal', '==', tanggal).onSnapshot(snapshot => {
+      setListening(true)
+      manageBiggest(snapshot)
+      //console.log("big", slot)
+      //saya termasuk?
+      let dahpesan = false
+      snapshot.forEach(doc => {
+        if (doc.data().id_pengantri === state.pengantri.id) {
+          dahpesan = true
+        }
+      })
+      setSayaDahPesan(dahpesan)
+    })
+    if (method === 'stop') {
+      unsubscribe()
+    }
+  }
+
+  function changedChosenTanggal() {
+    setListening(false)
+    setSayaDahPesan(false)
+    listenerManager("stop", chosenTanggal)
+    listenerManager("start", chosenTanggal)
+  }
 
   return (
     <>
@@ -192,8 +188,7 @@ const LayananView: React.FC = () => {
 
                   <IonSelect value={chosenTanggal} onIonChange={(e) => {
                     setChosenTanggal(e.detail.value)
-                    setListening(false)
-                    setSayaDahPesan(false)
+                    changedChosenTanggal()
                   }}>
                     {currLayanan.forSelect.map((obj: any, index: any) => {
                       return (

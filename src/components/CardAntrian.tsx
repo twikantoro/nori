@@ -85,7 +85,7 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
   }
 
   return (
-    <IonCard className="card-antrian" button onClick={() => $('#btn-layanan'+props.id).click()} >
+    <IonCard className="card-antrian">
       {typeof currDetail === 'undefined' ? <IonSpinner /> : <>
         <IonButton className="ion-hide" id={"btn-gerai"+props.id} routerLink={"/pengantri/cari/" + currDetail.gerai.kode} />
         <IonButton className="ion-hide" id={"btn-layanan"+props.id} routerLink={"/pengantri/cari/" + currDetail.gerai.kode + "/" + currDetail.layanan.kode + "/" + props.tanggal} />
@@ -107,7 +107,7 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
         </IonItem>
 
         <IonItemDivider style={heightlessItemDivider}></IonItemDivider>
-        <IonCardContent>
+        <IonCardContent onClick={() => $('#btn-layanan'+props.id).click()}>
 
           <IonRow>
             <IonCol>

@@ -29,54 +29,44 @@ const DefaultAntrianPage: React.FC = () => {
   }
 
   useEffect(() => {
-    //firestore, listen to all my antrian
-    // db.collection('pesanan').where('id_pengantri', '==', state.pengantri.id).onSnapshot(response => {
-    //   //run once
-    //   if (!dbInitiated) {
-    //     setdbInitiated(true)
-    //     let pesanans = new Array(0)
-    //     response.forEach(doc => {
-    //       let pesanan = doc.data()
-    //       pesanan.id = doc.id
-    //       if (pesanan.tanggal < tanggalHariIni) {
-
-    //       } else {
-    //         pesanans = pesanans.concat(pesanan)
-    //         setBerlangsungZero(true)
-    //         if (pesanan.tanggal == tanggalHariIni) {
-    //           setBerlangsungZero(false)
-    //         }
-    //         setMendatangZero(true)
-    //         if (pesanan.tanggal > tanggalHariIni) {
-    //           setMendatangZero(false)
-    //         }
-    //       }
-    //     })
-    //     dispatch(setPesanans(pesanans))
-    //     setListening(true)
-    //     console.log("once", state.pesanans)
-    //   }
-    //   //listening
-    //   response.docChanges().forEach(change => {
-    //     if (change.type === 'added') {
-    //       var newPesanan = change.doc.data()
-    //       newPesanan.id = change.doc.id
-    //       dispatch(setPesanans(state.pesanans.concat(newPesanan)))
-    //     }
-    //     if (change.type === 'removed') {
-    //       var deletedPesanan = { ...change.doc.data(), id: change.doc.id }
-    //       var newPesanans = new Array(0)
-    //       state.pesanans.forEach((pes: any) => {
-    //         if (pes.id !== deletedPesanan.id) {
-    //           newPesanans = newPesanans.concat(pes)
-    //         }
-    //       })
-    //       dispatch(setPesanans(newPesanans))
-    //     }
-    //     console.log("change", state.pesanans)
-    //   })
-    // })
+    //firestore listener
+    if (!dbInitiated) {
+      setdbInitiated(true)
+      //console.log("id", state.pengantri.id)
+      listenerManager('start')
+    }
+    //console.log("pesatte", state.pesanans)
   })
+
+  function listenerManager(method: any) {
+    let unsubscribe = db.collection('pesanan').where('id_pengantri', '==', state.pengantri.id).onSnapshot(snapshot => {
+      setListening(true)
+      //if (snapshot.empty) { console.log("empty") }
+      setBerlangsungZero(true)
+      setMendatangZero(true)
+      var pesanans = new Array(0)
+      snapshot.forEach(doc => {
+        if (parseInt(doc.data().tanggal) >= tanggalHariIni) {
+          var pesanan = doc.data()
+          pesanan.id = doc.id
+          pesanans = pesanans.concat(pesanan)
+          //console.log("found", doc.data())
+          //decide if zero or not
+          if (pesanan.tanggal == tanggalHariIni) {
+            setBerlangsungZero(false)
+          } else{
+            setMendatangZero(false)
+          }
+        }
+      })
+      //console.log("pes", pesanans)
+      dispatch(setPesanans(pesanans))
+
+    })
+    if (method === 'stop') {
+      unsubscribe()
+    }
+  }
 
   return (
     <>

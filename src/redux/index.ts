@@ -79,7 +79,8 @@ const initialState = {
   sedangPesan: false,
   pesanans: new Array(0),
   klasterRelateds: new Array(0),
-  isDeleting: false
+  isDeleting: false,
+  isFetchingUser: false
 }
 
 export default function reducer(state = initialState,
@@ -339,7 +340,7 @@ export default function reducer(state = initialState,
     case 'SET_PENGANTRI_DATA':
       return {
         ...state,
-        isFetching: false,
+        isFetchingUser: false,
         pengantri: payload
       }
     case 'SEDANG_PESAN':
@@ -359,6 +360,11 @@ export default function reducer(state = initialState,
         ...state,
         klasterRelateds: newKlasterRelateds,
         isFetching: false
+      }
+    case 'SET_IS_FETCHING_USER':
+      return {
+        ...state,
+        isFetchingUser: payload
       }
   }
 }

@@ -387,6 +387,10 @@ export const setPesanans = (payload: any) => {
   return { type: 'SET_PESANANS', payload }
 }
 
+export const setIsFetchingUser = (payload: any) => {
+  return { type: 'SET_IS_FETCHING_USER', payload }
+}
+
 export const fetchKlasterRelateds = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + '/klaster/getRelatedData?' + stringify(payload)).then(response => {
