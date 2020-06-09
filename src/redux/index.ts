@@ -80,7 +80,15 @@ const initialState = {
   pesanans: new Array(0),
   klasterRelateds: new Array(0),
   isDeleting: false,
-  isFetchingUser: false
+  isFetchingUser: false,
+  staf: {
+    id: ''
+  },
+  isFetchingStaf: false,
+  geraiStafs: new Array(0),
+  rekrutStatus: '',
+  geraiForStaf: { id: '' },
+  isFetchingGerai: false
 }
 
 export default function reducer(state = initialState,
@@ -365,6 +373,47 @@ export default function reducer(state = initialState,
       return {
         ...state,
         isFetchingUser: payload
+      }
+    case 'SET_IS_FETCHING_STAF':
+      return {
+        ...state,
+        isFetchingStaf: payload
+      }
+    case 'SET_STAF_DATA':
+      return {
+        ...state,
+        staf: payload,
+        isFetchingStaf: false
+      }
+    case 'ADD_STAFS_CACHE':
+      var newStafs = state.geraiStafs
+      newStafs[payload.identifier] = payload.stafs
+      return {
+        ...state,
+        geraiStafs: newStafs,
+        isFetching: false
+      }
+    case 'REKRUT_SELESAI':
+      return {
+        ...state,
+        isFetching: false,
+        rekrutStatus: payload
+      }
+    case 'SET_REKRUT_STATUS':
+      return {
+        ...state,
+        rekrutStatus: payload
+      }
+    case 'SET_GERAI_FOR_STAF':
+      return {
+        ...state,
+        geraiForStaf: payload,
+        isFetchingGerai: false
+      }
+    case 'SET_IS_FETCHING_GERAI':
+      return {
+        ...state,
+        isFetchingGerai: payload
       }
   }
 }

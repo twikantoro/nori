@@ -90,3 +90,16 @@
 .cust-no-dec {
   text-decoration: none;
 }
+
+.custom-overx {
+  overflow-x: scroll;
+  width: 2000px;
+}
+
+.custom-filler {
+  height: 100px;
+}
+
+.custom-width-100 {
+  width: 100%;
+}

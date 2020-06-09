@@ -87,27 +87,27 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
   return (
     <IonCard className="card-antrian">
       {typeof currDetail === 'undefined' ? <IonSpinner /> : <>
-        <IonButton className="ion-hide" id={"btn-gerai"+props.id} routerLink={"/pengantri/cari/" + currDetail.gerai.kode} />
-        <IonButton className="ion-hide" id={"btn-layanan"+props.id} routerLink={"/pengantri/cari/" + currDetail.gerai.kode + "/" + currDetail.layanan.kode + "/" + props.tanggal} />
+        <IonButton className="ion-hide" id={"btn-gerai" + props.id} routerLink={"/pengantri/cari/" + currDetail.gerai.kode} />
+        <IonButton className="ion-hide" id={"btn-layanan" + props.id} routerLink={"/pengantri/cari/" + currDetail.gerai.kode + "/" + currDetail.layanan.kode + "/" + props.tanggal} />
         <IonItem style={colorInherit} lines="none" className="ripple-transparent">
           <IonLabel>
-            <h3 onClick={() => $('#btn-gerai'+props.id).click()}>
+            <h3 onClick={() => $('#btn-gerai' + props.id).click()}>
               <b>{currDetail.gerai.nama}</b></h3>
-            <p onClick={() => $('#btn-layanan'+props.id).click()}
+            <p onClick={() => $('#btn-layanan' + props.id).click()}
             >{currDetail.layanan.nama}</p>
           </IonLabel>
-          {props.tanggal == tanggal ?
-            <IonBadge color="warning">Berlangsung</IonBadge> : (
-              props.status == 2 ?
-                <IonBadge color="danger">Terlambat</IonBadge> :
-                <IonBadge color="light">Dipesan</IonBadge>
-            )
+          {props.tanggal != tanggal ? <IonBadge color="light">Dipesan</IonBadge> :
+            props.status == 2 ?
+              <IonBadge color="danger">Terlambat</IonBadge> :
+              props.status == 1 ?
+              <IonBadge color="success">Selesai</IonBadge> :
+              <IonBadge color="warning">Berlangsung</IonBadge>
           }
 
         </IonItem>
 
         <IonItemDivider style={heightlessItemDivider}></IonItemDivider>
-        <IonCardContent onClick={() => $('#btn-layanan'+props.id).click()}>
+        <IonCardContent onClick={() => $('#btn-layanan' + props.id).click()}>
 
           <IonRow>
             <IonCol>
@@ -154,7 +154,7 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
                 </div>
               </IonPopover><IonCardSubtitle
                 onClick={() => setShowPopover(showPopover ? false : true)}
-              >Perkiraan dipanggil <IonIcon icon={helpCircle} /></IonCardSubtitle>
+              >Perkiraan<IonIcon icon={helpCircle} /></IonCardSubtitle>
 
               {perkiraan}
             </IonCol>

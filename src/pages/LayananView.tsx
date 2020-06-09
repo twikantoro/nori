@@ -3,7 +3,7 @@ import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent,
 import { useSelector, useDispatch } from 'react-redux'
 import { setTabRefresh, getLayananData, setIsFetching, sedangPesan, pesanAsync, setIsDeleting, batalPesanAsync } from '../redux/actions'
 import $ from 'jquery'
-import { getDateDisplay, db, getPerkiraan, getToken, getHariKode } from '../config/firebaseConfig'
+import { getDateDisplay, db, getPerkiraan, getToken, getHariKode, getTanggalHariIni } from '../config/firebaseConfig'
 
 const LayananView: React.FC = () => {
   let URLarray = window.location.href.split("/")
@@ -78,7 +78,8 @@ const LayananView: React.FC = () => {
 
       //firestore listener
       if (!dbInitiated) {
-        listenerManager('start', chosenTanggal)
+        setdbInitiated(true)
+        listenerManager('start', chosenTanggal === '' ? getTanggalHariIni() : chosenTanggal)
       }
 
       //set waktu perkiraan
@@ -136,14 +137,16 @@ const LayananView: React.FC = () => {
   }
 
   function listenerManager(method: any, tanggal: any) {
-    let unsubscribe = db.collection('pesanan').where('id_klaster', '==', currLayanan.klaster.id).where('tanggal', '==', tanggal).onSnapshot(snapshot => {
+    console.log('param', currLayanan.klaster.id, tanggal)
+    let unsubscribe = db.collection('pesanan').where('id_klaster', '==', currLayanan.klaster.id).where('tanggal', '==', tanggal.toString()).onSnapshot(snapshot => {
       setListening(true)
       manageBiggest(snapshot)
       //console.log("big", slot)
       //saya termasuk?
       let dahpesan = false
       snapshot.forEach(doc => {
-        if (doc.data().id_pengantri === state.pengantri.id) {
+        console.log('pes', doc.data())
+        if (doc.data().id_pengantri === state.pengantri.id && doc.data().status != '1') {
           dahpesan = true
         }
       })

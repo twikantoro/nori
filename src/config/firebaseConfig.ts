@@ -99,6 +99,13 @@ export function logoutUser(callback: any) {
   })
 }
 
+export const penggunaData = firebase.auth().currentUser
+
+export function getHari(kode: any) {
+  let haris = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu']
+  return haris[kode]
+}
+
 export function getCurrentUser() {
   return new Promise((resolve, reject) => {
     const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
@@ -309,7 +316,7 @@ function getDate(tanggal: any) {
   let tahun = parseInt(tgl.substr(0, 4))
   let bulan = parseInt(tgl.substr(4, 2))
   let hari = parseInt(tgl.substr(6, 2))
-  let date = new Date(tgl.substr(0, 4), bulan, hari-2)
+  let date = new Date(tgl.substr(0, 4), bulan, hari - 2)
   return date
 }
 

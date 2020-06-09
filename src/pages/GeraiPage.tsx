@@ -1,11 +1,13 @@
-import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCol, IonContent, IonHeader, IonItem, IonLabel, IonList, IonLoading, IonRow, IonTitle, IonToolbar, IonItemDivider, IonIcon, IonButton, IonSegment, IonSegmentButton, IonButtons, IonSelect, IonSelectOption } from "@ionic/react"
+import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCol, IonContent, IonHeader, IonItem, IonLabel, IonList, IonLoading, IonRow, IonTitle, IonToolbar, IonItemDivider, IonIcon, IonButton, IonSegment, IonSegmentButton, IonButtons, IonSelect, IonSelectOption, IonSpinner, IonAlert } from "@ionic/react"
 import React, { useEffect, useState } from "react"
 import { connect, useDispatch, useSelector } from "react-redux"
-import { locationOutline, addCircleOutline, businessOutline, heart, hourglassOutline, bookmarkOutline, bookmarksOutline, pencilSharp, pencilOutline, createOutline } from "ionicons/icons"
+import { locationOutline, addCircleOutline, businessOutline, heart, hourglassOutline, bookmarkOutline, bookmarksOutline, pencilSharp, pencilOutline, createOutline, trashOutline, closeOutline, personOutline } from "ionicons/icons"
 import $ from 'jquery'
-import { addKlasterIsComplete, fetchPemilikBelongingsAsync, setFetchingPemilikBelongings, setChosenGerai, setPemilikBelongingsUpToDate } from "../redux/actions"
+import { addKlasterIsComplete, fetchPemilikBelongingsAsync, setFetchingPemilikBelongings, setChosenGerai, setPemilikBelongingsUpToDate, fetchStafs, rekrutStafAsync, setIsFetching2, setRekrutStatus, hapusStafAsync } from "../redux/actions"
 import { getToken } from "../config/firebaseConfig"
 import { Link } from "react-router-dom"
+import { toast } from "../components/toast"
+import Platform from "./Platform"
 
 /* 
   BRIEFING
@@ -43,7 +45,7 @@ const GeraiPage: React.FC = () => {
   //kode
   const kode = state.chosenGeraiKode
   //chosen gerai
-  var chosenGerai = { nama: '', kode: '', deskripsi: '', alamat: '', tautan: '' }
+  var chosenGerai = { id: '', nama: '', kode: '', deskripsi: '', alamat: '', tautan: '' }
   //assign values of chosen gerai
   if (hasGerai) {
     for (let gerai of gerais) {
@@ -292,6 +294,135 @@ const GeraiPage: React.FC = () => {
       )
     }
 
+    const StafSegment: React.FC = () => {
+      const [chosenStaf, setChosenStaf] = useState('')
+      const isFetchingLocal = state.isFetching
+      const stafs = state.geraiStafs[chosenGerai.id] ? state.geraiStafs[chosenGerai.id] : new Array(0)
+      //const [email, setEmail] = useState('')
+      const [alertShown, setAlertShown] = useState(false)
+      const rekrutStatus = state.rekrutStatus
+      const [triedRekrut, setTriedRekrut] = useState(false)
+      const [alertPecat, setAlertPecat] = useState(false)
+      const [calonDeletedStaf, setCalonDeletedStaf] = useState('')
+
+      useEffect(() => {
+        //console.log("stat",state.rekrutStatus)
+        //console.log("emil",$('#email-input').val())
+        //console.log("staf"+chosenGerai.id,state.geraiStafs)
+        if (typeof state.geraiStafs[chosenGerai.id] === 'undefined' && !isFetchingLocal) {
+          dispatch(setIsFetching2(true))
+          dispatch(fetchStafs({ id_gerai: chosenGerai.id }))
+        }
+        if (state.rekrutStatus !== '') {
+          //console.log('fires')
+          setTriedRekrut(false)
+          toast(state.rekrutStatus)
+          dispatch(setRekrutStatus(''))
+          if (state.rekrutStatus === 'sukses') {
+            dispatch(setIsFetching2(true))
+            dispatch(fetchStafs({ id_gerai: chosenGerai.id }))
+          }
+        }
+      })
+
+      async function tambahStaf() {
+        var email = $('#email-input').val()
+        var params = {
+          token: await getToken(),
+          email: email,
+          id_gerai: chosenGerai.id
+        }
+        //console.log("par",params.email)
+        dispatch(setIsFetching2(true))
+        setTriedRekrut(true)
+        dispatch(rekrutStafAsync(params))
+      }
+
+      async function hapusStaf() {
+        var params = {
+          token: await getToken(),
+          email: calonDeletedStaf,
+          id_gerai: chosenGerai.id
+        }
+        dispatch(setIsFetching2(true))
+        dispatch(hapusStafAsync(params))
+      }
+
+      return (
+        isFetchingLocal ? <IonSpinner /> :
+          <>
+            {stafs.length < 1 ? <div className="ion-padding">Tidak ada staf</div> :
+              stafs.map((staf: any) => {
+                return (
+                  <IonItem id={staf.id} key={staf.id}>
+                    <IonIcon icon={personOutline} />&nbsp;
+                    <IonLabel>
+                      <h3>{staf.email}</h3>
+                    </IonLabel>
+                    <IonIcon icon={closeOutline} color="danger"
+                      onClick={() => {
+                        setCalonDeletedStaf(staf.email)
+                        setAlertPecat(true)
+                      }}
+                    />
+                  </IonItem>
+                )
+              })}
+            <IonItem button onClick={() => setAlertShown(true)}>
+              <IonIcon icon={addCircleOutline} />&nbsp;
+              <IonLabel>
+                Tambah staf
+                  </IonLabel>
+            </IonItem>
+            <IonAlert
+              isOpen={alertShown}
+              onDidDismiss={() => setAlertShown(false)}
+              header={'Tambah staf'}
+              message={'Masukkan email calon staf'}
+              buttons={[
+                {
+                  text: 'Batal',
+                  role: 'cancel',
+                  cssClass: 'secondary'
+                },
+                {
+                  text: 'Tambah',
+                  handler: () => {
+                    tambahStaf()
+                  }
+                }
+              ]}
+              inputs={
+                [{
+                  id: 'email-input',
+                  type: 'text',
+                  placeholder: 'staf@nori.id'
+                }]
+              }
+            ></IonAlert>
+            <IonAlert
+              isOpen={alertPecat}
+              onDidDismiss={() => setAlertShown(false)}
+              header={'Hapus staf'}
+              message={'Anda yakin akan menghapus staf <b>' + calonDeletedStaf + '<b>?'}
+              buttons={[
+                {
+                  text: 'Batal',
+                  role: 'cancel',
+                  cssClass: 'secondary'
+                },
+                {
+                  text: 'Hapus',
+                  handler: () => {
+                    hapusStaf()
+                  }
+                }
+              ]}
+            />
+          </>
+      )
+    }
+
     //this is hasgeraicomp's return
     return (
       <>
@@ -330,7 +461,7 @@ const GeraiPage: React.FC = () => {
           <KlasterSegment />
         </div>
         <div className={chosenSegment === 'staf' ? "" : "custom-hidden"}>
-          staf
+          <StafSegment />
         </div>
         <IonButton className="custom-hidden" routerLink={"/pemilik/gerai/" + kode + "/edit"} id="btn-edit" />
       </>

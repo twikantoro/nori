@@ -25,6 +25,10 @@ const PemilikRegisterPage : React.FC = () => {
     })
   }
 
+  const switchViewTo = (view: any) => {
+    window.location.href = "/" + view
+  }
+
   return (
     <IonPage>
       <IonContent className="ion-padding">
@@ -33,6 +37,7 @@ const PemilikRegisterPage : React.FC = () => {
         <h1>Buat akun Pemilik</h1>
         <p>Anda belum mempunyai akun pemilik. Apakah anda ingin membuatnya?</p>
         <IonButton onClick={()=>registerAkunPemilik()}>Buat</IonButton>
+        <IonButton fill="outline" onClick={()=>switchViewTo('pengantri')}>Kembali</IonButton>
         </div>
       </IonContent>
     </IonPage>

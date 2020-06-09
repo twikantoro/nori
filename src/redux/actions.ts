@@ -2,6 +2,7 @@ import Axios from "axios"
 import queryString from "query-string"
 import apiSite from "../config/apiSite"
 import { stringify } from "querystring"
+import { toast } from "../components/toast"
 
 export const setUserState = (payload: any) => {
   return { type: 'SET_USER_STATE', payload }
@@ -411,7 +412,7 @@ export const addKlasterRelateds = (payload: any) => {
 export const batalPesanAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + '/pesanan/batal?' + stringify(payload)).then(response => {
-      console.log("batal?",response.data)
+      console.log("batal?", response.data)
       dispatch(setIsDeleting(false))
     })
   }
@@ -419,4 +420,103 @@ export const batalPesanAsync = (payload: any) => {
 
 export const setIsDeleting = (payload: any) => {
   return { type: 'SET_IS_DELETING', payload }
+}
+
+export const fetchStafAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/staf/getOrCreate?' + stringify(payload)).then(response => {
+      console.log("getstaf?", response.data)
+      dispatch(setStafData(response.data))
+    })
+  }
+}
+
+export const setIsFetchingStaf = (payload: any) => {
+  return { type: 'SET_IS_FETCHING_STAF', payload }
+}
+
+export const setStafData = (payload: any) => {
+  return { type: 'SET_STAF_DATA', payload }
+}
+
+export const fetchStafs = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/staf/getByGerai?' + stringify(payload)).then(response => {
+      console.log("getstafs?", response.data)
+      let newPayload = {
+        identifier: payload.id_gerai,
+        stafs: response.data
+      }
+      dispatch(addStafsCache(newPayload))
+    })
+  }
+}
+
+export const addStafsCache = (payload: any) => {
+  return { type: 'ADD_STAFS_CACHE', payload }
+}
+
+export const rekrutStafAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/staf/rekrut?' + stringify(payload)).then(response => {
+      console.log("rekrut?", response.data)
+      dispatch(rekrutSelesai(response.data))
+    })
+  }
+}
+
+export const rekrutSelesai = (payload: any) => {
+  return { type: 'REKRUT_SELESAI', payload }
+}
+
+export const setIsFetching2 = (payload: any) => {
+  return { type: 'SET_IS_FETCHING', payload }
+}
+
+export const setRekrutStatus = (payload: any) => {
+  return { type: 'SET_REKRUT_STATUS', payload }
+}
+
+export const hapusStafAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/staf/hapus?' + stringify(payload)).then(response => {
+      console.log("hapusStaf?", response.data)
+      dispatch(rekrutSelesai(response.data))
+    })
+  }
+}
+
+export const fetchGeraiForStaf = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/staf/getWorkplaceData?' + stringify(payload)).then(response => {
+      console.log("geraiForStaf?", response.data)
+      dispatch(setGeraiForStaf(response.data))
+    })
+  }
+}
+
+export const setGeraiForStaf = (payload: any) => {
+  return { type: 'SET_GERAI_FOR_STAF', payload }
+}
+
+export const setIsFetchingGerai = (payload: any) => {
+  return { type: 'SET_IS_FETCHING_GERAI', payload }
+}
+
+export const bukaKLasterAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/pesanan/bukaKlaster?' + stringify(payload)).then(response => {
+      console.log("bukaKlaster?", response.data)
+      dispatch(setIsFetching(false))
+    })
+  }
+}
+
+export const pesananSelesai = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/pesanan/selesai?' + stringify(payload)).then(response => {
+      console.log("selesai?", response.data)
+      dispatch(setIsFetching(false))
+    })
+  }
 }

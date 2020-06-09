@@ -1,18 +1,18 @@
 import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, IonPage, IonContent, IonGrid, IonRow, IonSpinner } from '@ionic/react'
 import { businessOutline, personOutline } from 'ionicons/icons'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import AkunTab from './pemilik/AkunTab'
 import GeraiTab from './pemilik/GeraiTab'
 import Logout from '../pages/Logout'
 import Axios from 'axios'
-import { getToken } from '../config/firebaseConfig'
+import { getToken, getCurrentUser } from '../config/firebaseConfig'
 import apiSite from '../config/apiSite'
 import queryString, { stringify } from 'query-string'
 import { toast } from '../components/toast'
 import { useSelector, useDispatch } from 'react-redux'
 import Busy from '../pages/Busy'
-import { setPemilikData, setGerais, setPemilikBelongings, setError } from '../redux/actions'
+import { setPemilikData, setGerais, setPemilikBelongings, setError, setPenggunaData } from '../redux/actions'
 import PemilikRegisterPage from '../pages/PemilikRegisterPage'
 import GeraiPage from '../pages/GeraiPage'
 import AkunPemilik from '../pages/AkunPemilik'
@@ -31,6 +31,7 @@ const Pemilik: React.FC = () => {
   const [gettingPemilik, setGettingPemilik] = useState(true)
   const [busy, setBusy] = useState(true)
   const dispatch = useDispatch()
+  const state = useSelector((state: any) => state)
 
   async function getPemilik() {
     setBusy(true)
@@ -49,9 +50,9 @@ const Pemilik: React.FC = () => {
         }
         loadBelongings(response.data)
       } else {
-        //setBusy(false)
+        setBusy(false)
         dispatch(setPemilikData({
-          id: null,
+          id: '',
           isRegistered: false
         }))
       }
@@ -65,6 +66,7 @@ const Pemilik: React.FC = () => {
     })
   }
   async function loadBelongings(id_pemilik: any) {
+    //console.log("loadingbelonging")
     setBusy(true)
     var params = {
       token: await getToken(),
@@ -79,6 +81,20 @@ const Pemilik: React.FC = () => {
     }).then(() => {
       setBusy(false)
     })
+  }
+
+  useEffect(() => {
+    // console.log("busy",busy)
+    // console.log("isreg",isRegistered)
+    if (state.pengguna.uid === '') {
+      hehe()
+    }
+  })
+
+  async function hehe() {
+    let currentUser = await getCurrentUser()
+    //console.log("cur user: ", currentUser)
+    dispatch(setPenggunaData(currentUser))
   }
 
   if (gettingPemilik) { getPemilik(); setGettingPemilik(false) }

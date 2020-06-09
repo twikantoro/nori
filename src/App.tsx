@@ -1,41 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, IonContent, IonSpinner, IonPage, IonLoading, IonGrid, IonRow, IonAlert } from '@ionic/react';
+import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Pengantri from './tabs/Pengantri'
-
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
-
+import '@ionic/react/css/display.css';
+import '@ionic/react/css/flex-utils.css';
+import '@ionic/react/css/float-elements.css';
 /* Basic CSS for apps built with Ionic */
 import '@ionic/react/css/normalize.css';
-import '@ionic/react/css/structure.css';
-import '@ionic/react/css/typography.css';
-
 /* Optional CSS utils that can be commented out */
 import '@ionic/react/css/padding.css';
-import '@ionic/react/css/float-elements.css';
+import '@ionic/react/css/structure.css';
 import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
-import '@ionic/react/css/flex-utils.css';
-import '@ionic/react/css/display.css';
-
-/* Theme variables */
-import './theme/variables.css';
-import './theme/facebook.css'
-import './theme/google.css'
+import '@ionic/react/css/typography.css';
+import React, { useEffect, useState } from 'react';
+import { connect, useDispatch } from 'react-redux';
+import { Redirect, Route } from 'react-router-dom';
 import './App.css';
-import { useDispatch, connect, useSelector } from 'react-redux';
-import { setUserState, setRole } from './redux/actions';
-import { getCurrentUser, isPemilik, isStaf } from './config/firebaseConfig'
-import Pemilik from './tabs/Pemilik';
+import { getCurrentUser } from './config/firebaseConfig';
 import BusyPage from './pages/Busy';
 import ErrorPage from './pages/ErrorPage';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import { setRole, setUserState } from './redux/actions';
+import Pemilik from './tabs/Pemilik';
+import Pengantri from './tabs/Pengantri';
+import Staf from './tabs/Staf';
+import './theme/facebook.css';
+import './theme/google.css';
+/* Theme variables */
+import './theme/variables.css';
 
-import socketIOClient from "socket.io-client";
-import socketServer from './config/socketServer';
+
+
+
+
 
 const RoutingSystem: React.FC = () => {
   return (
@@ -43,6 +42,7 @@ const RoutingSystem: React.FC = () => {
       <IonRouterOutlet>
         <Route exact path="/pengantri" component={Pengantri} />
         <Route exact path="/pemilik" component={Pemilik} />
+        <Route exact path="/staf" component={Staf} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/error" component={ErrorPage} />

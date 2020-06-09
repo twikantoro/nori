@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonButton, IonLoading, IonGrid, IonList, IonItem, IonInput, IonTextarea, IonRow, IonCol, IonAlert, IonSelect, IonSelectOption } from '@ionic/react'
-import { useSelector, useDispatch } from 'react-redux'
+import { IonAlert, IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonInput, IonItem, IonList, IonLoading, IonRow, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react'
+import $ from 'jquery'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { toast } from '../components/toast'
 import { getToken } from '../config/firebaseConfig'
-import { createGeraiAsync, geraiNeedsUpdate, editGeraiAsync, hapusGeraiAsync } from '../redux/actions'
-import $ from 'jquery'
-import { Link } from 'react-router-dom'
 import kotKabs from '../json/kota-kabupaten'
-import { Gmaps } from 'react-gmaps'
+import { editGeraiAsync, hapusGeraiAsync } from '../redux/actions'
 
 const GeraiEditPage: React.FC = () => {
   const [busy, setBusy] = useState(false)

@@ -41,7 +41,7 @@ const Pengantri: React.FC = () => {
 
   async function hehe() {
     let currentUser = await getCurrentUser()
-    console.log("cur user: ", currentUser)
+    //console.log("cur user: ", currentUser)
     dispatch(setPenggunaData(currentUser))
   }
 

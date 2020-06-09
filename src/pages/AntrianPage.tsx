@@ -80,7 +80,7 @@ const DefaultAntrianPage: React.FC = () => {
           <IonSegment value={activeSegment}
             onIonChange={(e) => swithSegmentTo(e.detail.value)}>
             <IonSegmentButton value="berlangsung">
-              <IonLabel>Berlangsung</IonLabel>
+              <IonLabel>Hari ini</IonLabel>
             </IonSegmentButton>
             <IonSegmentButton value="mendatang">
               <IonLabel>Mendatang</IonLabel>

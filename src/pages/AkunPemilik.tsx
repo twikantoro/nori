@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from "react"
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonSegment, IonSegmentButton, IonLabel, IonRefresher, IonRefresherContent, IonList, IonListHeader, IonItem, IonBadge, IonSelect, IonSelectOption, IonButtons, IonButton, IonLoading, IonGrid, IonRow, IonCol, IonInput, IonSpinner, IonItemDivider, IonIcon, IonPage } from "@ionic/react"
-import CardAntrian from "../components/CardAntrian"
-import { useSelector, connect } from "react-redux"
+import { IonAvatar, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonItemDivider, IonLabel, IonLoading, IonSelect, IonSelectOption, IonToolbar } from "@ionic/react"
+import { addCircleOutline, createOutline, logOutOutline } from "ionicons/icons"
 import $ from 'jquery'
-import axios from 'axios'
-import queryString from 'query-string'
-import apiSite from "../config/apiSite"
-import { getToken, logoutUser } from "../config/firebaseConfig"
-import { logOutOutline, trashOutline, addCircleOutline } from "ionicons/icons"
+import React, { useState } from "react"
+import { connect, useSelector } from "react-redux"
+import { logoutUser, penggunaData, getCurrentUser } from "../config/firebaseConfig"
 
 const AkunPemilik: React.FC = () => {
   //others
+  const state = useSelector((state: any) => state)
   const [busy, setBusy] = useState(false)
   const role = useSelector((state: any) => state.role)
   const [activeSegment, setActiveSegment] = useState('berlangsung')
+  const pengguna = state.pengguna
 
   const switchViewTo = (view: any) => {
     window.location.href = "/" + view
@@ -21,41 +19,62 @@ const AkunPemilik: React.FC = () => {
 
   return (
     <>
-        <IonHeader>
-          <IonToolbar>
-            <IonButtons>
-              <IonSelect interface="popover" value={role} onIonChange={(e: any) => switchViewTo(e.target.value)}>
-                <IonSelectOption value="pengantri">Pengantri</IonSelectOption>
-                <IonSelectOption value="pemilik">Pemilik</IonSelectOption>
-                <IonSelectOption value="staf">Staf</IonSelectOption>
-              </IonSelect>
+      <IonHeader>
+        <IonToolbar>
+          <IonButtons>
+            <IonSelect interface="popover" value={role} onIonChange={(e: any) => switchViewTo(e.target.value)}>
+              <IonSelectOption value="pengantri">Pengantri</IonSelectOption>
+              <IonSelectOption value="pemilik">Pemilik</IonSelectOption>
+              <IonSelectOption value="staf">Staf</IonSelectOption>
+            </IonSelect>
 
-            </IonButtons>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <IonLoading isOpen={busy} />
-          <IonItemDivider mode="ios">Gerai</IonItemDivider>
-          <IonItem routerLink="/pemilik/akun/gerai/daftar" mode="md">
-            <IonIcon icon={addCircleOutline} />&nbsp;
-          <IonLabel>
-              <h3>Buat gerai baru</h3>
-            </IonLabel>
-          </IonItem>
-          <IonItemDivider mode="ios">Logout</IonItemDivider>
-          <IonItem onClick={() => {
-            logoutUser(function (response: any) {
-              if (response === true) {
-                window.location.href = "/"
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
+        <div className="ion-padding-vertical ion-padding-end">
+          <IonItem lines="none">
+            <IonAvatar>
+              {pengguna.photoURL ?
+                <img src={pengguna.photoURL} /> :
+                <img src="/assets/img/person-circle-outline.svg" />
               }
-            })
-          }}>
-            <IonIcon icon={logOutOutline} />&nbsp;
+            </IonAvatar>&nbsp;
           <IonLabel>
-              <h3>Logout</h3>
+              <h3>{pengguna.displayName ? pengguna.displayName : "user tanpa nama"}</h3>
+              <p></p>
             </IonLabel>
+            <IonIcon onClick={() => $('#btn-edit-akun').click()} icon={createOutline} />
           </IonItem>
-        </IonContent>
+        </div>
+        <IonItemDivider className="custom-divider" />
+
+        <IonItem lines="none">
+          <IonLabel><h3>Email</h3></IonLabel>
+          <IonLabel slot="end" className="ion-text-right"><p>{pengguna.email}</p></IonLabel>
+        </IonItem>
+        <IonLoading isOpen={busy} />
+        <IonItemDivider mode="ios">Gerai</IonItemDivider>
+        <IonItem routerLink="/pemilik/akun/gerai/daftar" mode="md">
+          <IonIcon icon={addCircleOutline} />&nbsp;
+          <IonLabel>
+            <h3>Buat gerai baru</h3>
+          </IonLabel>
+        </IonItem>
+        <IonItemDivider mode="ios">Logout</IonItemDivider>
+        <IonItem onClick={() => {
+          logoutUser(function (response: any) {
+            if (response === true) {
+              window.location.href = "/"
+            }
+          })
+        }}>
+          <IonIcon icon={logOutOutline} />&nbsp;
+          <IonLabel>
+            <h3>Logout</h3>
+          </IonLabel>
+        </IonItem>
+      </IonContent>
     </>
   )
 }
