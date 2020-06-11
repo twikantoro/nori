@@ -61,6 +61,7 @@ const GeraiPage: React.FC = () => {
   const chosenGeraiKode = state.chosenGeraiKode
 
   useEffect(() => {
+    //console.log("belongings?",state.pemilik)
     if (!pemilikBelongingsUpToDateLocal && !fetchingPemilikBelongingsLocal) {
       setIsFetching(true)
       otwFetchBelongings()
@@ -113,7 +114,23 @@ const GeraiPage: React.FC = () => {
         }
       }
     }
-    const hasKlaster = (Array.isArray(klasters) && klasters.length > 0) ? true : false
+    const [hasKlaster, setHasKlaster] = useState((Array.isArray(klasters) && klasters.length > 0) ? true : false)
+
+    useState(() => {
+      //modify existing klasters
+      if (Array.isArray(klastersAll) && klastersAll.length !== 0) {
+        for (let klaster of klastersAll) {
+          //console.log(klaster.id_gerai+" vs "+id_gerai)
+          if (klaster.id_gerai == id_gerai) {
+            //console.log('happening')
+            klasters = klasters.concat(klaster)
+            klastersWhitelist = klastersWhitelist.concat(klaster.id)
+          }
+        }
+      }
+      setHasKlaster((Array.isArray(klasters) && klasters.length > 0) ? true : false)
+
+    })
 
     const LayananSegment: React.FC = () => {
       const layanansAll = state.pemilik.layanans
@@ -125,8 +142,23 @@ const GeraiPage: React.FC = () => {
           }
         }
       }
+      // const [hasLayanan, setHasLayanan] = useState(layanans.length > 0 ? true : false)
+      // const [jmlLayanan, setJmlLayanan] = useState(layanans.length)
       const hasLayanan = layanans.length > 0 ? true : false
       const jmlLayanan = layanans.length
+
+      useEffect(() => {
+        //modify existing layanans
+        // if (Array.isArray(layanansAll) && layanansAll.length !== 0) {
+        //   for (let layanan of layanansAll) {
+        //     if (klastersWhitelist.includes(layanan.id_klaster)) {
+        //       layanans = layanans.concat(layanan)
+        //     }
+        //   }
+        // }
+        // setHasLayanan(layanans.length > 0 ? true : false)
+        // setJmlLayanan(layanans.length)
+      })
 
       interface layananCompProps {
         title: any,
@@ -229,7 +261,9 @@ const GeraiPage: React.FC = () => {
               <LayananAddComp />
               <LayananInvisComp width="2" />
             </IonRow>
-            : <>
+            : 
+            // renderRow[0][0] ? '' : 
+            <>
               {renderRow.map((row, index) => {
                 return (
                   <IonRow key={"baris" + index}>

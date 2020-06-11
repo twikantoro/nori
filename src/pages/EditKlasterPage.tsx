@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { IonToolbar, IonButtons, IonBackButton, IonHeader, IonContent, IonList, IonItem, IonInput, IonTitle, IonDatetime, IonLabel, IonBadge, IonChip, IonButton, IonLoading, IonRow, IonCol, IonAlert } from '@ionic/react'
 import TimePicker from '../components/TimePicker'
 import $ from 'jquery'
-import { addLayananIsComplete, addLayananAsync, fetchLayanansByKodeAsync, addKlasterIsComplete, addKlasterAsync, setPemilikBelongingsUpToDate, editKlasterAsync, hapusKlasterAsync } from '../redux/actions'
+import { addLayananIsComplete, addLayananAsync, fetchLayanansByKodeAsync, addKlasterIsComplete, addKlasterAsync, setPemilikBelongingsUpToDate, editKlasterAsync, hapusKlasterAsync, setIsDeleting } from '../redux/actions'
 import { useSelector, useDispatch } from 'react-redux'
 import Axios from 'axios'
 import { getToken } from '../config/firebaseConfig'
@@ -57,6 +57,7 @@ const EditKlasterPage: React.FC = () => {
   })
 
   const pemilikBelongingsUpToDateLocal = state.pemilikBelongingsUpToDate
+  const isDeletingLocal = state.isDeleting
 
   async function submitLayanan() {
     setBusy(true)
@@ -89,6 +90,7 @@ const EditKlasterPage: React.FC = () => {
   })
 
   async function hapusKlasterConfirm() {
+    dispatch(setIsDeleting(true))
     const params = {
       token: await getToken(),
       id_pemilik: state.pemilik.id,
@@ -109,7 +111,7 @@ const EditKlasterPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <IonLoading isOpen={busy} />
+        <IonLoading isOpen={busy||isDeletingLocal} />
         <IonList>
           <IonItem lines="none">
             <b>Nama:</b>&nbsp;

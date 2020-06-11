@@ -60,7 +60,7 @@ const LayananView: React.FC = () => {
       let jadwalWeek = JSON.parse(currLayanan.klaster.jadwal)
       setJadwalCurrHari(jadwalWeek[hariIni])
       //setting chosen tanggal for the first time
-      setChosenTanggal(currLayanan.forSelect[0].tanggal)
+      //setChosenTanggal(currLayanan.forSelect[0].tanggal)
     }
     //if ready
     if (typeof state.layanans[kodeGerai + "-" + kodeLayanan] !== 'undefined') {
@@ -112,12 +112,23 @@ const LayananView: React.FC = () => {
   }
 
   async function pesanSlot() {
+    //debug tanggal kosong
+    if (!chosenTanggal) {
+      setChosenTanggal(!chosenTanggal ?
+        window.location.href.split("/")[7] ?
+          window.location.href.split("/")[7] : currLayanan.forSelect[0].tanggal
+        : chosenTanggal)
+    }
+    //
     let params = {
       token: await getToken(),
       id_pengantri: state.pengantri.id,
       id_klaster: currLayanan.klaster.id,
       id_layanan: currLayanan.id,
-      tanggal: chosenTanggal,
+      tanggal: !chosenTanggal ?
+        window.location.href.split("/")[7] ?
+          window.location.href.split("/")[7] : currLayanan.forSelect[0].tanggal
+        : chosenTanggal,
       prefix: currLayanan.klaster.prefix,
       slot: slot
     }
@@ -157,11 +168,11 @@ const LayananView: React.FC = () => {
     }
   }
 
-  function changedChosenTanggal() {
+  function changedChosenTanggal(tanggal: any) {
     setListening(false)
     setSayaDahPesan(false)
-    listenerManager("stop", chosenTanggal)
-    listenerManager("start", chosenTanggal)
+    listenerManager("stop", tanggal)
+    listenerManager("start", tanggal)
   }
 
   return (
@@ -189,10 +200,15 @@ const LayananView: React.FC = () => {
                 <IonItem className="ion-no-margin" lines="none">
                   <IonLabel><b>Hari</b></IonLabel>
 
-                  <IonSelect value={chosenTanggal} onIonChange={(e) => {
-                    setChosenTanggal(e.detail.value)
-                    changedChosenTanggal()
-                  }}>
+                  <IonSelect value={
+                    !chosenTanggal ?
+                      window.location.href.split("/")[7] ?
+                        window.location.href.split("/")[7] : currLayanan.forSelect[0].tanggal
+                      : chosenTanggal}
+                    onIonChange={(e) => {
+                      setChosenTanggal(e.detail.value)
+                      changedChosenTanggal(e.detail.value)
+                    }}>
                     {currLayanan.forSelect.map((obj: any, index: any) => {
                       return (
                         <IonSelectOption key={obj.tanggal} value={obj.tanggal}

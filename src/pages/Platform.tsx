@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonItemDivider, IonButton, IonVirtualScroll, IonInfiniteScroll, IonInfiniteScrollContent, IonRow, IonButtons, IonSelectOption, IonSelect, IonItem, IonLabel, IonCard, IonCardContent, IonCol, IonSpinner } from '@ionic/react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setIsFetchingGerai, fetchGeraiForStaf, bukaKLasterAsync, setIsFetching, pesananSelesai } from '../redux/actions'
+import { setIsFetchingGerai, fetchGeraiForStaf, bukaKLasterAsync, setIsFetching, pesananSelesai, pesananTunda } from '../redux/actions'
 import { getToken, db, getTanggalHariIni } from '../config/firebaseConfig'
-import ReactLiveTime from 'react-live-time'
 import TimeDisplay from '../components/TimeDisplay'
 
 const Platform: React.FC = () => {
@@ -25,6 +24,7 @@ const Platform: React.FC = () => {
   const [currAntSlot, setCurrAntSlot] = useState('')
   const [currAntPrefix, setCurrAntPrefix] = useState('')
   const [loading, setLoading] = useState(false)
+  const [hasKlaster, setHasKlaster] = useState(false)
 
   useEffect(() => {
     if (employed && !gerai.id && !isFetchingGeraiLocal) {
@@ -33,8 +33,13 @@ const Platform: React.FC = () => {
     }
     //if ready, run once 
     if (gerai.id && !initiated) {
+      console.log("initiating")
       setInitiated(true)
-      setChosenKlaster(gerai.klasters[0].id)
+      if (gerai.klasters[0]) {
+        setHasKlaster(true)
+        setChosenKlaster(gerai.klasters[0].id)
+        setCurrKlasterID(gerai.klasters[0].id)
+      }
     }
     //detect change
     if (gerai.id && chosenKlaster !== currKlasterID) {
@@ -47,6 +52,7 @@ const Platform: React.FC = () => {
       //reset listener
       listenerManager('stop')
       setdbInitiated(false)
+      setIsOpen(false)
     }
     //firestore listener
     if (!dbInitiated && currKlasterID) {
@@ -67,13 +73,18 @@ const Platform: React.FC = () => {
         var jml = 0
         var smallest = 0
         snapshot.forEach(doc => {
+          //console.log("raw",doc.data())
           //get current pesanan
           if (!doc.data().status || doc.data().status == 3) {
-            
-            if (jml !> 0) {
+            console.log("active", doc.data())
+            console.log("jml", jml)
+            if (jml == 0) {
               console.log("ant", doc.data())
               smallest = parseInt(doc.data().slot)
             } else {
+              if (smallest == 0) {
+                smallest = parseInt(doc.data().slot)
+              }
               if (smallest > doc.data().slot) {
                 smallest = parseInt(doc.data().slot)
               }
@@ -140,6 +151,7 @@ const Platform: React.FC = () => {
 
   async function tidakHadir() {
     setLoading(true)
+    dispatch(pesananTunda({ id_pesanan: currAntID, token: await getToken() }))
   }
 
   return (
@@ -147,9 +159,11 @@ const Platform: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonTitle>Platform (live)</IonTitle>
-          {!gerai.id ? '' :
+          {!hasKlaster ? '' :
             <IonButtons slot="end" className="ion-padding-end">
-              <IonSelect interface="popover" value={gerai.klasters[0].id}>
+              <IonSelect interface="popover" value={chosenKlaster ? chosenKlaster : gerai.klasters[0].id}
+                onIonChange={(e) => setChosenKlaster(e.detail.value)}
+              >
                 {gerai.klasters.map((klaster: any) => {
                   return (
                     <IonSelectOption key={klaster.id} value={klaster.id}>{klaster.nama}</IonSelectOption>
@@ -161,36 +175,44 @@ const Platform: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <IonItemDivider mode="ios">Dashboard</IonItemDivider>
-        <IonItem lines="none">
-          <b>Waktu</b>
-          <p slot="end"><TimeDisplay /></p>
-        </IonItem>
-        <IonItem lines="none">
-          <b>Antrian hari ini</b>
-          <p slot="end">{jumlahAnt}</p>
-        </IonItem>
-        <IonItemDivider mode="ios">Layani</IonItemDivider>
-        {!listening ? '' : !isOpen ?
-          <div className="ion-padding custom-width-100 ion-justify-content-center ion-text-center">
-            Klaster ini belum buka <br /><br />
-            <IonButton disabled={isFetchingLocal} onClick={() => bukaKlaster()}>Buka</IonButton>
-          </div> : loading ? <IonSpinner className="ion-margin" /> : currAntSlot == '0' ?
-            <div className="ion-padding custom-width-100 ion-justify-content-center ion-text-center">
-              Sementara tidak ada antrian menunggu. Yay!
+        {!employed ? <div className="ion-padding custom-width-100 ion-justify-content-center ion-text-center">
+          Anda tidak bekerja di gerai manapun
+        </div> :
+          !hasKlaster ? <div className="ion-padding custom-width-100 ion-justify-content-center ion-text-center">
+            Gerai ini tidak memiliki klaster layanan
+          </div> :
+            <>
+              <IonItemDivider mode="ios">Dashboard</IonItemDivider>
+              <IonItem lines="none">
+                <b>Waktu</b>
+                <p slot="end"><TimeDisplay /></p>
+              </IonItem>
+              <IonItem lines="none">
+                <b>Antrian hari ini</b>
+                <p slot="end">{jumlahAnt}</p>
+              </IonItem>
+              <IonItemDivider mode="ios">Layani</IonItemDivider>
+              {!listening ? <IonSpinner className="ion-margin" /> : !isOpen ?
+                <div className="ion-padding custom-width-100 ion-justify-content-center ion-text-center">
+                  Klaster ini belum buka <br /><br />
+                  <IonButton disabled={isFetchingLocal} onClick={() => bukaKlaster()}>Buka</IonButton>
+                </div> : loading ? <IonSpinner className="ion-margin" /> : currAntSlot == '0' ?
+                  <div className="ion-padding custom-width-100 ion-justify-content-center ion-text-center">
+                    Sementara tidak ada antrian menunggu. Yay!
             </div> :
-            <IonCard>
-              <IonCardContent>
-                <IonItem lines="none"><IonLabel><h3>No. Urut</h3></IonLabel><b slot="end">{currAntPrefix + '-' + currAntSlot}</b></IonItem>
-                <IonItemDivider className="custom-divider" />
-                <IonRow>
-                  <IonCol>
-                    <IonButton onClick={() => tidakHadir()} expand="block" fill="outline">Tidak Hadir</IonButton></IonCol>
-                  <IonCol>
-                    <IonButton onClick={() => selesai()} expand="block">Selesai</IonButton></IonCol></IonRow>
-              </IonCardContent>
-            </IonCard>
-        }
+                  <IonCard>
+                    <IonCardContent>
+                      <IonItem lines="none"><IonLabel><h3>No. Urut</h3></IonLabel><b slot="end">{currAntPrefix + '-' + currAntSlot}</b></IonItem>
+                      <IonItemDivider className="custom-divider" />
+                      <IonRow>
+                        <IonCol>
+                          <IonButton onClick={() => tidakHadir()} expand="block" fill="outline">Tidak Hadir</IonButton></IonCol>
+                        <IonCol>
+                          <IonButton onClick={() => selesai()} expand="block">Selesai</IonButton></IonCol></IonRow>
+                    </IonCardContent>
+                  </IonCard>
+              }
+            </>}
       </IonContent>
     </>
   )

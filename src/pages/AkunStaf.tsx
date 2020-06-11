@@ -18,6 +18,7 @@ const AkunStaf: React.FC = () => {
   const staf = state.staf
   const [chosenKlaster, setChosenKlaster] = useState('')
   const [jadwal, setjadwal] = useState('')
+  const [hasKlaster, setHasKlaster] = useState(false)
 
   const switchViewTo = (view: any) => {
     window.location.href = "/" + view
@@ -31,8 +32,12 @@ const AkunStaf: React.FC = () => {
     }
     //if ready
     if (gerai.id) {
+      //setHasKlaster
+      if (gerai.klasters[0]) {
+        setHasKlaster(true)
+      }
       //kalo punya klaster
-      if (gerai.klasters[0].id) {
+      if (hasKlaster) {
         var asu = gerai.klasters[0].id
         //setchosenklaster
         setChosenKlaster(asu)
@@ -109,26 +114,28 @@ const AkunStaf: React.FC = () => {
           !gerai.id ? <IonSpinner className="ion-margin" /> : <>
             <IonItem lines="none">
               <IonLabel>
-                <h3>Gerai Baru</h3>
-                <p>Jl. Solo semarang No. 40</p>
+                <h3>{gerai.nama}</h3>
+                <p>{gerai.alamat}</p>
               </IonLabel>
             </IonItem>
 
             <IonItemDivider mode="ios">Waktu Operasional</IonItemDivider>
-            <IonItem>
-              <IonLabel>
-                <h3>Klaster</h3>
-              </IonLabel>
-              <IonSelect interface="popover" value={gerai.klasters[0].id} onIonChange={(e) => setChosenKlaster(e.detail.value)}>
-                {gerai.klasters.map((klaster: any) => {
-                  return (
-                    <IonSelectOption key={klaster.id} value={klaster.id}>
-                      {klaster.nama}
-                    </IonSelectOption>
-                  )
-                })}
-              </IonSelect>
-            </IonItem>
+            {!hasKlaster ? <div className="ion-padding">Gerai ini tidak memiliki klaster layanan</div> :
+              <IonItem>
+                <IonLabel>
+                  <h3>Klaster</h3>
+                </IonLabel>
+
+                <IonSelect interface="popover" value={gerai.klasters[0].id} onIonChange={(e) => setChosenKlaster(e.detail.value)}>
+                  {gerai.klasters.map((klaster: any) => {
+                    return (
+                      <IonSelectOption key={klaster.id} value={klaster.id}>
+                        {klaster.nama}
+                      </IonSelectOption>
+                    )
+                  })}
+                </IonSelect>
+              </IonItem>}
             {jadwal === '' ? '' : JSON.parse(jadwal).map((hari: any, index: any) => {
               return (
                 <IonItem key={index}>

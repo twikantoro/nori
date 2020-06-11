@@ -4,7 +4,7 @@ import { connect, useDispatch, useSelector } from "react-redux"
 import { toast } from "../components/toast"
 import { getToken } from "../config/firebaseConfig"
 import kotKabs from "../json/kota-kabupaten"
-import { createGeraiAsync, geraiNeedsUpdate } from "../redux/actions"
+import { createGeraiAsync, geraiNeedsUpdate, setIsFetching } from "../redux/actions"
 
 const DaftarGerai: React.FC = () => {
   const theState = useSelector((state: any) => state)
@@ -12,7 +12,7 @@ const DaftarGerai: React.FC = () => {
   const [nama, setNama] = useState('')
   const [deskripsi, setDeskripsi] = useState('')
   const [alamat, setAlamat] = useState('')
-  const [wilayah, setWilayah] = useState('')
+  const [wilayah, setWilayah] = useState('Surakarta')
   const [kode, setKode] = useState('')
   const [tautan, setTautan] = useState('')
   const pemilik = useSelector((state: any) => state.pemilik)
@@ -25,13 +25,10 @@ const DaftarGerai: React.FC = () => {
   //geraineeds update?
   const geraiNeedsUpdateLocal = useSelector((state: any) => state.geraiNeedsUpdate)
   const backURL = '/pemilik/akun'
+  const state = useSelector((state:any)=>state)
+  const isFetchingLocal = state.isFetching
 
   async function submitGerai() {
-    if (nama === '' || kode === '' || deskripsi === '' || alamat === '' || wilayah === '') {
-      toast("Mohon isi formulir secara lengkap")
-      return false
-    }
-    setBusy(true)
     const params = {
       token: await getToken(),
       id_pemilik: pemilik.id,
@@ -42,11 +39,18 @@ const DaftarGerai: React.FC = () => {
       wilayah: wilayah,
       tautan: tautan
     }
+    console.log("params", params)
+    if (nama === '' || kode === '' || deskripsi === '' || alamat === '' || wilayah === '') {
+      toast("Mohon isi formulir secara lengkap")
+      return false
+    }
+    dispatch(setIsFetching(true))
+    setBusy(true)
     dispatch(createGeraiAsync(params))
   }
 
   useEffect(() => {
-    if (geraiNeedsUpdateLocal) {
+    if (!isFetchingLocal && busy) {
       dispatch(geraiNeedsUpdate(false))
       setBusy(false)
       toast("Berhasil")

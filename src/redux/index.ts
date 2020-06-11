@@ -36,7 +36,9 @@ const initialState = {
   ],
   pemilik: {
     isRegistered: false,
-    gerais: initialGerais
+    gerais: initialGerais,
+    layanans: new Array(0),
+    klasters: new Array(0)
   },
   geraisLoaded: false,
   gerais: new Array(0),
@@ -157,7 +159,8 @@ export default function reducer(state = initialState,
       return {
         ...state,
         gerais: newGerai,
-        isFetching: false
+        isFetching: false,
+        geraiNeedsUpdate: true
       }
 
     case 'REMOVE_GERAI':
@@ -226,6 +229,9 @@ export default function reducer(state = initialState,
       }
     case 'SET_PEMILIK_BELONGINGS':
       var newPemilik = state.pemilik
+      delete(newPemilik.gerais)
+      delete(newPemilik.klasters)
+      delete(newPemilik.layanans)
       newPemilik = {
         ...newPemilik,
         ...payload
@@ -277,7 +283,8 @@ export default function reducer(state = initialState,
     case 'SET_PEMILIK_UP_TO_DATE':
       return {
         ...state,
-        pemilikBelongingsUpToDate: payload
+        pemilikBelongingsUpToDate: payload,
+        isDeleting: false
       }
     case 'SET_IS_SEARCHING':
       return {

@@ -51,6 +51,7 @@ export const newState = (payload: any) => {
 export const createGeraiAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/gerai/create?" + queryString.stringify(payload)).then(response => {
+      console.log("createGera?",response.data)
       delete payload.token
       delete payload.id_pemilik
       dispatch(addGerai(payload))
@@ -191,8 +192,8 @@ export const setPemilikBelongings = (payload: any) => {
 export const fetchPemilikBelongingsAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/pemilik/getAllBelongings?" + stringify(payload)).then(response => {
-      dispatch(setPemilikBelongings(response.data))
       console.log("belongings?", response.data)
+      dispatch(setPemilikBelongings(response.data))
     })
   }
 }
@@ -516,6 +517,24 @@ export const pesananSelesai = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + '/pesanan/selesai?' + stringify(payload)).then(response => {
       console.log("selesai?", response.data)
+      dispatch(setIsFetching(false))
+    })
+  }
+}
+
+export const pesananTunda = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/pesanan/tunda?' + stringify(payload)).then(response => {
+      console.log("tunda?", response.data)
+      dispatch(setIsFetching(false))
+    })
+  }
+}
+
+export const diLokasiAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/pesanan/diLokasi?' + stringify(payload)).then(response => {
+      console.log("diLokasi?", response.data)
       dispatch(setIsFetching(false))
     })
   }
