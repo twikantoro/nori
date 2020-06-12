@@ -4,6 +4,8 @@ import { starSharp, starHalfSharp, chevronDownOutline, chevronBackOutline, filte
 import { useDispatch, useSelector } from 'react-redux'
 import { searchGeraiOrLayanan, setIsSearching } from '../redux/actions'
 import { Link } from 'react-router-dom'
+import kotkab from '../json/kota-kabupaten'
+import kotaKabupaten from '../json/kota-kabupaten'
 
 const CariPage: React.FC = () => {
   const [busy, setBusy] = useState(false)
@@ -19,6 +21,7 @@ const CariPage: React.FC = () => {
 
   const hasilSearchLocal = state.hasilSearch
   const isSearchingLocal = state.isSearching
+  const [chosenWilayah, setChosenWilayah] = useState('Surakarta')
 
   //cardSearch component
   const CardSearch: React.FC<CardSearchProps> = ({ props }) => {
@@ -30,7 +33,7 @@ const CariPage: React.FC = () => {
       layanansNames = '-'
     }
     return (
-      <IonCard button routerLink={'/pengantri/cari/'+props.kode}>
+      <IonCard button routerLink={'/pengantri/cari/' + props.kode}>
         <IonCardHeader className="ion-no-padding ion-padding-vertical">
           <IonItem lines="none">
             <IonAvatar>
@@ -123,8 +126,12 @@ const CariPage: React.FC = () => {
           <>
             <IonItem lines="none">
               <IonLabel>Wilayah:</IonLabel>
-              <IonSelect value="surakarta" interface="alert">
-                <IonSelectOption value="surakarta">Surakarta</IonSelectOption>
+              <IonSelect onIonChange={(e) => setChosenWilayah(e.detail.value)} value={chosenWilayah} interface="alert">
+                {kotaKabupaten.map(k => {
+                  return (
+                    <IonSelectOption key={k} value={k}>{k}</IonSelectOption>
+                  )
+                })}
               </IonSelect>
             </IonItem>
             <IonItemDivider className="custom-divider" />
@@ -137,7 +144,10 @@ const CariPage: React.FC = () => {
             (Array.isArray(hasilSearchLocal) && hasilSearchLocal.length > 0 && searchText === lastSearch) ?
               hasilSearchLocal.map(gerai => {
                 //console.log(gerai)
-                return <CardSearch key={gerai.id} props={gerai} />
+                return !filterExpanded ?
+                  <CardSearch key={gerai.id} props={gerai} /> :
+                  gerai.wilayah == chosenWilayah ?
+                    <CardSearch key={gerai.id} props={gerai} /> : ''
               })
               : searchText === '' ? "" : searchText === lastSearch ? <TiadaHasil /> : ""
         }

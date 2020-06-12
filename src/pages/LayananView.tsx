@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonSpinner, IonItem, IonLabel, IonItemDivider, IonSelect, IonSelectOption, IonRow, IonCol, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonAlert } from '@ionic/react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setTabRefresh, getLayananData, setIsFetching, sedangPesan, pesanAsync, setIsDeleting, batalPesanAsync } from '../redux/actions'
+import { setTabRefresh, getLayananData, setIsFetching, sedangPesan, pesanAsync, setIsDeleting, batalPesanAsync, clearBan } from '../redux/actions'
 import $ from 'jquery'
-import { getDateDisplay, db, getPerkiraan, getToken, getHariKode, getTanggalHariIni } from '../config/firebaseConfig'
+import { getDateDisplay, db, getPerkiraan, getToken, getHariKode, getTanggalHariIni, getTanggalDisplay } from '../config/firebaseConfig'
 
 const LayananView: React.FC = () => {
   let URLarray = window.location.href.split("/")
@@ -92,6 +92,13 @@ const LayananView: React.FC = () => {
       setPerkiraan(getPerkiraan(params))
       //test debug
       //console.log("tgl",chosenTanggal)
+
+      //detect if ban has expired
+      if (parseInt(state.pengantri.banned) <= getTanggalHariIni() && !isFetchingLocal) {
+        dispatch(setIsFetching(true))
+        dispatch(clearBan({ id_pengantri: state.pengantri.id }))
+      }
+
     }
     //detect url to tanggal
     if (typeof window.location.href.split('/')[7] !== 'undefined' && chosenTanggal == '') {
@@ -158,7 +165,9 @@ const LayananView: React.FC = () => {
       snapshot.forEach(doc => {
         console.log('pes', doc.data())
         if (doc.data().id_pengantri === state.pengantri.id && doc.data().status != '1') {
-          dahpesan = true
+          if (doc.data().status != 4) {
+            dahpesan = true
+          }
         }
       })
       setSayaDahPesan(dahpesan)
@@ -197,55 +206,58 @@ const LayananView: React.FC = () => {
             {typeof currLayanan.forSelect === 'undefined' ? "" :
               <>
                 <IonItemDivider mode="ios">Pesan</IonItemDivider>
-                <IonItem className="ion-no-margin" lines="none">
-                  <IonLabel><b>Hari</b></IonLabel>
+                {state.pengantri.banned ? <div className="ion-padding">
+                  Anda tidak bisa melakukan reservasi sebelum <b>{getTanggalDisplay(state.pengantri.banned.toString())}</b> karena sudah 3 kali keterlambatan
+                </div> : <>
+                    <IonItem className="ion-no-margin" lines="none">
+                      <IonLabel><b>Hari</b></IonLabel>
 
-                  <IonSelect value={
-                    !chosenTanggal ?
-                      window.location.href.split("/")[7] ?
-                        window.location.href.split("/")[7] : currLayanan.forSelect[0].tanggal
-                      : chosenTanggal}
-                    onIonChange={(e) => {
-                      setChosenTanggal(e.detail.value)
-                      changedChosenTanggal(e.detail.value)
-                    }}>
-                    {currLayanan.forSelect.map((obj: any, index: any) => {
-                      return (
-                        <IonSelectOption key={obj.tanggal} value={obj.tanggal}
-                          onClick={() => setHariKode((hariIni + index) % 7)}
-                        >{obj.display}</IonSelectOption>
-                      )
-                    })}
-                  </IonSelect>
-                </IonItem>
-                {jadwalCurrHari === '' ? "" : listening ?
-                  sayaDahPesan ? <div className="ion-padding-horizontal">
-                    < p > Anda sudah pesan layanan ini di hari tersebut. Untuk melihatnya, silahkan cek di Tab Antrian</p>
-                    <IonButton disabled={isDeletingLocal} onClick={() => setShowAlert(true)} color="danger">Batalkan reservasi</IonButton>
-                  </div> :
-                    <IonCard>
-                      <IonCardContent>
-                        <IonItem lines="none">
-                          <IonLabel><b>Slot</b></IonLabel>
-                          <b slot="end">{currLayanan.klaster.prefix + slot}</b>
-                        </IonItem>
-                        <IonItem lines="none">
-                          <IonLabel><p>Jam operasional</p></IonLabel>
-                          <p slot="end">{jadwalCurrHari !== '' ? jadwalCurrHari : "libur"}</p>
-                        </IonItem>
-                        <IonItem className="ion-no-margin" lines="none">
-                          <IonLabel><p>Perkiraan dipanggil</p></IonLabel>
-                          <p slot="end">{perkiraan}</p>
-                        </IonItem>
-                        <div className="ion-padding">
-                          <IonButton expand="block" disabled={sedangPesanLocal}
-                            onClick={() => pesanSlot()}
-                          >Pesan slot</IonButton>
-                        </div>
-                      </IonCardContent>
-                    </IonCard> : <IonSpinner />}
-              </>
-            }
+                      <IonSelect value={
+                        !chosenTanggal ?
+                          window.location.href.split("/")[7] ?
+                            window.location.href.split("/")[7] : currLayanan.forSelect[0].tanggal
+                          : chosenTanggal}
+                        onIonChange={(e) => {
+                          setChosenTanggal(e.detail.value)
+                          changedChosenTanggal(e.detail.value)
+                        }}>
+                        {currLayanan.forSelect.map((obj: any, index: any) => {
+                          return (
+                            <IonSelectOption key={obj.tanggal} value={obj.tanggal}
+                              onClick={() => setHariKode((hariIni + index) % 7)}
+                            >{obj.display}</IonSelectOption>
+                          )
+                        })}
+                      </IonSelect>
+                    </IonItem>
+                    {jadwalCurrHari === '' ? "" : listening ?
+                      sayaDahPesan ? <div className="ion-padding-horizontal">
+                        < p > Anda sudah pesan layanan ini di hari tersebut. Untuk melihatnya, silahkan cek di Tab Antrian</p>
+                        <IonButton disabled={isDeletingLocal} onClick={() => setShowAlert(true)} color="danger">Batalkan reservasi</IonButton>
+                      </div> :
+                        <IonCard>
+                          <IonCardContent>
+                            <IonItem lines="none">
+                              <IonLabel><b>Slot</b></IonLabel>
+                              <b slot="end">{currLayanan.klaster.prefix + slot}</b>
+                            </IonItem>
+                            <IonItem lines="none">
+                              <IonLabel><p>Jam operasional</p></IonLabel>
+                              <p slot="end">{jadwalCurrHari !== '' ? jadwalCurrHari : "libur"}</p>
+                            </IonItem>
+                            <IonItem className="ion-no-margin" lines="none">
+                              <IonLabel><p>Perkiraan dipanggil</p></IonLabel>
+                              <p slot="end">{perkiraan}</p>
+                            </IonItem>
+                            <div className="ion-padding">
+                              <IonButton expand="block" disabled={sedangPesanLocal}
+                                onClick={() => pesanSlot()}
+                              >Pesan slot</IonButton>
+                            </div>
+                          </IonCardContent>
+                        </IonCard> : <IonSpinner />}
+                  </>
+                }</>}
           </>
         }
         <IonButton className="ion-hide" id="btn-cari-refresh" routerLink="/pengantri/cari"></IonButton>

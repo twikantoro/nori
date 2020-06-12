@@ -5,6 +5,7 @@ import { useSelector, connect, useDispatch } from "react-redux"
 import $ from 'jquery'
 import { db, getTanggalHariIni } from "../config/firebaseConfig"
 import { setPesanans } from "../redux/actions"
+import arraySort from 'array-sort'
 
 const DefaultAntrianPage: React.FC = () => {
   const antrians = useSelector((state: any) => state.pesanans)
@@ -60,6 +61,8 @@ const DefaultAntrianPage: React.FC = () => {
         }
       })
       //console.log("pes", pesanans)
+      //sortir pesanan
+      pesanans = arraySort(pesanans,'status')
       dispatch(setPesanans(pesanans))
 
     })

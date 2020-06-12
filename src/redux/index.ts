@@ -1,3 +1,6 @@
+import Pengantri from "../tabs/Pengantri"
+import { setIsFetching } from "./actions"
+
 const initialGerais = {
   layanans: new Array(0),
   klasters: new Array(0)
@@ -229,9 +232,9 @@ export default function reducer(state = initialState,
       }
     case 'SET_PEMILIK_BELONGINGS':
       var newPemilik = state.pemilik
-      delete(newPemilik.gerais)
-      delete(newPemilik.klasters)
-      delete(newPemilik.layanans)
+      delete (newPemilik.gerais)
+      delete (newPemilik.klasters)
+      delete (newPemilik.layanans)
       newPemilik = {
         ...newPemilik,
         ...payload
@@ -421,6 +424,21 @@ export default function reducer(state = initialState,
       return {
         ...state,
         isFetchingGerai: payload
+      }
+    case 'SET_BANNED':
+      return {
+        ...state,
+        pengantri: {
+          ...state.pengantri,
+          banned: payload
+        },
+        isFetching: false
+      }
+    case 'BERHASIL_UNDUR_DIRI':
+      return {
+        ...state,
+        staf: { id: payload.id_staf },
+        isFetching: false
       }
   }
 }

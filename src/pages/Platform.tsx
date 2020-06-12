@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonItemDivider, IonButton, IonVirtualScroll, IonInfiniteScroll, IonInfiniteScrollContent, IonRow, IonButtons, IonSelectOption, IonSelect, IonItem, IonLabel, IonCard, IonCardContent, IonCol, IonSpinner } from '@ionic/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { setIsFetchingGerai, fetchGeraiForStaf, bukaKLasterAsync, setIsFetching, pesananSelesai, pesananTunda } from '../redux/actions'
-import { getToken, db, getTanggalHariIni } from '../config/firebaseConfig'
+import { getToken, db, getTanggalHariIni, getPerkiraan, getHariKode } from '../config/firebaseConfig'
 import TimeDisplay from '../components/TimeDisplay'
 
 const Platform: React.FC = () => {
@@ -151,7 +151,25 @@ const Platform: React.FC = () => {
 
   async function tidakHadir() {
     setLoading(true)
-    dispatch(pesananTunda({ id_pesanan: currAntID, token: await getToken() }))
+    let jadwalWeek = new Array(0)
+    let durasi = ''
+    gerai.klasters.forEach((klaster: any) => {
+      if (klaster.id === currKlasterID) {
+        jadwalWeek = JSON.parse(klaster.jadwal)
+        durasi = klaster.durasi
+      }
+    })
+    let params = {
+      slot: currAntSlot,
+      hari: getHariKode(getTanggalHariIni()),
+      jadwal: jadwalWeek,
+      durasi: parseInt(durasi)
+    }
+    dispatch(pesananTunda({
+      id_pesanan: currAntID,
+      token: await getToken(),
+      perkiraan: getPerkiraan(params)
+    }))
   }
 
   return (

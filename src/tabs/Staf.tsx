@@ -9,6 +9,7 @@ import { getCurrentUser, getToken } from '../config/firebaseConfig'
 import BusyPage from '../pages/Busy'
 import Platform from '../pages/Platform'
 import firebase from '../config/firebaseConfig'
+import AkunEdit from '../pages/AkunEdit'
 
 const Staf: React.FC = () => {
   const state = useSelector((state: any) => state)
@@ -53,6 +54,7 @@ const Staf: React.FC = () => {
         <Switch>
           <Redirect exact from="/staf" to="/staf/platform" />
           <Route exact path="/staf/akun" component={AkunStaf} />
+          <Route exact path="/staf/akun/edit" component={AkunEdit} />
           <Route exact path="/staf/platform" component={Platform} />
         </Switch>
       </IonRouterOutlet>

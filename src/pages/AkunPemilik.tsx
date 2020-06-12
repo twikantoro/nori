@@ -1,4 +1,4 @@
-import { IonAvatar, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonItemDivider, IonLabel, IonLoading, IonSelect, IonSelectOption, IonToolbar } from "@ionic/react"
+import { IonAvatar, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonItemDivider, IonLabel, IonLoading, IonSelect, IonSelectOption, IonToolbar, IonButton } from "@ionic/react"
 import { addCircleOutline, createOutline, logOutOutline } from "ionicons/icons"
 import $ from 'jquery'
 import React, { useState } from "react"
@@ -74,6 +74,7 @@ const AkunPemilik: React.FC = () => {
             <h3>Logout</h3>
           </IonLabel>
         </IonItem>
+        <IonButton className="ion-hide" routerLink="/pemilik/akun/edit" id="btn-edit-akun" />
       </IonContent>
     </>
   )

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { IonHeader, IonToolbar, IonButtons, IonSelect, IonSelectOption, IonButton, IonContent, IonItem, IonAvatar, IonLabel, IonIcon, IonItemDivider, IonSpinner } from '@ionic/react'
+import { IonHeader, IonToolbar, IonButtons, IonSelect, IonSelectOption, IonButton, IonContent, IonItem, IonAvatar, IonLabel, IonIcon, IonItemDivider, IonSpinner, IonAlert, IonLoading } from '@ionic/react'
 import { logoutUser, getToken, getHari } from '../config/firebaseConfig'
 import { useSelector, useDispatch } from 'react-redux'
-import { createOutline } from 'ionicons/icons'
+import { createOutline, powerOutline } from 'ionicons/icons'
 import firebase from '../config/firebaseConfig'
 import $ from 'jquery'
-import { setIsFetchingGerai, fetchGeraiForStaf } from '../redux/actions'
+import { setIsFetchingGerai, fetchGeraiForStaf, setIsFetching, undurDiri } from '../redux/actions'
 
 const AkunStaf: React.FC = () => {
   const state = useSelector((state: any) => state)
@@ -19,6 +19,8 @@ const AkunStaf: React.FC = () => {
   const [chosenKlaster, setChosenKlaster] = useState('')
   const [jadwal, setjadwal] = useState('')
   const [hasKlaster, setHasKlaster] = useState(false)
+  const [alertQuit, setAlertQuit] = useState(false)
+  const isFetchingLocal = state.isFetching
 
   const switchViewTo = (view: any) => {
     window.location.href = "/" + view
@@ -62,6 +64,14 @@ const AkunStaf: React.FC = () => {
     dispatch(fetchGeraiForStaf(params))
   }
 
+  async function quitGerai(){
+    dispatch(setIsFetching(true))
+    dispatch(undurDiri({
+      token: await getToken(),
+      id_staf: staf.id
+    }))
+  }
+
   return (
     <>
       <IonHeader>
@@ -87,6 +97,7 @@ const AkunStaf: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonLoading isOpen={isFetchingLocal} />
         <div className="ion-padding-vertical ion-padding-end">
           <IonItem lines="none">
             <IonAvatar>
@@ -117,6 +128,7 @@ const AkunStaf: React.FC = () => {
                 <h3>{gerai.nama}</h3>
                 <p>{gerai.alamat}</p>
               </IonLabel>
+              <IonIcon icon={powerOutline} color="danger" onClick={()=>setAlertQuit(true)} />
             </IonItem>
 
             <IonItemDivider mode="ios">Waktu Operasional</IonItemDivider>
@@ -154,9 +166,28 @@ const AkunStaf: React.FC = () => {
             }
           })
         }}>Logout</IonButton>
-        <IonButton className="ion-hide" routerLink="/pengantri/akun/edit" id="btn-edit-akun" />
+        <IonButton className="ion-hide" routerLink="/staf/akun/edit" id="btn-edit-akun" />
         <div className="custom-filler"></div>
       </IonContent>
+      <IonAlert
+        isOpen={alertQuit}
+        onDidDismiss={() => setAlertQuit(false)}
+        header={'Peringatan'}
+        message={'Anda yakin akan mengundurkan diri dari <b>' + gerai.nama + '<b>?'}
+        buttons={[
+          {
+            text: 'Batal',
+            role: 'cancel',
+            cssClass: 'secondary'
+          },
+          {
+            text: 'Konfirmasi',
+            handler: () => {
+              quitGerai()
+            }
+          }
+        ]}
+      />
     </>
   )
 }

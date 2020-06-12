@@ -3,7 +3,7 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonSegment, IonSegmentButt
 import CardAntrian from "../components/CardAntrian"
 import { useSelector, connect } from "react-redux"
 import $ from 'jquery'
-import { logoutUser } from "../config/firebaseConfig"
+import { logoutUser, getTanggalDisplay } from "../config/firebaseConfig"
 import { createOutline } from "ionicons/icons"
 
 const DefaultAkunPage: React.FC = () => {
@@ -65,7 +65,7 @@ const DefaultAkunPage: React.FC = () => {
               <h3>{pengguna.displayName ? pengguna.displayName : "user tanpa nama"}</h3>
               <p></p>
             </IonLabel>
-            <IonIcon onClick={()=>$('#btn-edit-akun').click()} icon={createOutline} />
+            <IonIcon onClick={() => $('#btn-edit-akun').click()} icon={createOutline} />
           </IonItem>
         </div>
         <IonItemDivider className="custom-divider" />
@@ -74,6 +74,20 @@ const DefaultAkunPage: React.FC = () => {
           <IonLabel><h3>Email</h3></IonLabel>
           <IonLabel slot="end" className="ion-text-right"><p>{pengguna.email}</p></IonLabel>
         </IonItem>
+
+        <IonItemDivider mode="ios">Pengantri</IonItemDivider>
+        <IonItem lines="none">
+          <IonLabel><h3>Jumlah keterlambatan</h3></IonLabel>
+          <p slot="end">{state.pengantri.penalti ? state.pengantri.penalti.length : '0'}</p>
+        </IonItem>
+        {state.pengantri.banned ?
+          <IonItem lines="none">
+            <IonLabel><h3>Berakhirnya hukuman</h3></IonLabel>
+            <p slot="end">{ getTanggalDisplay(state.pengantri.banned)}</p>
+          </IonItem>
+          : ''}
+
+        {/* Hidden */}
 
         <IonButton className="ion-hide" id="btn-logout" onClick={() => {
           logoutUser(function (response: any) {

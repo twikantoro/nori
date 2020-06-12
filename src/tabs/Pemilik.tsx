@@ -22,6 +22,7 @@ import EditLayananPage from '../pages/EditLayananPage'
 import TambahLayananPage from '../pages/TambahLayanan'
 import TambahKlasterPage from '../pages/TambahKlaster'
 import GeraiEditPage from '../pages/GeraiEditPage'
+import AkunEdit from '../pages/AkunEdit'
 
 const Pemilik: React.FC = () => {
   //state
@@ -119,6 +120,7 @@ const Pemilik: React.FC = () => {
                 <Route exact path="/pemilik/gerai/:id/tambahKlaster" component={TambahKlasterPage} />
                 <Route exact path="/pemilik/gerai/:id/edit" component={GeraiEditPage} />
                 <Route exact path="/pemilik/akun" component={AkunPemilik} />
+                <Route exact path="/pemilik/akun/edit" component={AkunEdit} />
                 <Route exact path="/pemilik/akun/gerai/daftar" component={DaftarGeraiPage}></Route>
                 <Route exact path="/pemilik/akun/logout" component={Logout}></Route>
                 <Route path="/logout" render={() => <Logout />} exact={true} />

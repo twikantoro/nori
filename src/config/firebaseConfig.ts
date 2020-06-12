@@ -305,6 +305,13 @@ export function getTanggalDisplay(tanggal: any) {
   return weekday + ", " + hari + " " + bulans[bulan - 1] + " " + tahun
 }
 
+export function getJamDisplayByTimestamp(timestamp: any) {
+  let date = new Date(timestamp * 1000)
+  let hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours()
+  let minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
+  return hour + ":" + minute
+}
+
 export function getHariKode(tanggal: any) {
   let date = getDate(tanggal)
   let hariKode = date.getDay() - 1

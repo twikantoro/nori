@@ -2,9 +2,9 @@ import React, { Component, useState, useEffect } from 'react'
 import { IonCard, IonItem, IonAvatar, IonLabel, IonCardContent, IonRow, IonCol, IonCardSubtitle, IonButton, IonBadge, IonIcon, IonItemDivider, IonSpinner, IonPopover, IonButtons } from '@ionic/react'
 import { chevronUpCircleOutline, star, starOutline, closeOutline, helpCircle } from 'ionicons/icons'
 import { useSelector, useDispatch } from 'react-redux'
-import { setIsFetching, fetchKlasterRelateds, diLokasiAsync } from '../redux/actions'
+import { setIsFetching, fetchKlasterRelateds, diLokasiAsync, confirmSelesai, belumSelesai, getOrCreatePengantri } from '../redux/actions'
 import $ from 'jquery'
-import { getTanggalHariIni, getTanggalDisplay, getHariKode, getPerkiraan, db } from '../config/firebaseConfig'
+import { getTanggalHariIni, getTanggalDisplay, getHariKode, getPerkiraan, db, getToken, getJamDisplayByTimestamp } from '../config/firebaseConfig'
 
 interface OwnProps {
   props: any
@@ -60,6 +60,7 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
   }
 
   useEffect(() => {
+    console.log("curr for ", props.prefix + props.slot, currSlot)
     if (typeof currDetail === 'undefined' && !isFetchingLocal) {
       dispatch(setIsFetching(true))
       dispatch(fetchKlasterRelateds({ id_klaster: props.id_klaster, id_layanan: props.id_layanan }))
@@ -82,7 +83,22 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
       //setup firestore listener
       listenerManager('start')
     }
+    //re-enable button
+    if (btnPressed) {
+      if (props.status == 3 || !props.status) {
+        setBtnPressed(false)
+      }
+    }
+    //refresh pengantri data if met status == 2
+    if (props.status == 2 && !isFetchingLocal) {
+      dispatch(setIsFetching(true))
+      fetchPengantri()
+    }
   })
+
+  async function fetchPengantri() {
+    dispatch(getOrCreatePengantri({ token: await getToken() }))
+  }
 
   function listenerManager(method: any) {
     console.log("opening for " + currDetail.nama, "id klaster", props.id_klaster)
@@ -143,6 +159,16 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
     }))
   }
 
+  function confirmSelesaiLocal() {
+    setBtnPressed(true)
+    dispatch(confirmSelesai({ id_pesanan: props.id }))
+  }
+
+  function belumSelesaiLocal() {
+    setBtnPressed(true)
+    dispatch(belumSelesai({ id_pesanan: props.id }))
+  }
+
   return (
     <IonCard className="card-antrian">
       {typeof currDetail === 'undefined' ? <IonSpinner /> : <>
@@ -158,7 +184,7 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
           {props.tanggal != tanggal ? <IonBadge color="light">Dipesan</IonBadge> :
             props.status == 2 ?
               <IonBadge color="danger">Terlambat</IonBadge> :
-              props.status == 1 ?
+              props.status == 1 || props.status == 4 ?
                 <IonBadge color="success">Selesai</IonBadge> :
                 !dibuka ?
                   <IonBadge color="light">Belum buka</IonBadge> :
@@ -175,7 +201,7 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
               <IonCardSubtitle>Slot Anda</IonCardSubtitle>
               <IonBadge color="primary">{props.prefix + "-" + props.slot}</IonBadge>
             </IonCol>
-            {tanggal != props.tanggal || currSlot == 0 || props.status == 1 || !dibuka ? '' :
+            {tanggal != props.tanggal || currSlot == 0 || props.status == 1 || !dibuka || props.status == 4 ? '' :
               props.status == 2 ?
                 <IonCol>
                   <IonCardSubtitle>Slot sekarang</IonCardSubtitle>
@@ -185,6 +211,12 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
                   <IonBadge color="warning">{currDetail.prefix + "-" + currSlot}</IonBadge>
                 </IonCol>
             }
+            {props.waktu_selesai?
+              <IonCol>
+                <IonCardSubtitle>Waktu selesai</IonCardSubtitle>
+                {getJamDisplayByTimestamp(props.waktu_selesai)}
+              </IonCol>
+            :''}
 
           </IonRow>
           <IonRow>
@@ -226,6 +258,18 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
             <IonButton expand="block" disabled={btnPressed}
               onClick={() => diLokasi()}
             >Saya sudah di lokasi</IonButton></> : ''}
+
+          {props.status == 1 ? <>
+            <IonItemDivider className="custom-divider" />
+            <IonRow>
+              <IonCol>
+                <IonButton disabled={btnPressed} expand="block" fill="outline" onClick={() => belumSelesaiLocal()}>Belum</IonButton>
+              </IonCol>
+              <IonCol>
+                <IonButton disabled={btnPressed} expand="block" onClick={() => confirmSelesaiLocal()}>Selesai</IonButton>
+              </IonCol>
+            </IonRow>
+          </> : ''}
         </IonCardContent>
 
 

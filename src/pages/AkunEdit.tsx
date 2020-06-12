@@ -30,7 +30,7 @@ const AkunEdit: React.FC = () => {
 
   return (
     <>
-      <IonButton id="btn-to-akun" className="ion-hide" routerLink="/pengantri/akun" />
+      <IonButton id="btn-to-akun" className="ion-hide" routerLink={"/"+state.role+"/akun"} />
       <IonLoading isOpen={busy} />
       <IonHeader>
         <IonToolbar>

@@ -539,3 +539,47 @@ export const diLokasiAsync = (payload: any) => {
     })
   }
 }
+
+export const clearBan = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/pengantri/clearBan?' + stringify(payload)).then(response => {
+      console.log("clearBan?", response.data)
+      dispatch(setBanned(false))
+    })
+  }
+}
+
+export const belumSelesai = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/pesanan/belumSelesai?' + stringify(payload)).then(response => {
+      console.log("belumSelesai?", response.data)
+      dispatch(setIsFetching(false))
+    })
+  }
+}
+
+export const confirmSelesai = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/pesanan/confirmSelesai?' + stringify(payload)).then(response => {
+      console.log("confirmSelesai?", response.data)
+      dispatch(setIsFetching(false))
+    })
+  }
+}
+
+export const setBanned = (payload: any) => {
+  return { type: 'SET_BANNED', payload }
+}
+
+export const undurDiri = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/staf/undurDiri?' + stringify(payload)).then(response => {
+      console.log("undurDiri?", response.data)
+      dispatch(berhasilUndurDiri(payload))
+    })
+  }
+}
+
+export const berhasilUndurDiri = (payload: any) => {
+  return { type: 'BERHASIL_UNDUR_DIRI', payload }
+}
