@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { IonPage, IonHeader, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonInput, IonRow, IonImg, IonGrid, IonCol, IonButton, IonToolbar, IonLoading } from "@ionic/react";
+import { IonPage, IonHeader, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonInput, IonRow, IonImg, IonGrid, IonCol, IonButton, IonToolbar, IonLoading, IonRefresher, IonRefresherContent, IonIcon } from "@ionic/react";
 import { signupUser, validateEmail } from "../config/firebaseConfig";
 import { toast } from '../components/toast'
 import { Link, Redirect } from "react-router-dom";
 import { render } from "@testing-library/react";
+import { eyeOutline, eyeOffOutline } from "ionicons/icons";
 
 const Signup: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [nama, setNama] = useState('')
   const [busy, setBusy] = useState(false)
+  const [passwordShown, setPasswordShown] = useState(false)
 
   async function Signup() {
     if (validateEmail(email)) {
@@ -36,6 +38,9 @@ const Signup: React.FC = () => {
     <IonPage id="Signup-page">
 
       <IonContent className="ion-padding">
+        <IonRefresher slot="fixed" onIonRefresh={() => window.location.href = window.location.href}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         <h1 className="ion-text-center">Daftar</h1>
         <IonLoading
           isOpen={busy}
@@ -61,10 +66,13 @@ const Signup: React.FC = () => {
             </IonItem>
             <IonItem>
               <IonInput
-                type="password"
+                type={passwordShown ? 'text' : 'password'}
                 name="password"
                 placeholder="Password"
                 onIonChange={(e: any) => setPassword(e.target.value)}
+              />
+              <IonIcon size="small" icon={!passwordShown ? eyeOutline : eyeOffOutline} 
+                onClick={()=>setPasswordShown(!passwordShown)}
               />
             </IonItem>
           </IonList>
@@ -87,7 +95,7 @@ const Signup: React.FC = () => {
 
           </IonRow>
         </IonGrid>
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
     </IonPage>
   )
 }

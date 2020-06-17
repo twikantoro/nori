@@ -1,4 +1,4 @@
-import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCol, IonContent, IonHeader, IonItem, IonLabel, IonList, IonLoading, IonRow, IonTitle, IonToolbar, IonItemDivider, IonIcon, IonButton, IonSegment, IonSegmentButton, IonButtons, IonSelect, IonSelectOption, IonSpinner, IonAlert } from "@ionic/react"
+import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCol, IonContent, IonHeader, IonItem, IonLabel, IonList, IonLoading, IonRow, IonTitle, IonToolbar, IonItemDivider, IonIcon, IonButton, IonSegment, IonSegmentButton, IonButtons, IonSelect, IonSelectOption, IonSpinner, IonAlert, IonRefresher, IonRefresherContent } from "@ionic/react"
 import React, { useEffect, useState } from "react"
 import { connect, useDispatch, useSelector } from "react-redux"
 import { locationOutline, addCircleOutline, businessOutline, heart, hourglassOutline, bookmarkOutline, bookmarksOutline, pencilSharp, pencilOutline, createOutline, trashOutline, closeOutline, personOutline } from "ionicons/icons"
@@ -61,6 +61,7 @@ const GeraiPage: React.FC = () => {
   const chosenGeraiKode = state.chosenGeraiKode
 
   useEffect(() => {
+    //console.log("chosen",state.chosenGeraiKode)
     //console.log("belongings?",state.pemilik)
     if (!pemilikBelongingsUpToDateLocal && !fetchingPemilikBelongingsLocal) {
       setIsFetching(true)
@@ -261,7 +262,7 @@ const GeraiPage: React.FC = () => {
               <LayananAddComp />
               <LayananInvisComp width="2" />
             </IonRow>
-            : 
+            :
             // renderRow[0][0] ? '' : 
             <>
               {renderRow.map((row, index) => {
@@ -503,6 +504,10 @@ const GeraiPage: React.FC = () => {
   }
 
   //console.log(gerais)
+  async function refreshGerai(){
+    dispatch(setIsFetching2(true))
+    otwFetchBelongings()
+  }
 
   return (
     <>
@@ -542,9 +547,15 @@ const GeraiPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={(r) => {
+          refreshGerai()
+          setTimeout(() => r.detail.complete(), 1)
+        }}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         <IonLoading isOpen={isFetching} />
         {!hasGerai ? <HasNoGeraiComp /> : <HasGeraiComp />}
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
     </>
   )
 }

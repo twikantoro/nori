@@ -4,7 +4,7 @@ import CardAntrian from "../components/CardAntrian"
 import { useSelector, connect, useDispatch } from "react-redux"
 import $ from 'jquery'
 import { db, getTanggalHariIni } from "../config/firebaseConfig"
-import { setPesanans } from "../redux/actions"
+import { setPesanans, setIsFetching, addKlasterIsComplete } from "../redux/actions"
 import arraySort from 'array-sort'
 
 const DefaultAntrianPage: React.FC = () => {
@@ -55,14 +55,14 @@ const DefaultAntrianPage: React.FC = () => {
           //decide if zero or not
           if (pesanan.tanggal == tanggalHariIni) {
             setBerlangsungZero(false)
-          } else{
+          } else {
             setMendatangZero(false)
           }
         }
       })
       //console.log("pes", pesanans)
       //sortir pesanan
-      pesanans = arraySort(pesanans,'status')
+      pesanans = arraySort(pesanans, 'status')
       dispatch(setPesanans(pesanans))
 
     })
@@ -92,6 +92,9 @@ const DefaultAntrianPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={(r) => { listenerManager('stop'); listenerManager('start'); setTimeout(() => r.detail.complete(), 1) }}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         {!listening ? <div className="ion-padding"><IonSpinner /></div> :
           <>
             <div id="segment-berlangsung" className="customSegments">
@@ -118,7 +121,7 @@ const DefaultAntrianPage: React.FC = () => {
             </div>
           </>
         }
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
     </>
   )
 }

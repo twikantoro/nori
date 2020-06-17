@@ -177,7 +177,7 @@ const EditKlasterPage: React.FC = () => {
             }
           ]}
         />
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
       <IonButton className="custom-hidden" routerLink={motherURL} id="btn-back" />
     </>
   )

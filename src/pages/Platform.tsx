@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonItemDivider, IonButton, IonVirtualScroll, IonInfiniteScroll, IonInfiniteScrollContent, IonRow, IonButtons, IonSelectOption, IonSelect, IonItem, IonLabel, IonCard, IonCardContent, IonCol, IonSpinner } from '@ionic/react'
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonItemDivider, IonButton, IonVirtualScroll, IonInfiniteScroll, IonInfiniteScrollContent, IonRow, IonButtons, IonSelectOption, IonSelect, IonItem, IonLabel, IonCard, IonCardContent, IonCol, IonSpinner, IonRefresher, IonRefresherContent } from '@ionic/react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setIsFetchingGerai, fetchGeraiForStaf, bukaKLasterAsync, setIsFetching, pesananSelesai, pesananTunda } from '../redux/actions'
+import { setIsFetchingGerai, fetchGeraiForStaf, bukaKLasterAsync, setIsFetching, pesananSelesai, pesananTunda, setPenggunaData } from '../redux/actions'
 import { getToken, db, getTanggalHariIni, getPerkiraan, getHariKode } from '../config/firebaseConfig'
 import TimeDisplay from '../components/TimeDisplay'
+import firebase from '../config/firebaseConfig'
 
 const Platform: React.FC = () => {
   const state = useSelector((state: any) => state)
@@ -193,6 +194,12 @@ const Platform: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={(r) => {
+          dispatch(setPenggunaData(firebase.auth().currentUser))
+          setTimeout(() => r.detail.complete(), 1)
+        }}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         {!employed ? <div className="ion-padding custom-width-100 ion-justify-content-center ion-text-center">
           Anda tidak bekerja di gerai manapun
         </div> :
@@ -231,7 +238,7 @@ const Platform: React.FC = () => {
                   </IonCard>
               }
             </>}
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
     </>
   )
 }

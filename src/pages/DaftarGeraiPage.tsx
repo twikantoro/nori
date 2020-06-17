@@ -25,7 +25,7 @@ const DaftarGerai: React.FC = () => {
   //geraineeds update?
   const geraiNeedsUpdateLocal = useSelector((state: any) => state.geraiNeedsUpdate)
   const backURL = '/pemilik/akun'
-  const state = useSelector((state:any)=>state)
+  const state = useSelector((state: any) => state)
   const isFetchingLocal = state.isFetching
 
   async function submitGerai() {
@@ -114,7 +114,7 @@ const DaftarGerai: React.FC = () => {
             </IonItem>
             <IonItem>
               <b>Wilayah:</b>&nbsp;
-              <IonSelect slot="end" value={"Surakarta"} interface="alert" onIonChange={(e) => setWilayah(e.detail.value)}>
+              <IonSelect slot="end" value={wilayah ? wilayah : "Surakarta"} interface="alert" onIonChange={(e) => setWilayah(e.detail.value)}>
                 {kotKabs.map(kotKab => {
                   return (
                     <IonSelectOption key={kotKab} value={kotKab}>{kotKab}</IonSelectOption>
@@ -149,7 +149,7 @@ const DaftarGerai: React.FC = () => {
             </IonCol>
           </IonRow>
         </IonGrid>
-      </IonContent>
+        <div className="custom-filler"></div></IonContent>
     </>
   )
 }

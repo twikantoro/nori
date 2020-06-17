@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { IonHeader, IonToolbar, IonButtons, IonSelect, IonSelectOption, IonButton, IonContent, IonItem, IonAvatar, IonLabel, IonIcon, IonItemDivider, IonSpinner, IonAlert, IonLoading } from '@ionic/react'
+import { IonHeader, IonToolbar, IonButtons, IonSelect, IonSelectOption, IonButton, IonContent, IonItem, IonAvatar, IonLabel, IonIcon, IonItemDivider, IonSpinner, IonAlert, IonLoading, IonRefresher, IonRefresherContent } from '@ionic/react'
 import { logoutUser, getToken, getHari } from '../config/firebaseConfig'
 import { useSelector, useDispatch } from 'react-redux'
-import { createOutline, powerOutline } from 'ionicons/icons'
+import { createOutline, powerOutline, logoGoogle } from 'ionicons/icons'
 import firebase from '../config/firebaseConfig'
 import $ from 'jquery'
-import { setIsFetchingGerai, fetchGeraiForStaf, setIsFetching, undurDiri } from '../redux/actions'
+import { setIsFetchingGerai, fetchGeraiForStaf, setIsFetching, undurDiri, setPenggunaData } from '../redux/actions'
 
 const AkunStaf: React.FC = () => {
   const state = useSelector((state: any) => state)
@@ -64,7 +64,7 @@ const AkunStaf: React.FC = () => {
     dispatch(fetchGeraiForStaf(params))
   }
 
-  async function quitGerai(){
+  async function quitGerai() {
     dispatch(setIsFetching(true))
     dispatch(undurDiri({
       token: await getToken(),
@@ -97,6 +97,12 @@ const AkunStaf: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={(r) => {
+          dispatch(setPenggunaData(firebase.auth().currentUser))
+          setTimeout(() => r.detail.complete(), 1)
+        }}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         <IonLoading isOpen={isFetchingLocal} />
         <div className="ion-padding-vertical ion-padding-end">
           <IonItem lines="none">
@@ -110,7 +116,8 @@ const AkunStaf: React.FC = () => {
               <h3>{pengguna.displayName ? pengguna.displayName : "user tanpa nama"}</h3>
               <p></p>
             </IonLabel>
-            <IonIcon onClick={() => $('#btn-edit-akun').click()} icon={createOutline} />
+            {firebase.auth().currentUser?.emailVerified ? <IonIcon icon={logoGoogle} /> : ''}
+            <IonIcon className={firebase.auth().currentUser?.emailVerified ? 'ion-hide' : ''} onClick={() => $('#btn-edit-akun').click()} icon={createOutline} />
           </IonItem>
         </div>
         <IonItemDivider className="custom-divider" />
@@ -128,7 +135,7 @@ const AkunStaf: React.FC = () => {
                 <h3>{gerai.nama}</h3>
                 <p>{gerai.alamat}</p>
               </IonLabel>
-              <IonIcon icon={powerOutline} color="danger" onClick={()=>setAlertQuit(true)} />
+              <IonIcon icon={powerOutline} color="danger" onClick={() => setAlertQuit(true)} />
             </IonItem>
 
             <IonItemDivider mode="ios">Waktu Operasional</IonItemDivider>
@@ -167,8 +174,7 @@ const AkunStaf: React.FC = () => {
           })
         }}>Logout</IonButton>
         <IonButton className="ion-hide" routerLink="/staf/akun/edit" id="btn-edit-akun" />
-        <div className="custom-filler"></div>
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
       <IonAlert
         isOpen={alertQuit}
         onDidDismiss={() => setAlertQuit(false)}

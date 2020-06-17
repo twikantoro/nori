@@ -17,7 +17,7 @@ const Logout: React.FC = () => {
     <IonContent>
       <p>Logging out...</p>
       <IonLoading isOpen={busy}></IonLoading>
-    </IonContent>
+    <div className="custom-filler"></div></IonContent>
   )
 }
 

@@ -11,19 +11,32 @@ const TambahLayananPage: React.FC = () => {
   const state = useSelector((state: any) => state)
   const motherURL = "/pemilik/gerai/" + window.location.href.split("/")[5]
   const [busy, setBusy] = useState(false)
+  const currGeraiKode = state.chosenGeraiKode
   const [inputs, setInputs] = useState({
     nama: '',
     kode: '',
     deskripsi: '',
     syarat: '',
   })
-  const klasters = state.pemilik.klasters
+  var currGerai = { id: '' }
+  state.pemilik.gerais.forEach((gerai: any) => {
+    if (gerai.kode === currGeraiKode) {
+      currGerai = gerai
+    }
+  })
+  var klasters = new Array(0)
+  state.pemilik.klasters.forEach((klaster: any) => {
+    if (klaster.id_gerai == currGerai.id) {
+      klasters = klasters.concat(klaster)
+    }
+  })
   const hasKlaster = (Array.isArray(klasters) && klasters.length > 0) ? true : false
   const [chosenKlaster, setChosenKlaster] = useState()
   const dispatch = useDispatch()
   const addLayananIsCompleteLocal = state.addLayananIsComplete
 
   useEffect(() => {
+    //console.log(currGeraiKode,klasters)
     if (hasKlaster) {
       setChosenKlaster(klasters[0].id)
     }
@@ -139,7 +152,7 @@ const TambahLayananPage: React.FC = () => {
           <IonButton expand="block" onClick={() => submitLayanan()}>Buat</IonButton>
         </div> : ""}
 
-      </IonContent>
+        <div className="custom-filler"></div></IonContent>
       <IonButton className="custom-hidden" id="btn-back" routerLink={motherURL} />
     </>
   )

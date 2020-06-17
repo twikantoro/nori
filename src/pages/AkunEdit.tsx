@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { IonHeader, IonContent, IonToolbar, IonButtons, IonBackButton, IonTitle, IonItem, IonLabel, IonInput, IonButton, IonLoading } from '@ionic/react'
+import { IonHeader, IonContent, IonToolbar, IonButtons, IonBackButton, IonTitle, IonItem, IonLabel, IonInput, IonButton, IonLoading, IonRefresher, IonRefresherContent } from '@ionic/react'
 import { useSelector, useDispatch } from 'react-redux'
-import firebase, { getCurrentUser } from '../config/firebaseConfig'
+import firebase, { getCurrentUser, logoutUser } from '../config/firebaseConfig'
 import { toast } from '../components/toast'
 import $ from 'jquery'
 import { setUserState } from '../redux/actions'
@@ -12,25 +12,40 @@ const AkunEdit: React.FC = () => {
   const user = firebase.auth().currentUser
   const [nama, setNama] = useState(user?.displayName)
   const [busy, setBusy] = useState(false)
+  const [email, setEmail] = useState(user?.email ? user?.email : '')
   const dispatch = useDispatch()
 
   async function submitForm() {
     setBusy(true)
-    user?.updateProfile({
-      displayName: nama
-    }).then(response => {
-      //berhasil
-      setBusy(false)
-      //console.log("user",user)
-      $('#btn-to-akun').click()
+    user?.updateEmail(email).then(respon => {
+      user?.updateProfile({
+        displayName: nama
+      }).then(response => {
+        //berhasil
+        setBusy(false)
+        //console.log("user",user)
+        $('#btn-to-akun').click()
+      }).catch(e => {
+        setBusy(false)
+        toast("error: " + e.message)
+      })
     }).catch(e => {
-      toast("error: " + e)
+      setBusy(false)
+      console.log(e.message)
+      toast("Sudah lama sejak terakhir kali anda login. Anda akan diarahkan ke halaman login")
+      setTimeout(() =>
+        logoutUser(function (response: any) {
+          if (response === true) {
+            window.location.href = "/"
+          }
+        }), 2000)
     })
+
   }
 
   return (
     <>
-      <IonButton id="btn-to-akun" className="ion-hide" routerLink={"/"+state.role+"/akun"} />
+      <IonButton id="btn-to-akun" className="ion-hide" routerLink={"/" + state.role + "/akun"} />
       <IonLoading isOpen={busy} />
       <IonHeader>
         <IonToolbar>
@@ -41,6 +56,9 @@ const AkunEdit: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={(r) => { setTimeout(() => r.detail.complete(), 1) }}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         <IonItem lines="none">
           <b>Nama:</b>&nbsp;
               <IonInput
@@ -51,10 +69,25 @@ const AkunEdit: React.FC = () => {
             value={nama}
           />
         </IonItem>
-        <IonButton expand="block" onClick={() => submitForm()}>
+        <IonItem lines="none">
+          <b>Email:</b>&nbsp;
+              <IonInput
+            type="text"
+            placeholder="user@nori.id"
+            onIonChange={(e: any) => setEmail(e.target.value)}
+            required
+            value={email}
+          />
+        </IonItem>
+        {/* <IonItem lines="none">
+          <b>Foto profil:</b>&nbsp;
+
+        </IonItem>
+        <input className="ion-padding-horizontal" type="file" accept="image/*;capture=camera" /> */}
+        <IonButton className="ion-margin" expand="block" onClick={() => submitForm()}>
           Submit
         </IonButton>
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
     </>
   )
 }

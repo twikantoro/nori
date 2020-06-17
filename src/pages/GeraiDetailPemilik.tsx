@@ -212,7 +212,7 @@ const GeraiDetailPemilik: React.FC = (data: any) => {
             }]
           }
         />
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
       <IonButton id="btn-back" className="custom-hidden" routerLink="/pemilik/gerai" />
       <IonButton id="btn-add-layanan" className="custom-hidden" routerLink={"/pemilik/gerai/" + kode + "/tambah"} />
     </>

@@ -29,7 +29,7 @@ const RiwayatDetailPage: React.FC = () => {
           status="berhasil"
           kebuka={false}
         />
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
     </>
   )
 }

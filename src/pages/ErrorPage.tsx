@@ -9,7 +9,7 @@ const ErrorPage: React.FC = () => {
       <IonContent className="ion-padding">
         <h3>Error</h3>
         <p>{error}</p>
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
     </IonPage>
   )
 }

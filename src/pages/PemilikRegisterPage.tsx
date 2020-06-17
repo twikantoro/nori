@@ -39,7 +39,7 @@ const PemilikRegisterPage : React.FC = () => {
         <IonButton onClick={()=>registerAkunPemilik()}>Buat</IonButton>
         <IonButton fill="outline" onClick={()=>switchViewTo('pengantri')}>Kembali</IonButton>
         </div>
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
     </IonPage>
   )
 }

@@ -1,9 +1,11 @@
-import { IonAvatar, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonItemDivider, IonLabel, IonLoading, IonSelect, IonSelectOption, IonToolbar, IonButton } from "@ionic/react"
-import { addCircleOutline, createOutline, logOutOutline } from "ionicons/icons"
+import { IonAvatar, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonItemDivider, IonLabel, IonLoading, IonSelect, IonSelectOption, IonToolbar, IonButton, IonRefresher, IonRefresherContent } from "@ionic/react"
+import { addCircleOutline, createOutline, logOutOutline, logoGoogle } from "ionicons/icons"
 import $ from 'jquery'
 import React, { useState } from "react"
-import { connect, useSelector } from "react-redux"
+import { connect, useSelector, useDispatch } from "react-redux"
 import { logoutUser, penggunaData, getCurrentUser } from "../config/firebaseConfig"
+import { setPenggunaData } from "../redux/actions"
+import firebase from "../config/firebaseConfig"
 
 const AkunPemilik: React.FC = () => {
   //others
@@ -12,6 +14,7 @@ const AkunPemilik: React.FC = () => {
   const role = useSelector((state: any) => state.role)
   const [activeSegment, setActiveSegment] = useState('berlangsung')
   const pengguna = state.pengguna
+  const dispatch = useDispatch()
 
   const switchViewTo = (view: any) => {
     window.location.href = "/" + view
@@ -32,6 +35,12 @@ const AkunPemilik: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={(r) => {
+          dispatch(setPenggunaData(firebase.auth().currentUser))
+          setTimeout(() => r.detail.complete(), 1)
+        }}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         <div className="ion-padding-vertical ion-padding-end">
           <IonItem lines="none">
             <IonAvatar>
@@ -44,7 +53,8 @@ const AkunPemilik: React.FC = () => {
               <h3>{pengguna.displayName ? pengguna.displayName : "user tanpa nama"}</h3>
               <p></p>
             </IonLabel>
-            <IonIcon onClick={() => $('#btn-edit-akun').click()} icon={createOutline} />
+            {firebase.auth().currentUser?.emailVerified ? <IonIcon icon={logoGoogle} /> : ''}
+            <IonIcon className={firebase.auth().currentUser?.emailVerified ? 'ion-hide' : ''} onClick={() => $('#btn-edit-akun').click()} icon={createOutline} />
           </IonItem>
         </div>
         <IonItemDivider className="custom-divider" />
@@ -75,7 +85,7 @@ const AkunPemilik: React.FC = () => {
           </IonLabel>
         </IonItem>
         <IonButton className="ion-hide" routerLink="/pemilik/akun/edit" id="btn-edit-akun" />
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
     </>
   )
 }

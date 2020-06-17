@@ -1,4 +1,4 @@
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonLoading, IonSegment, IonSegmentButton, IonTitle, IonToolbar, IonCol, IonCard, IonCardContent, IonRow, IonSpinner } from '@ionic/react'
+import { IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonLoading, IonSegment, IonSegmentButton, IonTitle, IonToolbar, IonCol, IonCard, IonCardContent, IonRow, IonSpinner, IonRefresher, IonRefresherContent } from '@ionic/react'
 import { businessOutline, starHalfSharp, starSharp, hourglassOutline, addCircleOutline } from 'ionicons/icons'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -161,6 +161,12 @@ const GeraiView: React.FC = () => {
     )
   }
 
+  function refreshGerai(r: any) {
+    dispatch(setIsFetching(true))
+    setBusy(true)
+    dispatch(getGeraiAsyncPublic(kodeGerai))
+  }
+
   //GeraiView's return
   return (
     <>
@@ -173,8 +179,14 @@ const GeraiView: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={(r) => {
+          refreshGerai(r)
+          setTimeout(()=>r.detail.complete(),1)
+        }}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         {/* <IonLoading isOpen={busy} /> */}
-        {busy ? <div className="ion-padding"><IonSpinner /></div> :
+        {!currGerai.nama ? <div className="ion-padding"><IonSpinner /></div> :
           <>
             <div className="ion-padding-vertical">
               <IonItem lines="none" mode="md">
@@ -183,7 +195,7 @@ const GeraiView: React.FC = () => {
                   <h3>{busy ? "Gerai" : currGerai.nama}</h3>
                   <p>@{busy ? "kode" : currGerai.kode}</p>
                 </IonLabel>
-                <div slot="end" className="ion-text-right ion-justify-content-right custom-review-text">
+                <div slot="end" className="ion-text-right ion-justify-content-right custom-review-text ion-hide">
                   <IonIcon icon={starSharp} color="warning" />
                   <IonIcon icon={starSharp} color="warning" />
                   <IonIcon icon={starSharp} color="warning" />
@@ -214,7 +226,7 @@ const GeraiView: React.FC = () => {
             </div>
           </>
         }
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
     </>
   )
 }

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react"
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonSegment, IonSegmentButton, IonLabel, IonRefresher, IonRefresherContent, IonList, IonListHeader, IonItem, IonBadge, IonSelect, IonSelectOption, IonButtons, IonButton, IonAvatar, IonIcon, IonItemDivider, IonPage } from "@ionic/react"
 import CardAntrian from "../components/CardAntrian"
-import { useSelector, connect } from "react-redux"
+import { useSelector, connect, useDispatch } from "react-redux"
 import $ from 'jquery'
 import { logoutUser, getTanggalDisplay } from "../config/firebaseConfig"
-import { createOutline } from "ionicons/icons"
+import { createOutline, logoGoogle } from "ionicons/icons"
+import { setUserState, setPenggunaData } from "../redux/actions"
+import firebase from "../config/firebaseConfig"
 
 const DefaultAkunPage: React.FC = () => {
   const antrians = useSelector((state: any) => state.antrians)
@@ -16,6 +18,7 @@ const DefaultAkunPage: React.FC = () => {
   const hidden = { display: 'none' }
   const state = useSelector((state: any) => state)
   const pengguna = state.pengguna
+  const dispatch = useDispatch()
 
   const swithSegmentTo = (segment: any) => {
     setActiveSegment(segment)
@@ -26,6 +29,10 @@ const DefaultAkunPage: React.FC = () => {
 
   const switchViewTo = (view: any) => {
     window.location.href = "/" + view
+  }
+
+  function refreshAkun() {
+    dispatch(setPenggunaData(firebase.auth().currentUser))
   }
 
   return (
@@ -53,6 +60,12 @@ const DefaultAkunPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={(r) => {
+          dispatch(setPenggunaData(firebase.auth().currentUser))
+          setTimeout(() => r.detail.complete(), 1)
+        }}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         <div className="ion-padding-vertical ion-padding-end">
           <IonItem lines="none">
             <IonAvatar>
@@ -65,7 +78,8 @@ const DefaultAkunPage: React.FC = () => {
               <h3>{pengguna.displayName ? pengguna.displayName : "user tanpa nama"}</h3>
               <p></p>
             </IonLabel>
-            <IonIcon onClick={() => $('#btn-edit-akun').click()} icon={createOutline} />
+            {firebase.auth().currentUser?.emailVerified ? <IonIcon icon={logoGoogle} /> : ''}
+            <IonIcon className={firebase.auth().currentUser?.emailVerified ? 'ion-hide' : ''} onClick={() => $('#btn-edit-akun').click()} icon={createOutline} />
           </IonItem>
         </div>
         <IonItemDivider className="custom-divider" />
@@ -83,7 +97,7 @@ const DefaultAkunPage: React.FC = () => {
         {state.pengantri.banned ?
           <IonItem lines="none">
             <IonLabel><h3>Berakhirnya hukuman</h3></IonLabel>
-            <p slot="end">{ getTanggalDisplay(state.pengantri.banned)}</p>
+            <p slot="end">{getTanggalDisplay(state.pengantri.banned)}</p>
           </IonItem>
           : ''}
 
@@ -97,7 +111,7 @@ const DefaultAkunPage: React.FC = () => {
           })
         }}>Logout</IonButton>
         <IonButton className="ion-hide" routerLink="/pengantri/akun/edit" id="btn-edit-akun" />
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
     </>
   )
 }

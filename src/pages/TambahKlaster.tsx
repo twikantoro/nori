@@ -20,6 +20,13 @@ const TambahKlasterPage: React.FC = () => {
   const [nama, setNama] = useState('')
   const [durasi, setDurasi] = useState('')
   const [prefix, setPrefix] = useState('')
+  const currGeraiKode = state.chosenGeraiKode
+  var id_gerai = ''
+  state.pemilik.gerais.forEach((gerai:any)=>{
+    if(gerai.kode === currGeraiKode){
+      id_gerai = gerai.id
+    }
+  })
   //hari
   // const initialHari = [
   //   [true,true,true,true,false,false,false],
@@ -46,6 +53,7 @@ const TambahKlasterPage: React.FC = () => {
     var params = {
       token: await getToken(),
       id_pemilik: id_pemilik,
+      id_gerai: id_gerai,
       kode: kode,
       nama: nama,
       jadwal: JSON.stringify(jadwal),
@@ -119,7 +127,7 @@ const TambahKlasterPage: React.FC = () => {
             <IonButton expand="block" onClick={() => submitLayanan()}>Buat</IonButton>
           </div>
         </IonList>
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
       <IonButton className="custom-hidden" routerLink={motherURL} id="btn-back" />
     </>
   )

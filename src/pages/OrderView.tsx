@@ -17,7 +17,7 @@ const OrderView: React.FC = () => {
       </IonHeader>
       <IonContent>
 
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
     </IonPage>
   )
 }

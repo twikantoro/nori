@@ -215,7 +215,7 @@ const GeraiEditPage: React.FC = () => {
             }]
           }
         />
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
     </>
   )
 }

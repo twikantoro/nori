@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonSpinner, IonItem, IonLabel, IonItemDivider, IonSelect, IonSelectOption, IonRow, IonCol, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonAlert } from '@ionic/react'
+import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonSpinner, IonItem, IonLabel, IonItemDivider, IonSelect, IonSelectOption, IonRow, IonCol, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonAlert, IonRefresher, IonRefresherContent } from '@ionic/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { setTabRefresh, getLayananData, setIsFetching, sedangPesan, pesanAsync, setIsDeleting, batalPesanAsync, clearBan } from '../redux/actions'
 import $ from 'jquery'
@@ -184,6 +184,16 @@ const LayananView: React.FC = () => {
     listenerManager("start", tanggal)
   }
 
+  function refreshLayanan() {
+    var payload = {
+      geraiKode: kodeGerai,
+      layananKode: kodeLayanan
+    }
+    setBusy(true)
+    dispatch(setIsFetching(true))
+    dispatch(getLayananData(payload))
+  }
+
   return (
     <>
       <IonHeader>
@@ -195,6 +205,12 @@ const LayananView: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={(r) => {
+          refreshLayanan()
+          setTimeout(() => r.detail.complete(), 1)
+        }}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         <IonButton id="btn-to-antrian" className="ion-hide" routerLink="/pengantri/antrian"></IonButton>
         {isFetchingLocal ? <div className="ion-padding"><IonSpinner /></div> :
           <>

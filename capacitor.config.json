@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "nori-four",
+  "appId": "com.wikand3ti.nori",
+  "appName": "Nori - Aplikasi Antrian",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",

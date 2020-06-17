@@ -55,7 +55,7 @@ const DefaultRiwayatPage: React.FC = () => {
             <IonBadge color="success">Sukses</IonBadge>
           </IonItem>
         </IonList>
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
     </>
   )
 }

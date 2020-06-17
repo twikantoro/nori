@@ -7,7 +7,7 @@ const BusyPage: React.FC = () => {
       <IonContent>
         <IonGrid>
           <IonRow className="ion-justify-content-center ion-align-items-end height-50-percent">
-            <IonSpinner name="dots" /></IonRow><IonRow></IonRow></IonGrid></IonContent></IonPage>
+            <IonSpinner name="dots" /></IonRow><IonRow></IonRow></IonGrid><div className="custom-filler"></div></IonContent></IonPage>
   )
 } 
   

@@ -18,7 +18,7 @@ const Home: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <ExploreContainer />
-      </IonContent>
+      <div className="custom-filler"></div></IonContent>
     </IonPage>
   );
 };

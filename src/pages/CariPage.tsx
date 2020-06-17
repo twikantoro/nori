@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { IonToolbar, IonTitle, IonHeader, IonContent, IonLoading, IonSearchbar, IonCol, IonRow, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonButtons, IonItemDivider, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonFooter, IonIcon, IonAvatar, IonInput, IonSpinner, IonPage } from '@ionic/react'
+import { IonToolbar, IonTitle, IonHeader, IonContent, IonLoading, IonSearchbar, IonCol, IonRow, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonButtons, IonItemDivider, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonFooter, IonIcon, IonAvatar, IonInput, IonSpinner, IonPage, IonRefresher, IonRefresherContent } from '@ionic/react'
 import { starSharp, starHalfSharp, chevronDownOutline, chevronBackOutline, filterSharp, filterOutline, settingsOutline, funnelOutline, funnelSharp, search, searchOutline } from 'ionicons/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { searchGeraiOrLayanan, setIsSearching } from '../redux/actions'
 import { Link } from 'react-router-dom'
 import kotkab from '../json/kota-kabupaten'
 import kotaKabupaten from '../json/kota-kabupaten'
+import $ from 'jquery'
 
 const CariPage: React.FC = () => {
   const [busy, setBusy] = useState(false)
@@ -43,7 +44,7 @@ const CariPage: React.FC = () => {
               <h3>{props.nama}</h3>
               <p>@{props.kode}</p>
             </IonLabel>
-            <div slot="end" className="ion-text-right ion-justify-content-right custom-review-text">
+            <div slot="end" className="ion-text-right ion-justify-content-right custom-review-text ion-hide">
               <IonIcon icon={starSharp} color="warning" />
               <IonIcon icon={starSharp} color="warning" />
               <IonIcon icon={starSharp} color="warning" />
@@ -107,11 +108,25 @@ const CariPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={(r) => {
+          setSearchText('')
+          setFilterExpanded(false)
+          setTimeout(() => r.detail.complete(), 1)
+          $('#search-bar').val('')
+        }}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         <IonLoading isOpen={busy} />
         <IonRow className="ion-align-items-center">
           <IonCol>
-            <IonSearchbar value={searchText} onIonChange={(e: any) => { setSearchText(e.detail.value) }}
-              placeholder="gerai atau layanan"
+            <IonSearchbar id="search-bar" onIonChange={(e: any) => { setSearchText(e.detail.value) }}
+              placeholder='misal "bank" atau "tukar"'
+              onKeyDown={(e) => {
+                if (e.keyCode === 13) {
+                  $('input').blur()
+                  goSearch()
+                }
+              }}
             />
           </IonCol>
 
@@ -149,10 +164,14 @@ const CariPage: React.FC = () => {
                   gerai.wilayah == chosenWilayah ?
                     <CardSearch key={gerai.id} props={gerai} /> : ''
               })
-              : searchText === '' ? "" : searchText === lastSearch ? <TiadaHasil /> : ""
+              : searchText === '' ?
+                <div className="ion-padding ion-text-center">                  
+                  Anda bisa mencari gerai berdasarkan nama gerai atau layanan yang ada di dalamnya. Misal "bank ngadirejo" atau "tukar uang"
+              </div>
+                : searchText === lastSearch ? <TiadaHasil /> : ""
         }
-        <Link to="/pengantri/cari/geraibaru/priksamata" >shortcut</Link>
-      </IonContent>
+        <Link className="ion-hide" to="/pengantri/cari/geraibaru/priksamata" >shortcut</Link>
+        <div className="custom-filler"></div></IonContent>
     </>
   )
 }
