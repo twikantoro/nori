@@ -75,9 +75,7 @@ const DefaultAntrianPage: React.FC = () => {
     <>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>
-            Antrian
-          </IonTitle>
+          <IonTitle>Antrian (live)</IonTitle>
         </IonToolbar>
         <IonToolbar>
           <IonSegment value={activeSegment}

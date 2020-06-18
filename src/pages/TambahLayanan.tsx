@@ -25,11 +25,13 @@ const TambahLayananPage: React.FC = () => {
     }
   })
   var klasters = new Array(0)
-  state.pemilik.klasters.forEach((klaster: any) => {
-    if (klaster.id_gerai == currGerai.id) {
-      klasters = klasters.concat(klaster)
-    }
-  })
+  if(typeof state.pemilik.klasters !== 'undefined'){
+    state.pemilik.klasters.forEach((klaster: any) => {
+      if (klaster.id_gerai == currGerai.id) {
+        klasters = klasters.concat(klaster)
+      }
+    })
+  }
   const hasKlaster = (Array.isArray(klasters) && klasters.length > 0) ? true : false
   const [chosenKlaster, setChosenKlaster] = useState()
   const dispatch = useDispatch()

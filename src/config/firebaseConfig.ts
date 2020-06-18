@@ -2,6 +2,7 @@ import axios from 'axios';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import 'firebase/messaging';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Replace this with your own config details
@@ -317,6 +318,10 @@ export function getHariKode(tanggal: any) {
   let hariKode = date.getDay() - 1
   return hariKode < 0 ? hariKode + 7 : hariKode
 }
+
+// firebase.messaging().usePublicVapidKey('BE1Az_hBaAmp8v0eGG372yVsI524ezY9zTxXqgt-CvRr5iteUhoKibRciT7Vi-w6WkOsRMm50NkHXm6i-ZrvzAE')
+// export const messaging = firebase.messaging()
+//BE1Az_hBaAmp8v0eGG372yVsI524ezY9zTxXqgt-CvRr5iteUhoKibRciT7Vi-w6WkOsRMm50NkHXm6i-ZrvzAE
 
 function getDate(tanggal: any) {
   let tgl = tanggal.toString()

@@ -31,11 +31,6 @@ import './theme/google.css';
 /* Theme variables */
 import './theme/variables.css';
 
-
-
-
-
-
 const RoutingSystem: React.FC = () => {
   return (
     <IonReactRouter>
@@ -57,6 +52,7 @@ const App: React.FC = () => {
   const [amiPemilik, setAmiPemilik] = useState(false)
   const [amiStaf, setAmiStaf] = useState(false)
   const dispatch = useDispatch()
+  const [fcmInitiated, setFcmInitiated] = useState(false)
 
   // isPemilik(function (result: any) {
   //   setAmiPemilik(result)
@@ -96,7 +92,40 @@ const App: React.FC = () => {
       }
       setBusy(false)
     })
+    //firebase cloud messaging
+    // if (!fcmInitiated) {
+    //   setFcmInitiated(true)
+    //   initFcm()
+    // }
   }, [])
+
+  /*
+  function initFcm() {
+    //init
+    fcmTokenUpdater()
+    //listen
+    fcmListener()
+  }
+
+  function fcmTokenUpdater() {
+    messaging.getToken().then((currToken: any) => {
+      console.log("messaging token", currToken)
+    }).catch(e => {
+      console.log("error fcm gettoken", e)
+    })
+  }
+
+  function fcmListener() {
+    console.log("fcm listener initiated")
+    messaging.onTokenRefresh(() => {
+      fcmTokenUpdater()
+    })
+    messaging.onMessage((message) => {
+      console.log("got message:", message)
+    })
+  }
+  */
+
   return <IonApp>{busy ? <BusyPage /> : <RoutingSystem />}</IonApp>
 };
 
