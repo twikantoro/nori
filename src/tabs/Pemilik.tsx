@@ -12,7 +12,7 @@ import queryString, { stringify } from 'query-string'
 import { toast } from '../components/toast'
 import { useSelector, useDispatch } from 'react-redux'
 import Busy from '../pages/Busy'
-import { setPemilikData, setGerais, setPemilikBelongings, setError, setPenggunaData } from '../redux/actions'
+import { setPemilikData, setGerais, setPemilikBelongings, setError, setPenggunaData, retrieveFcmToken } from '../redux/actions'
 import PemilikRegisterPage from '../pages/PemilikRegisterPage'
 import GeraiPage from '../pages/GeraiPage'
 import AkunPemilik from '../pages/AkunPemilik'
@@ -84,7 +84,11 @@ const Pemilik: React.FC = () => {
     })
   }
 
+  // const fcmTokenLocal = state.fcmToken
   useEffect(() => {
+    // if (!fcmTokenLocal) {
+    //   dispatch(retrieveFcmToken(''))
+    // }
     // console.log("busy",busy)
     // console.log("isreg",isRegistered)
     if (state.pengguna.uid === '') {

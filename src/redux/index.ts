@@ -94,7 +94,8 @@ const initialState = {
   rekrutStatus: '',
   geraiForStaf: { id: '' },
   isFetchingGerai: false,
-  fcmToken: ''
+  fcmToken: '',
+  fcmTokenOnCloud: 'notInitialized'
 }
 
 export default function reducer(state = initialState,
@@ -445,6 +446,11 @@ export default function reducer(state = initialState,
       return {
         ...state,
         fcmToken: payload
+      }
+    case 'SET_FCM_TOKEN_ON_CLOUD':
+      return {
+        ...state,
+        fcmTokenOnCloud: payload
       }
   }
 }

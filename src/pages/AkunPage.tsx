@@ -101,8 +101,8 @@ const DefaultAkunPage: React.FC = () => {
             <p slot="end">{getTanggalDisplay(state.pengantri.banned)}</p>
           </IonItem>
           : ''}
-          <IonButton onClick={()=>dispatch(retrieveFcmToken(''))}>Retrieve FCM Token</IonButton>
-          <p>Token: {fcmTokenLocal}</p>
+          {/* <IonButton onClick={()=>dispatch(retrieveFcmToken(''))}>Retrieve FCM Token</IonButton>
+          <p>Token: {typeof fcmTokenLocal === 'string' ? fcmTokenLocal : typeof fcmTokenLocal}</p> */}
 
         {/* Hidden */}
 

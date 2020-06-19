@@ -4,7 +4,7 @@ import { Switch, Redirect, Route } from 'react-router'
 import { calendarOutline, hourglassOutline, personOutline } from 'ionicons/icons'
 import AkunStaf from '../pages/AkunStaf'
 import { useSelector, useDispatch } from 'react-redux'
-import { setIsFetching, setPenggunaData, setIsFetchingUser, fetchStafAsync, setIsFetchingStaf } from '../redux/actions'
+import { setIsFetching, setPenggunaData, setIsFetchingUser, fetchStafAsync, setIsFetchingStaf, retrieveFcmToken } from '../redux/actions'
 import { getCurrentUser, getToken } from '../config/firebaseConfig'
 import BusyPage from '../pages/Busy'
 import Platform from '../pages/Platform'
@@ -20,7 +20,11 @@ const Staf: React.FC = () => {
   const isFetchingLocal = state.isFetching
   const isFetchingStafLocal = state.isFetchingStaf
 
+  // const fcmTokenLocal = state.fcmToken
   useEffect(() => {
+    // if (!fcmTokenLocal) {
+    //   dispatch(retrieveFcmToken(''))
+    // }
     //init pengguna
     if (pengguna.uid === '' && !isFetchingUserLocal) {
       dispatch(setIsFetchingUser(true))

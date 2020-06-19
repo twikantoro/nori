@@ -13,7 +13,7 @@ import Logout from '../pages/Logout'
 import NotifikasiPage from '../pages/NotifikasiPage'
 import OrderView from '../pages/OrderView'
 import RiwayatPage from '../pages/RiwayatPage'
-import { getOrCreatePengantri, setIsFetching, setPenggunaData, setTabRefresh, setIsFetchingUser } from '../redux/actions'
+import { getOrCreatePengantri, setIsFetching, setPenggunaData, setTabRefresh, setIsFetchingUser, retrieveFcmToken, fetchFcmTokenAsync } from '../redux/actions'
 import BusyPage from '../pages/Busy'
 import AkunEdit from '../pages/AkunEdit'
 
@@ -24,6 +24,9 @@ const Pengantri: React.FC = () => {
   const pengguna = state.pengguna
   const isFetchingLocal = state.isFetching
   const isFetchingUserLocal = state.isFetchingUser
+  const fcmTokenLocal = state.fcmToken
+  const fcmTokenOnCloudLocal = state.fcmTokenOnCloud
+  const [fetchingToken, setFetchingToken] = useState(false)
   useEffect(() => {
     if (pengantri.id === '' && !isFetchingUserLocal) {
       dispatch(setIsFetchingUser(true))
@@ -31,7 +34,21 @@ const Pengantri: React.FC = () => {
     }
     if (pengguna.uid === '') {
       hehe()
+    } else { //pengguna has been fetched
+      //fetch token stored on cloud, and storing it, if different
+      if (fcmTokenOnCloudLocal == 'notInitialized' && !fetchingToken && fcmTokenLocal) {
+        setFetchingToken(true)
+        dispatch(fetchFcmTokenAsync({
+          id_pengguna: pengguna.uid,
+          fcmToken: fcmTokenLocal
+        }))
+      }
+      //fetch token stored on disk
+      if (!fcmTokenLocal) {
+        dispatch(retrieveFcmToken(''))
+      }
     }
+
     //firestore listeners
   })
 
@@ -52,35 +69,35 @@ const Pengantri: React.FC = () => {
   }
 
   return (
-    isFetchingUserLocal ? <BusyPage /> :
-    <IonTabs>
-      <IonRouterOutlet>
-        <Switch>
-          <Redirect exact from="/pengantri" to="/pengantri/antrian" />
-          <Route path="/pengantri/antrian" render={() => <AntrianPage />} exact={true} />
-          <Route path="/pengantri/cari" render={() => <CariPage />} exact={true} />
-          <Route exact path="/pengantri/cari/:id" component={GeraiView} />
-          <Route exact path="/pengantri/cari/:id/:id" component={LayananView} />
-          <Route exact path="/pengantri/cari/:id/:id/:tanggal" component={LayananView} />
-          {/* <Route path="/pengantri/notifikasi" render={() => <NotifikasiPage />} exact={true} />
+    isFetchingUserLocal || fcmTokenOnCloudLocal == 'notInitialized' ? <BusyPage /> :
+      <IonTabs>
+        <IonRouterOutlet>
+          <Switch>
+            <Redirect exact from="/pengantri" to="/pengantri/antrian" />
+            <Route path="/pengantri/antrian" render={() => <AntrianPage />} exact={true} />
+            <Route path="/pengantri/cari" render={() => <CariPage />} exact={true} />
+            <Route exact path="/pengantri/cari/:id" component={GeraiView} />
+            <Route exact path="/pengantri/cari/:id/:id" component={LayananView} />
+            <Route exact path="/pengantri/cari/:id/:id/:tanggal" component={LayananView} />
+            {/* <Route path="/pengantri/notifikasi" render={() => <NotifikasiPage />} exact={true} />
           <Route path="/pengantri/riwayat" render={() => <RiwayatPage />} exact={true} /> */}
-          <Route path="/pengantri/akun" render={() => <AkunPage />} exact={true} />
-          <Route path="/pengantri/akun/edit" render={() => <AkunEdit />} exact={true} />
-          <Route exact path="/pengantri/akun/logout" component={Logout}></Route>
-        </Switch>
-      </IonRouterOutlet>
-      <IonLoading isOpen={isFetchingLocal} />
-      <IonTabBar slot="bottom" selectedTab="antrian">
-        <IonTabButton tab="antrian" href="/pengantri/antrian"
-          onClick={() => {
-            if (lastClicked === 'antrian') refreshTab('antrian')
-            setLastClicked('antrian')
-          }}
-          id="tab-antrian-btn">
-          <IonIcon icon={calendarOutline} />
-          <IonLabel>Antrian</IonLabel>
-        </IonTabButton>
-        {/* <IonTabButton tab="riwayat" href="/pengantri/riwayat" id="tab-riwayat-btn"
+            <Route path="/pengantri/akun" render={() => <AkunPage />} exact={true} />
+            <Route path="/pengantri/akun/edit" render={() => <AkunEdit />} exact={true} />
+            <Route exact path="/pengantri/akun/logout" component={Logout}></Route>
+          </Switch>
+        </IonRouterOutlet>
+        <IonLoading isOpen={isFetchingLocal} />
+        <IonTabBar slot="bottom" selectedTab="antrian">
+          <IonTabButton tab="antrian" href="/pengantri/antrian"
+            onClick={() => {
+              if (lastClicked === 'antrian') refreshTab('antrian')
+              setLastClicked('antrian')
+            }}
+            id="tab-antrian-btn">
+            <IonIcon icon={calendarOutline} />
+            <IonLabel>Antrian</IonLabel>
+          </IonTabButton>
+          {/* <IonTabButton tab="riwayat" href="/pengantri/riwayat" id="tab-riwayat-btn"
           onClick={() => {
             if (lastClicked === 'riwayat') refreshTab('riwayat')
             setLastClicked('riwayat')
@@ -88,15 +105,15 @@ const Pengantri: React.FC = () => {
           <IonIcon icon={readerOutline} />
           <IonLabel>Riwayat</IonLabel>
         </IonTabButton> */}
-        <IonTabButton tab="cari" href="/pengantri/cari" id="tab-reservasi-btn"
-          onClick={() => {
-            if (lastClicked === 'reservasi') refreshTab('reservasi')
-            setLastClicked('reservasi')
-          }}>
-          <IonIcon icon={duplicateOutline} />
-          <IonLabel>Reservasi</IonLabel>
-        </IonTabButton>
-        {/* <IonTabButton tab="notifikasi" href="/pengantri/notifikasi" id="tab-notifikasi-btn"
+          <IonTabButton tab="cari" href="/pengantri/cari" id="tab-reservasi-btn"
+            onClick={() => {
+              if (lastClicked === 'reservasi') refreshTab('reservasi')
+              setLastClicked('reservasi')
+            }}>
+            <IonIcon icon={duplicateOutline} />
+            <IonLabel>Reservasi</IonLabel>
+          </IonTabButton>
+          {/* <IonTabButton tab="notifikasi" href="/pengantri/notifikasi" id="tab-notifikasi-btn"
           onClick={() => {
             if (lastClicked === 'notifikasi') refreshTab('notifikasi')
             setLastClicked('notifikasi')
@@ -104,16 +121,16 @@ const Pengantri: React.FC = () => {
           <IonIcon icon={notificationsOutline} />
           <IonLabel>Notifikasi</IonLabel>
         </IonTabButton> */}
-        <IonTabButton tab="akun" href="/pengantri/akun" id="tab-akun-btn"
-          onClick={() => {
-            if (lastClicked === 'akun') refreshTab('akun')
-            setLastClicked('akun')
-          }}>
-          <IonIcon icon={personOutline} />
-          <IonLabel>Akun</IonLabel>
-        </IonTabButton>
-      </IonTabBar>
-    </IonTabs>
+          <IonTabButton tab="akun" href="/pengantri/akun" id="tab-akun-btn"
+            onClick={() => {
+              if (lastClicked === 'akun') refreshTab('akun')
+              setLastClicked('akun')
+            }}>
+            <IonIcon icon={personOutline} />
+            <IonLabel>Akun</IonLabel>
+          </IonTabButton>
+        </IonTabBar>
+      </IonTabs>
   )
 }
 
