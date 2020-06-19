@@ -93,7 +93,8 @@ const initialState = {
   geraiStafs: new Array(0),
   rekrutStatus: '',
   geraiForStaf: { id: '' },
-  isFetchingGerai: false
+  isFetchingGerai: false,
+  fcmToken: ''
 }
 
 export default function reducer(state = initialState,
@@ -439,6 +440,11 @@ export default function reducer(state = initialState,
         ...state,
         staf: { id: payload.id_staf },
         isFetching: false
+      }
+    case 'SET_FCM_TOKEN':
+      return {
+        ...state,
+        fcmToken: payload
       }
   }
 }

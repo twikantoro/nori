@@ -3,6 +3,9 @@ import queryString from "query-string"
 import apiSite from "../config/apiSite"
 import { stringify } from "querystring"
 import { toast } from "../components/toast"
+import { Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
+
+const { Filesystem } = Plugins;
 
 export const setUserState = (payload: any) => {
   return { type: 'SET_USER_STATE', payload }
@@ -51,7 +54,7 @@ export const newState = (payload: any) => {
 export const createGeraiAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/gerai/create?" + queryString.stringify(payload)).then(response => {
-      console.log("createGera?",response.data)
+      console.log("createGera?", response.data)
       delete payload.token
       delete payload.id_pemilik
       dispatch(addGerai(payload))
@@ -582,4 +585,25 @@ export const undurDiri = (payload: any) => {
 
 export const berhasilUndurDiri = (payload: any) => {
   return { type: 'BERHASIL_UNDUR_DIRI', payload }
+}
+
+export const retrieveFcmToken = (payload: any) => {
+  return (dispatch: any) => {
+    retrieveFile()
+    async function retrieveFile(){
+      let contents = await Filesystem.readFile({
+        path: 'nori/noriconfig.txt',
+        directory: FilesystemDirectory.ExternalStorage,
+        encoding: FilesystemEncoding.UTF8
+      }).catch(e=>{
+        dispatch(setFcmToken(e))  
+      })
+      console.log(contents);
+      dispatch(setFcmToken(contents))
+    }
+  }
+}
+
+export const setFcmToken = (payload: any) => {
+  return { type: 'SET_FCM_TOKEN', payload }
 }

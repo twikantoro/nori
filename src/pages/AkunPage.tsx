@@ -5,7 +5,7 @@ import { useSelector, connect, useDispatch } from "react-redux"
 import $ from 'jquery'
 import { logoutUser, getTanggalDisplay } from "../config/firebaseConfig"
 import { createOutline, logoGoogle } from "ionicons/icons"
-import { setUserState, setPenggunaData } from "../redux/actions"
+import { setUserState, setPenggunaData, retrieveFcmToken } from "../redux/actions"
 import firebase from "../config/firebaseConfig"
 
 const DefaultAkunPage: React.FC = () => {
@@ -19,6 +19,7 @@ const DefaultAkunPage: React.FC = () => {
   const state = useSelector((state: any) => state)
   const pengguna = state.pengguna
   const dispatch = useDispatch()
+  const fcmTokenLocal = state.fcmToken
 
   const swithSegmentTo = (segment: any) => {
     setActiveSegment(segment)
@@ -100,6 +101,8 @@ const DefaultAkunPage: React.FC = () => {
             <p slot="end">{getTanggalDisplay(state.pengantri.banned)}</p>
           </IonItem>
           : ''}
+          <IonButton onClick={()=>dispatch(retrieveFcmToken(''))}>Retrieve FCM Token</IonButton>
+          <p>Token: {fcmTokenLocal}</p>
 
         {/* Hidden */}
 
