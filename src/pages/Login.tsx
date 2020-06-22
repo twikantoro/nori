@@ -145,14 +145,13 @@ const Login: React.FC = () => {
             </IonCol>
           </IonRow>
 
-          <p className="ion-text-center">Atau</p>
+          {/* <p className="ion-text-center">Atau</p> */}
           {/* <IonButton color="facebook" className="no-text-transform" expand="block" onClick={()=>loginWithFacebook()}>
             <IonIcon icon={logoFacebook} slot="start" />
              Login dengan Facebook</IonButton> */}
-          <IonButton mode="md" color="justwhite" className="no-text-transform custom-login-text-google" expand="block" onClick={() => loginWithGoogle2()}>
-            {/* <IonIcon icon={logoGoogle} slot="start" /> */}
+          {/* <IonButton mode="md" color="justwhite" className="no-text-transform custom-login-text-google" expand="block" onClick={() => loginWithGoogle2()}>
             <img src="/assets/img/google-logo.png" className="custom-login-pic-google" />
-            Masuk dengan Google</IonButton>
+            Masuk dengan Google</IonButton> */}
           <IonRow className="ion-justify-content-center">
             <p>Atau <Link to="/signup">daftar</Link> dengan email</p>
           </IonRow>
