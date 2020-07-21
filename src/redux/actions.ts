@@ -51,10 +51,13 @@ export const newState = (payload: any) => {
 export const createGeraiAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/gerai/create?" + queryString.stringify(payload)).then(response => {
-      console.log("createGera?",response.data)
+      console.log("createGera?", response.data)
       delete payload.token
       delete payload.id_pemilik
-      dispatch(addGerai(payload))
+      dispatch(editGeraiResponse({
+        responded: true,
+        message: response.data
+      }))
     }).catch(error => {
       console.log(error)
     }).then(() => {
@@ -126,9 +129,15 @@ export const setLayananIsComplete = (payload: any) => {
 export const addLayananAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/layanan/create?" + stringify(payload)).then(response => {
-      dispatch(addLayananIsComplete(true))
+      dispatch(editGeraiResponse({
+        responded: true,
+        message: response.data
+      }))
     }).catch(e => {
-      dispatch(addLayananIsComplete(true))
+      dispatch(editGeraiResponse({
+        responded: true,
+        message: e
+      }))
     })
   }
 }
@@ -227,9 +236,16 @@ export const editGeraiAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/gerai/edit?" + stringify(payload)).then(response => {
       console.log(response.data)
-      dispatch(setPemilikBelongingsUpToDate(false))
+      dispatch(editGeraiResponse({
+        responded: true,
+        message: response.data
+      }))
     })
   }
+}
+
+export const editGeraiResponse = (payload: any) => {
+  return { type: 'EDIT_GERAI_RESPONSE', payload }
 }
 
 export const editKlasterAsync = (payload: any) => {
@@ -254,9 +270,9 @@ export const editLayananAsync = (payload: any) => {
   return (dispatch: any) => {
     Axios.get(apiSite + "/layanan/edit?" + stringify(payload)).then(response => {
       console.log("editlayanan?: " + response.data)
-      dispatch(setPemilikBelongingsUpToDate(false))
-    })
-  }
+      dispatch(editGeraiResponse({ responded: true, message: response.data }))
+  })
+}
 }
 
 export const hapusLayananAsync = (payload: any) => {

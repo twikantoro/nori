@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from '../components/toast'
 import { getToken } from '../config/firebaseConfig'
-import { addLayananAsync, addLayananIsComplete, editLayananAsync, hapusLayananAsync, deaktivasiLayananAsync, aktivasiLayananAsync } from '../redux/actions'
+import { addLayananAsync, addLayananIsComplete, editLayananAsync, hapusLayananAsync, deaktivasiLayananAsync, aktivasiLayananAsync, editGeraiResponse } from '../redux/actions'
 
 const EditLayananPage: React.FC = () => {
   const state = useSelector((state: any) => state)
@@ -43,6 +43,7 @@ const EditLayananPage: React.FC = () => {
   const dispatch = useDispatch()
   const addLayananIsCompleteLocal = state.addLayananIsComplete
   const pemilikBelongingsUpToDateLocal = state.pemilikBelongingsUpToDate
+  const editGeraiResponseLocal = state.editGeraiResponse
 
   useEffect(() => {
     if (hasKlaster) {
@@ -56,6 +57,20 @@ const EditLayananPage: React.FC = () => {
     if (!pemilikBelongingsUpToDateLocal) {
       setBusy(false)
       $('#btn-back').click()
+    }
+    if (editGeraiResponseLocal.responded) {
+      setBusy(false)
+      if (editGeraiResponseLocal.message === 'sukses') {
+        toast('Berhasil')
+        $('#btn-back').click()
+      } else {
+        toast(editGeraiResponseLocal.message)
+      }
+      //
+      dispatch(editGeraiResponse({
+        responded: false,
+        message: ''
+      }))
     }
   })
 
@@ -73,8 +88,8 @@ const EditLayananPage: React.FC = () => {
 
     if (!inputsValid) {
       toast("Harap isi dengan lengkap"); return
-    // } else if (!inputs.durasi.match(/^-{0,1}\d+$/)) {
-    //   toast("Durasi slot harus berupa angka"); return
+      // } else if (!inputs.durasi.match(/^-{0,1}\d+$/)) {
+      //   toast("Durasi slot harus berupa angka"); return
     } else if (!inputs.kode.match(/^\S*$/)) {
       toast("Kode tidak boleh mengandung spasi"); return
     } else if (!inputs.kode.match(/^[a-zA-Z0-9_.-]*$/)) {
@@ -240,7 +255,7 @@ const EditLayananPage: React.FC = () => {
           ]}
         />
 
-      <div className="custom-filler"></div></IonContent>
+        <div className="custom-filler"></div></IonContent>
       <IonButton className="custom-hidden" id="btn-back" routerLink={motherURL} />
     </>
   )

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toast } from '../components/toast'
 import { getToken } from '../config/firebaseConfig'
 import kotKabs from '../json/kota-kabupaten'
-import { editGeraiAsync, hapusGeraiAsync } from '../redux/actions'
+import { editGeraiAsync, hapusGeraiAsync, editGeraiResponse } from '../redux/actions'
 
 const GeraiEditPage: React.FC = () => {
   const [busy, setBusy] = useState(false)
@@ -19,6 +19,7 @@ const GeraiEditPage: React.FC = () => {
   const pemilikBelongingsUpToDateLocal = state.pemilikBelongingsUpToDate
 
   const geraiKode = window.location.href.split("/")[5]
+  const editGeraiResponseLocal = state.editGeraiResponse
 
   var id_gerai = ''
   var currGerai = { nama: '', deskripsi: '', alamat: '', kode: '', wilayah: '', tautan: '' }
@@ -59,11 +60,20 @@ const GeraiEditPage: React.FC = () => {
   }
 
   useEffect(() => {
-    if (!pemilikBelongingsUpToDateLocal) {
+    if (editGeraiResponseLocal.responded) {
       setBusy(false)
-      toast("Berhasil")
-      //$('#btnToGerai').click()
-      window.location.href = "/pemilik/gerai"
+      if (editGeraiResponseLocal.message === 'sukses') {
+        toast("Berhasil")
+        //$('#btnToGerai').click()
+        window.location.href = "/pemilik/gerai"
+      } else {
+        //gagal
+        toast(editGeraiResponseLocal.message)
+      }
+      dispatch(editGeraiResponse({
+        responded: false,
+        message: ''
+      }))
     }
   })
 
@@ -215,7 +225,7 @@ const GeraiEditPage: React.FC = () => {
             }]
           }
         />
-      <div className="custom-filler"></div></IonContent>
+        <div className="custom-filler"></div></IonContent>
     </>
   )
 }

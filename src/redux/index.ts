@@ -93,7 +93,11 @@ const initialState = {
   geraiStafs: new Array(0),
   rekrutStatus: '',
   geraiForStaf: { id: '' },
-  isFetchingGerai: false
+  isFetchingGerai: false,
+  editGeraiResponse: {
+    responded: false,
+    message: ''
+  }
 }
 
 export default function reducer(state = initialState,
@@ -439,6 +443,11 @@ export default function reducer(state = initialState,
         ...state,
         staf: { id: payload.id_staf },
         isFetching: false
+      }
+    case 'EDIT_GERAI_RESPONSE':
+      return {
+        ...state,
+        editGeraiResponse: payload
       }
   }
 }

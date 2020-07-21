@@ -302,7 +302,9 @@ export function getTanggalDisplay(tanggal: any) {
   let date = new Date(tgl.substr(0, 4), bulan, hari - 2)
   let bulans = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
   const options = { weekday: 'long' }
-  let weekday = date.toLocaleDateString('id-id', options)
+  let dateMin1 = date
+  dateMin1.setDate(date.getDate()-1)
+  let weekday = dateMin1.toLocaleDateString('id-id', options)
   return weekday + ", " + hari + " " + bulans[bulan - 1] + " " + tahun
 }
 

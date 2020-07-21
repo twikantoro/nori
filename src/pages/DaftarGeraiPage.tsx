@@ -4,7 +4,7 @@ import { connect, useDispatch, useSelector } from "react-redux"
 import { toast } from "../components/toast"
 import { getToken } from "../config/firebaseConfig"
 import kotKabs from "../json/kota-kabupaten"
-import { createGeraiAsync, geraiNeedsUpdate, setIsFetching } from "../redux/actions"
+import { createGeraiAsync, geraiNeedsUpdate, setIsFetching, editGeraiResponse } from "../redux/actions"
 
 const DaftarGerai: React.FC = () => {
   const theState = useSelector((state: any) => state)
@@ -27,6 +27,7 @@ const DaftarGerai: React.FC = () => {
   const backURL = '/pemilik/akun'
   const state = useSelector((state: any) => state)
   const isFetchingLocal = state.isFetching
+  const editGeraiResponseLocal = state.editGeraiResponse
 
   async function submitGerai() {
     const params = {
@@ -50,12 +51,20 @@ const DaftarGerai: React.FC = () => {
   }
 
   useEffect(() => {
-    if (!isFetchingLocal && busy) {
-      dispatch(geraiNeedsUpdate(false))
+    if (editGeraiResponseLocal.responded) {
       setBusy(false)
-      toast("Berhasil")
-      //$('#btnToGerai').click()
-      window.location.href = "/pemilik/gerai"
+      if (editGeraiResponseLocal.message === 'sukses') {
+        toast("Berhasil")
+        //$('#btnToGerai').click()
+        window.location.href = "/pemilik/gerai"
+      } else {
+        //gagal
+        toast(editGeraiResponseLocal.message)
+      }
+      dispatch(editGeraiResponse({
+        responded: false,
+        message: ''
+      }))
     }
   })
 

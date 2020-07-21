@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from '../components/toast'
 import { getToken } from '../config/firebaseConfig'
-import { addLayananAsync, addLayananIsComplete } from '../redux/actions'
+import { addLayananAsync, addLayananIsComplete, editGeraiResponse } from '../redux/actions'
 
 const TambahLayananPage: React.FC = () => {
   const state = useSelector((state: any) => state)
@@ -36,6 +36,7 @@ const TambahLayananPage: React.FC = () => {
   const [chosenKlaster, setChosenKlaster] = useState()
   const dispatch = useDispatch()
   const addLayananIsCompleteLocal = state.addLayananIsComplete
+  const editGeraiResponseLocal = state.editGeraiResponse
 
   useEffect(() => {
     //console.log(currGeraiKode,klasters)
@@ -46,6 +47,20 @@ const TambahLayananPage: React.FC = () => {
       setBusy(false)
       dispatch(addLayananIsComplete(false))
       $('#btn-back').click()
+    }
+    if (editGeraiResponseLocal.responded) {
+      setBusy(false)
+      if (editGeraiResponseLocal.message === 'sukses') {
+        toast('Berhasil')
+        $('#btn-back').click()
+      } else {
+        toast(editGeraiResponseLocal.message)
+      }
+      //
+      dispatch(editGeraiResponse({
+        responded: false,
+        message: ''
+      }))
     }
   })
 
