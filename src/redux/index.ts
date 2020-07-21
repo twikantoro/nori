@@ -97,7 +97,9 @@ const initialState = {
   editGeraiResponse: {
     responded: false,
     message: ''
-  }
+  },
+  fcmToken: '',
+  fcmTokenOnCloud: 'notInitialized'
 }
 
 export default function reducer(state = initialState,
@@ -448,6 +450,16 @@ export default function reducer(state = initialState,
       return {
         ...state,
         editGeraiResponse: payload
+      }
+    case 'SET_FCM_TOKEN':
+      return {
+        ...state,
+        fcmToken: payload
+      }
+    case 'SET_FCM_TOKEN_ON_CLOUD':
+      return {
+        ...state,
+        fcmTokenOnCloud: payload
       }
   }
 }

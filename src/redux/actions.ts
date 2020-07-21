@@ -3,6 +3,8 @@ import queryString from "query-string"
 import apiSite from "../config/apiSite"
 import { stringify } from "querystring"
 import { toast } from "../components/toast"
+import { Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
+const { Filesystem } = Plugins;
 
 export const setUserState = (payload: any) => {
   return { type: 'SET_USER_STATE', payload }
@@ -598,4 +600,54 @@ export const undurDiri = (payload: any) => {
 
 export const berhasilUndurDiri = (payload: any) => {
   return { type: 'BERHASIL_UNDUR_DIRI', payload }
+}
+
+export const retrieveFcmToken = (payload: any) => {
+  return (dispatch: any) => {
+    retrieveFile()
+    async function retrieveFile() {
+      let contents = await Filesystem.readFile({
+        path: 'nori/noriconfig.txt',
+        directory: FilesystemDirectory.ExternalStorage,
+        encoding: FilesystemEncoding.UTF8
+      }).catch(e => {
+        //dispatch(setFcmToken(e))  
+        //send error to server
+        Axios.get(apiSite + "/error/submit?error=" + JSON.stringify(e)).then()
+      })
+      console.log(contents);
+      let token = JSON.stringify(contents).split('"')[3]
+      dispatch(setFcmToken(token))
+    }
+  }
+}
+
+export const setFcmToken = (payload: any) => {
+  return { type: 'SET_FCM_TOKEN', payload }
+}
+
+export const setFcmTokenOnCloud = (payload: any) => {
+  return { type: 'SET_FCM_TOKEN_ON_CLOUD', payload }
+}
+
+export const fetchFcmTokenAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/pengguna/getFcmToken?' + stringify(payload)).then(response => {
+      console.log("fcmTokenFromCloud?", response.data)
+      dispatch(setFcmTokenOnCloud(response.data))
+    })
+  }
+}
+
+export const submitFcmTokenAsync = (payload: any) => {
+  return (dispatch: any) => {
+    Axios.get(apiSite + '/pengguna/submitFcmToken?token=' + stringify(payload)).then(response => {
+      console.log("submitFcmToken?", response.data)
+      if (response.data == 'sukses') {
+        dispatch(setFcmTokenOnCloud(payload))
+      } else {
+        dispatch(setFcmTokenOnCloud(''))
+      }
+    })
+  }
 }

@@ -13,7 +13,7 @@ import Logout from '../pages/Logout'
 import NotifikasiPage from '../pages/NotifikasiPage'
 import OrderView from '../pages/OrderView'
 import RiwayatPage from '../pages/RiwayatPage'
-import { getOrCreatePengantri, setIsFetching, setPenggunaData, setTabRefresh, setIsFetchingUser } from '../redux/actions'
+import { getOrCreatePengantri, setIsFetching, setPenggunaData, setTabRefresh, setIsFetchingUser, fetchFcmTokenAsync, retrieveFcmToken } from '../redux/actions'
 import BusyPage from '../pages/Busy'
 import AkunEdit from '../pages/AkunEdit'
 
@@ -24,6 +24,9 @@ const Pengantri: React.FC = () => {
   const pengguna = state.pengguna
   const isFetchingLocal = state.isFetching
   const isFetchingUserLocal = state.isFetchingUser
+  const fcmTokenLocal = state.fcmToken
+  const fcmTokenOnCloudLocal = state.fcmTokenOnCloud
+  const [fetchingToken, setFetchingToken] = useState(false)
   useEffect(() => {
     if (pengantri.id === '' && !isFetchingUserLocal) {
       dispatch(setIsFetchingUser(true))
@@ -31,6 +34,19 @@ const Pengantri: React.FC = () => {
     }
     if (pengguna.uid === '') {
       hehe()
+    } else { //pengguna has been fetched
+      //fetch token stored on cloud, and storing it, if different
+      if (fcmTokenOnCloudLocal == 'notInitialized' && !fetchingToken && fcmTokenLocal) {
+        setFetchingToken(true)
+        dispatch(fetchFcmTokenAsync({
+          id_pengguna: pengguna.uid,
+          fcmToken: fcmTokenLocal
+        }))
+      }
+      //fetch token stored on disk
+      if (!fcmTokenLocal) {
+        dispatch(retrieveFcmToken(''))
+      }
     }
     //firestore listeners
   })
