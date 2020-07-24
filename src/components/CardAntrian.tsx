@@ -211,7 +211,7 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
                   <IonBadge color="warning">{currDetail.prefix + "-" + currSlot}</IonBadge>
                 </IonCol>
             }
-            {props.waktu_selesai?
+            {props.waktu_selesai && props.status ?
               <IonCol>
                 <IonCardSubtitle>Waktu selesai</IonCardSubtitle>
                 {getJamDisplayByTimestamp(props.waktu_selesai)}
