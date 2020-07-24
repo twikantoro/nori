@@ -77,7 +77,7 @@ const CardAntrian: React.FC<CardAntrianProps> = ({ props }) => {
         durasi: parseInt(currDetail.durasi)
       }
       console.log("perk", params)
-      let wtf = getPerkiraan(params)
+      //let wtf = getPerkiraan(params)
       setPerkiraan(getPerkiraan(params))
       //console.log("pr", wtf)
       //setup firestore listener
