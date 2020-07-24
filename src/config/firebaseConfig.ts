@@ -231,7 +231,10 @@ export function getDateDisplay(data: any) {
 
 export function getPerkiraan(data: any) {
   var jadwalArr = data.jadwal
-  var jadwalHari = jadwalArr[data.hari]
+  var jadwalHari = jadwalArr[parseInt(data.hari)-1]
+  //<debug
+    if(!jadwalHari) return 'error, hari: '+data.hari
+  //>
   var decodedJadwal = decodeJadwal(jadwalHari)
   var durasi = parseInt(data.durasi)
   var slots = new Array(0)
