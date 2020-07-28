@@ -86,11 +86,7 @@ export async function signupUser(email: string, password: string, callback: Func
     callback('Berhasil')
     document.location.href = "/login"
   }).catch((error) => {
-    if (error === 'Error: The email address is already in use by another account.') {
-      callback('Email sudah terdaftar')
-    } else {
-      callback('Terjadi kesalahan')
-    }
+    callback(error)
   })
 }
 

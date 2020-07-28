@@ -16,12 +16,13 @@ const LayananView: React.FC = () => {
   const isFetchingLocal = state.isFetching
   const hariIni = getHariIni()
   const [chosenTanggal, setChosenTanggal] = useState('')
-  const [hariKode, setHariKode] = useState(0)
+  const [hariKode, setHariKode] = useState(1)
   const [sayaDahPesan, setSayaDahPesan] = useState(false)
   const [listening, setListening] = useState(false)
 
   function getHariIni() {
     var date = new Date()
+    date.setHours(date.getHours()+7)
     var returned = date.getDay() - 1
     return returned >= 0 ? returned : returned + 7
   }
