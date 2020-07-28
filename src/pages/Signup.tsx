@@ -3,7 +3,6 @@ import { IonPage, IonHeader, IonButtons, IonMenuButton, IonTitle, IonContent, Io
 import { signupUser, validateEmail } from "../config/firebaseConfig";
 import { toast } from '../components/toast'
 import { Link, Redirect } from "react-router-dom";
-import { render } from "@testing-library/react";
 import { eyeOutline, eyeOffOutline } from "ionicons/icons";
 
 const Signup: React.FC = () => {
@@ -23,6 +22,7 @@ const Signup: React.FC = () => {
       await signupUser(email, password, function (response: any) {
         setBusy(false)
         console.log(response)
+        toast(response)
         // if (response.substring(0, 1) === 'E') {
         //   toast(response)
         // } else if (response.substring(0, 3) === 'Ber') {
